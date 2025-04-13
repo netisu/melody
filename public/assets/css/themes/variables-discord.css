@@ -1,0 +1,82 @@
+:root {
+    --white: #000000;
+    --white-rgb: 255, 255, 255;
+    --black: #ffffff;
+    --black-rgb: 0, 0, 0;
+
+
+    --success-500: #43a047;
+    --success-500-rgb: 67, 160, 71;
+    --success-400: #4caf50;
+    --success-300: #66bb6a;
+
+    --danger-600: #e53935;
+    --danger-600-rgb: 229, 57, 53;
+    --danger-500: #f44336;
+    --danger-400: #ef5350;
+    --danger-300: #e57373;
+
+    --upgrade-300: #b455c5;
+    --upgrade-400: #ab47bc;
+    --upgrade-400-rgb: 171, 71, 188;
+    --upgrade-500: #9c27b0;
+
+    --love-500: #e91e63;
+
+    --warning-600: #fdd835;
+    --warning-700: #fbc02d;
+    --warning-gold: #FCAF3C;
+    --warning-700-rgb: 251, 192, 45;
+    --warning-800: #f9a825;
+
+    --info-400: #5B6DAE;
+    --info-500: #8094dd;
+    --info-600: #7289da;
+    --info-600-rgb: 114, 137, 218;
+
+    --secondary-400: #a9a9a9;
+    --secondary-500: #9e9e9e;
+    --secondary-600: #757575;
+
+    --gray-100: #f5f5f5;
+    --gray-200: #eeeeee;
+    --gray-300: #e0e0e0;
+    --gray-400: #bdbdbd;
+    --gray-500: #9e9e9e;
+    --gray-600: #757575;
+    --gray-800: #424242;
+
+    --btn-gray-color: #424242;
+
+    --body-bg: #1e2124;
+    --body-color: #fff;
+
+    --section-bg: #282b30;
+    --section-border-color: #525860;
+    --section-shadow: 0, 0, 0;
+
+    --input-bg: #282B30;
+    --input-border-color: #36393e;
+
+    --sidebar-active-bg: 3, 155, 229, 0.2;
+    --sidebar-active-color: #039be5;
+
+    --sidebar-upgrade-bg: 171, 71, 188, 0.2;
+    --sidebar-upgrade-color: #ab47bc;
+
+    --button-border-color: 0, 0, 0;
+
+    --pagination-color: #424242;
+
+    --tooltip-bg: #424242;
+
+    --like-btn-hover-bg: 233, 30, 99, 0.1;
+
+    --rounded-none: 0px;
+    --rounded-sm: 4px;
+    --rounded-md: 6px;
+    --rounded-lg: 8px;
+    --rounded-xl: 10px;
+    --rounded-2xl: 12px;
+    --rounded-circle: 9999px;
+}

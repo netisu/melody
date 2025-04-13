@@ -1,0 +1,33 @@
+.chat-card-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.chat-receiver {
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    max-width: 55%;
+}
+
+.chat-sender {
+    margin-right: auto;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    max-width: 55%;
+}
+.chat-sender
+.badge {
+    display: flex; 
+    justify-content: flex-start;
+    width:auto;
+    border-top-left-radius: 0px;
+}
+.chat-receiver .badge {
+    display: inline-flex; /* Change to inline-flex */
+    flex-shrink: 0;
+    border-top-right-radius: 0px;
+}

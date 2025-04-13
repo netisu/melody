@@ -1,0 +1,41 @@
+.pagination {
+    appearance: none;
+    margin: 0;
+    padding: 0;
+}
+.page-link {
+    font-weight: 500;
+    color: var(--pagination-color) !important;
+    border-radius: var(--rounded-sm) !important;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+    margin: 0;
+    height: 32px;
+    width: 32px;
+}
+.page-link:hover {
+    background: rgb(var(--black-rgb), 8%) !important;
+}
+.page-link:active {
+    background: rgb(var(--black-rgb), 12%) !important;
+    transform: scale(0.94);
+}
+.page-disabled,
+.page-disabled:hover,
+.page-disabled:focus,
+.page-disabled:active {
+    pointer-events: none;
+    background: transparent !important;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.page-active,
+.page-active:hover,
+.page-active:focus,
+.page-active:active {
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px rgb(0, 0, 0, 0.2);
+    background: var(--info-600) !important;
+    color: #fff !important;
+}

@@ -1,0 +1,28 @@
+.table {
+    overflow: hidden;
+    border-radius: var(--rounded-md);
+    border: 1px solid rgb(var(--info-600-rgb), 0.5);
+    box-shadow: 0 1px 2px rgb(var(--section-shadow), 0.1);
+}
+.table .table-header {
+    padding: 10px 16px;
+    font-size: 12px;
+    background: rgb(var(--info-600-rgb), 0.1);
+    border-bottom: 1px solid rgb(var(--info-600-rgb), 0.5);
+    text-shadow: 0 1px 1px rgb(0, 0, 0, 0.06);
+    text-transform: uppercase;
+    overflow-x: scroll;
+    font-weight: 700;
+    color: var(--info-600);
+}
+.table .table-body {
+    background: var(--section-bg);
+    overflow-x: scroll;
+    padding: 10px 16px;
+}
+.table .table-body:not(:last-child) {
+    border-bottom: 1px solid rgb(var(--info-600-rgb), 0.5);
+}
+.table .table-body-darker {
+    background: rgb(var(--info-600-rgb), 0.1);
+}

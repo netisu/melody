@@ -1,0 +1,59 @@
+.card {
+    background: var(--section-bg);
+    border: 1px solid var(--section-border-color);
+    box-shadow:
+        0 0.5em 1em -0.125em rgb(var(--section-shadow), 0.1),
+        0 0px 0 1px,
+        rgb(var(--section-shadow), 0.02);
+    border-radius: var(--rounded-lg);
+    position: relative;
+}
+
+.card-body {
+    padding: 18px;
+}
+.card-inner {
+    background: var(--input-bg);
+    border-color: var(--input-border-color);
+}
+
+.card-item-owned {
+    border-color: var(--success-500) !important;
+}
+
+.card-item {
+    border-radius: var(--rounded-lg);
+    border: 5px solid var(--section-border-color);
+    background: radial-gradient(
+        circle,
+        rgba(79, 86, 96, 0.3019607843) 0%,
+        transparent 100%
+    );
+}
+.card-five-star {
+    background: rgb(var(--warning-700-rgb), 20%);
+    border-color: var(--warning-700);
+    border-bottom: 4px solid var(--warning-700);
+}
+.card-four-star {
+    background: rgb(var(--upgrade-400-rgb), 20%);
+    border-color: var(--upgrade-400);
+    border-bottom: 4px solid var(--upgrade-400);
+}
+.card-three-star {
+    background: rgb(var(--success-500-rgb), 20%);
+    border-color: var(--success-500);
+    border-bottom: 4px solid var(--success-500);
+}
+.card-two-and-one-star {
+    background: var(--input-bg);
+    border-color: var(--input-border-color);
+    border-bottom-width: 4px;
+}
+
+.card-status {
+    border-bottom-width: 4px;
+}
+.card-status.online {
+    border-bottom-color: var(--success-500);
+}

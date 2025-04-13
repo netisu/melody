@@ -1,0 +1,208 @@
+.btn {
+    border-color: rgb(var(--button-border-color), 0.2);
+    border-width: 1px;
+    cursor: pointer;
+    justify-content: center;
+    border-radius: 290486px;
+    padding: 0 18px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-weight: 600;
+    height: 38px;
+    line-height: auto;
+    font-size: 15px;
+}
+.btn:hover {
+    box-shadow: 0 2px 2px rgb(0, 0, 0, 0.2);
+}
+.btn:active {
+    transform: scale(0.94);
+}
+.btn-block {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+.btn-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
+.btn-sm {
+    height: 38px;
+    line-height: 30px;
+    font-size: 15px;
+}
+.flex-container .btn-sm {
+    line-height: 36px;
+}
+.btn-xs {
+    height: 34px;
+    line-height: 26px;
+    font-size: 13px;
+    padding: 0 15px;
+}
+.flex-container .btn-xs {
+    line-height: 30px;
+}
+
+.btn-like {
+    color: var(--gray-600);
+    padding: 0 !important;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.btn-like i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    height: 26px;
+    width: 26px;
+    margin: 0;
+    padding: 0;
+    border-radius: var(--rounded-circle);
+}
+.btn-like:hover {
+    color: var(--love-500);
+}
+.btn-like:hover i {
+    background: rgb(var(--like-btn-hover-bg)) !important;
+    color: var(--love-500);
+}
+.btn-like.active {
+    color: var(--love-500);
+}
+.btn-like.active i {
+    font-weight: 800;
+}
+
+.btn-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    width: 36px;
+    color: var(--gray-600);
+    border-radius: var(--rounded-circle);
+    transition: all 0.2s;
+}
+.btn-circle:hover {
+    background: rgb(var(--black-rgb), 0.06);
+    color: var(--gray-600);
+}
+.btn-success:hover{
+    background-image: linear-gradient(to right, #f6d365 0%, #fda085 51%, #f6d365 100%);
+}
+.btn-circle:active {
+    transform: scale(0.94);
+    background: rgb(var(--black-rgb), 0.1);
+    color: var(--gray-600);
+}
+
+.btn.btn-circle {
+    height: 38px;
+}
+
+.btn-success {
+    background: var(--success-500);
+    color: #ffffff !important;
+}
+.btn-success:hover {
+    background: var(--success-400);
+}
+.btn-success:active {
+    background: var(--success-300);
+}
+.btn-danger {
+    background: var(--danger-600);
+    color: #ffffff !important;
+}
+.btn-danger:hover {
+    background: var(--danger-500);
+}
+.btn-danger:active {
+    background: var(--danger-400);
+}
+.btn-warning {
+    background: var(--warning-800);
+    color: #ffffff !important;
+}
+.btn-warning:hover {
+    background: var(--warning-700);
+}
+.btn-warning:active {
+    background: var(--warning-600);
+}
+.btn-info {
+    background: var(--info-600);
+    color: #ffffff !important;
+}
+.btn-info:hover {
+    background: var(--info-500);
+}
+.btn-info:active {
+    background: var(--info-400);
+}
+.btn-secondary {
+    background: var(--secondary-600);
+    color: #ffffff !important;
+}
+.btn-secondary:hover {
+    background: var(--secondary-500);
+}
+.btn-secondary:active {
+    background: var(--secondary-400);
+}
+.btn-gray {
+    background: rgb(var(--black-rgb), 0.04);
+    color: var(--btn-gray-color) !important;
+}
+.btn-gray:hover {
+    background: rgb(var(--black-rgb), 0.06);
+}
+.btn-gray:active {
+    background: rgb(var(--black-rgb), 0.08);
+}
+.btn-discord {
+    background: #5865f2;
+    color: #ffffff;
+}
+.btn-discord:hover {
+    background: #6873f0;
+}
+.btn-discord:active {
+    background: #6e78e7;
+}
+.btn-upgrade {
+    background: var(--upgrade-500);
+    color: #ffffff !important;
+}
+.btn-upgrade:hover {
+    background: var(--upgrade-400);
+}
+.btn-upgrade:active {
+    background: var(--upgrade-300);
+}
+.btn-gold {
+    background: #FCAF3C;
+    color: #ffffff !important;
+}
+.btn-gold:hover {
+    border: 2px solid var(--warning-700);
+    background: transparent;
+    color: #ffffff !important;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}

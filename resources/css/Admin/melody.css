@@ -1,0 +1,128 @@
+@import url("https://unpkg.com/bulmaswatch/lumen/bulmaswatch.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300&display=swap");
+@import url("https://rawcdn.githack.com/hung1001/font-awesome-pro/8af0edd/css/all.css");
+
+* {
+  font-family: "Lexend Deca", sans-serif;
+}
+
+button {
+  font-family: "Lexend Deca", sans-serif;
+}
+
+::-webkit-file-upload-button {
+  display: none;
+}
+::file-selector-button {
+  display: none;
+}
+
+#app {
+    height: 100vh;
+}
+
+html, body {
+  background: #ededed !important;
+}
+
+footer {
+  background: #ededed !important;
+}
+
+.fad {
+  width: 30px;
+  text-align: center;
+}
+
+.pagination-link.is-current {
+    background: #3298dc !important;
+    color: #fff;
+    border-color: #207BB9 !important;
+}
+
+.button {
+    background: #3298dc !important;
+    color: #fff;
+    border-color: #207BB9 !important;
+}
+.button.is-danger {
+    background: #ff4136 !important;
+    color: #fff !important;
+    border-color: #F70E00 !important;
+}
+.button.is-danger:hover {
+    color: orange !important;
+}
+.content blockquote { 
+    background: #3298dc !important;
+    color: #fff;
+    border-color: #207BB9 !important;
+}
+.input, .select select, .textarea {
+    background: #3298dc !important;
+    color: #fff;
+    border-color: #207BB9 !important;
+}
+.button.is-purple {
+    background: #4956f3 !important;
+    color: #fff;
+    border-color: #161616 !important;
+
+}
+.card {
+  background: rgb(255, 255, 255) !important;
+  border-color: #d8d5d5 !important;
+  border-width: auto;
+}
+
+
+.navbar {
+    background: #3298dc !important;
+    color: #fff;
+    border-color: #207BB9 !important;
+}
+
+.navbar .navbar-dropdown {
+    background: #3298dc !important;
+    color: #fff;
+    border-color: #207BB9 !important;
+    box-shadow: none;
+}
+.navbar-menu {
+    background: #3298dc !important;
+    box-shadow: 0 8px 16px rgba(10, 10, 10, .1);
+    padding: .5rem 0;
+}
+.navbar-item {
+  background: #3298dc !important;
+  color: #fff !important;
+}
+.has-text-link.navbar-item {
+    color: #232323 !important;
+}
+.has-text-link.navbar-item:hover {
+    color: #161616 !important;
+}
+
+.navbar-dropdown {
+  background: #1b1b1b !important;
+  -color: rgb(27, 27, 27) !important;
+}
+
+.navbar-link {
+  -color: rgb(27, 27, 27) !important;
+}
+
+.notification {
+  background: #02517c !important;
+  border-color: #02517c !important;
+}
+
+.input::placeholder {
+  color: #fff !important;
+}
+
+textarea::placeholder {
+    color: #fff !important;
+}
+  

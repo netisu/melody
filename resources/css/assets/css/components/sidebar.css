@@ -1,0 +1,95 @@
+.sidebar {
+    background: var(--section-bg);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 9997;
+    width: 215px;
+    border-right: 1px solid var(--section-border-color);
+    padding-top: 62px;
+    overflow-y: auto;
+    margin:0 auto;
+}
+.sidebar:dir(rtl) {
+    background: var(--section-bg);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 9997;
+    width: 215px;
+    border-left: 1px solid var(--section-border-color);
+    padding-top: 62px;
+    padding-right: 6px;
+    box-shadow: 1px 1px 5px rgb(var(--section-shadow), 0.1);
+    overflow-y: auto;
+}
+.sidebar .sidebar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.sidebar .side-link {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--gray-700);
+    transition: all 0.2s;
+    display: block;
+    padding: 10px;
+    border-left-color: transparent;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar .side-link:hover {
+  background: rgb(var(--black-rgb), 0.06);
+  border-color: var(--info-600);
+}
+.sidebar .side-link-has-img {
+    padding-top: 8px;
+    padding-bottom: 7px;
+}
+.sidebar .side-link:hover {
+    background: rgb(var(--black-rgb), 0.06);
+}
+.sidebar .side-link:active {
+    background: rgb(var(--black-rgb), 0.1);
+}
+.sidebar .side-link.active {
+    background: rgb(var(--sidebar-active-bg));
+    color: var(--sidebar-active-color);
+}
+.sidebar .side-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-left: 18px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    color: var(--gray-600);
+}
+.sidebar .side-icon {
+    width: 46px;
+    text-align: center;
+    font-size: 20px;
+    vertical-align: middle;
+    margin-top: -2px;
+}
+.sidebar .side-img {
+    height: 32px;
+    width: 32px;
+    padding: 10px;
+    margin-top: -2px;
+}
+.sidebar .side-img img {
+    height: 32px;
+    width: 32px;
+    margin-top: -2px;
+}
+.sidebar .side-upgrade,
+.sidebar .side-upgrade:hover,
+.sidebar .side-upgrade:focus,
+.sidebar .side-upgrade:active {
+    background: rgb(var(--sidebar-upgrade-bg));
+    color: var(--sidebar-upgrade-color);
+}

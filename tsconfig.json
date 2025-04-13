@@ -1,0 +1,59 @@
+{
+    "extends": [
+        "@vue/tsconfig/tsconfig.json",
+        "@vue/tsconfig/tsconfig.dom.json"
+    ],
+    "compilerOptions": {
+        // Enable latest features
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleDetection": "force",
+        "jsx": "preserve",
+        "allowJs": true,
+        // Bundler mode
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+        // Best practices
+        "strict": false,
+        "skipLibCheck": true,
+        "noFallthroughCasesInSwitch": true,
+        // Some stricter flags
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "types": [
+            "vite/client",
+            "@inertiajs/core",
+            "@inertiajs/vue3"
+        ],
+        "paths": {
+            "@/*": [
+                "resources/js/*"
+            ]
+        },
+        "baseUrl": ".",
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true, // Enable strict type-checking options
+        "noImplicitAny": false // Bypass raising errors on `any` type
+    },
+    "include": [
+        "resources/**/*.ts",
+        "resources/js/**/*.ts",
+        "resources/js/**/*.vue",
+        "resources/**/*.vue",
+        "resources/**/*.d.ts",
+        "vite.config.ts",
+        "resources/js/**/*",
+        "vue.config.ts"
+    ], // Paths
+    "exclude": [
+        "node_modules"
+    ]
+}

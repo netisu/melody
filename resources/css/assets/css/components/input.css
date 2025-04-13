@@ -1,0 +1,56 @@
+.form {
+    display: block;
+    width: 100%;
+    outline: none;
+    margin: 0;
+    height: 42px;
+    line-height: 42px;
+    border: 1px solid var(--input-border-color);
+    padding-left: 14px;
+    font-weight: 600;
+    border-radius: var(--rounded-lg);
+    box-shadow: 0 1px 2px rgb(0, 0, 0, 0.1);
+    background: var(--input-bg);
+    color: var(--black);
+    transition: all 0.2s;
+}
+.form:focus {
+    border-width: 1px;
+    box-shadow: 0 1px 2px rgb(0, 0, 0, 0.18);
+}
+.form::placeholder {
+    color: var(--gray-500);
+}
+.form-sm {
+    height: 38px;
+    line-height: 30px;
+    font-size: 15px;
+}
+.form-xs {
+    height: 34px;
+    line-height: 26px;
+    font-size: 14px;
+}
+.form-select,
+.form-select:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 16px 12px !important;
+    outline: none !important;
+    appearance: none !important;
+    cursor: pointer !important;
+}
+textarea.form {
+    padding-top: 14px;
+    line-height: 20px;
+    height: auto;
+    resize: none;
+}
+.form-has-button {
+    padding-right: 80px !important;
+}
+.form-has-section-color {
+    background: var(--section-bg);
+    border: 1px solid var(--section-border-color);
+}

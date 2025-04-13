@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phive xmlns="https://phar.io/phive">
+  <phar name="composer-unused" version="^0.8.11" installed="0.8.11" location="./tools/composer-unused" copy="false"/>
+</phive>

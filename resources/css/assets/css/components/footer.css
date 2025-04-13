@@ -1,0 +1,64 @@
+.footer {
+    background: var(--section-bg);
+    border-top: 1px solid var(--section-border-color);
+    margin-top: 40px;
+    position: sticky;
+    top: 100%;
+}
+.footer-link {
+    text-transform: uppercase;
+    color: var(--gray-600);
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.footer-media {
+    transition: all 0.2s;
+}
+.footer-media:active {
+    transform: scale(0.94);
+}
+.footer-link:hover,
+.footer-link.active {
+    color: var(--info-600);
+}
+.footer-link:active {
+    transform: scale(0.94);
+    color: var(--info-500);
+}
+.footer-link:not(:last-child) {
+    margin-right: 16px;
+}
+
+@media screen and (max-width: 63.99875em) {
+    .footer {
+        text-align: center;
+    }
+    .footer-link {
+        display: inline-block;
+    }
+}
+.footer-media:hover .fad.fa-language {
+    transition: all 0.2s;
+    color: var(--warning-800);
+}
+
+.footer-media:hover .fab.fa-discord {
+    transition: all 0.2s;
+    color: #5865f2;
+}
+.footer-media:hover .fab.fa-twitter {
+    transition: all 0.2s;
+    color: #00acee;
+}
+.footer-media:hover .fab.fa-twitch {
+    transition: all 0.2s;
+    color: #6441a5;
+}
+.footer-media:hover .fab.fa-tiktok {
+    transition: all 0.2s;
+    color: #ff0050;
+}
+.footer-media:hover .fab.fa-facebook {
+    transition: all 0.2s;
+    color: #1778f2;
+}
