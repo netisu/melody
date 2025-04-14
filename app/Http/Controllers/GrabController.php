@@ -159,7 +159,7 @@ class GrabController extends Controller
                 $avatar->{"color_{$request->body_part}"} = $request->color;
                 $avatar->save();
 
-                $this->regenerate($request);
+                $this->regenerate();
 
                 return Auth::user()->thumbnail();
 
