@@ -36,7 +36,7 @@ class RenderController extends Controller
         $avatar->save();
 
         // Return the rendered image as a response
-        return $this->getAvatarRenderHash($avatar->id);
+        return $this->getAvatarRenderHash($avatar->user_id);
     }
 
     public function ItemRender($id)
