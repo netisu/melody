@@ -468,7 +468,6 @@ const isVerifiedEmail = computed(() => {
                             </div>
                             <div class="mb-3 position-relative">
                                 <form>
-                                    Test
                                     <textarea class="form form-has-button pe-5" rows="5">{{ usePage<any>().props.auth.user.about_me
                                 }}</textarea>
                                 <input type="submit" class="btn btn-success btn-sm" value="Update" style="
