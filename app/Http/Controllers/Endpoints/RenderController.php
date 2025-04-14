@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Cache;
 
 class RenderController extends Controller
 {
-    function getAvatarRecord(int $id)
+    function getAvatarRecord($id)
     {
         return Avatar::where('user_id', $id)->first();
     }
 
-    public function UserRender(int $id)
+    public function UserRender($id)
     {
         // Retrieve parameters for the request
         // Verify the encryption or any other required validations
