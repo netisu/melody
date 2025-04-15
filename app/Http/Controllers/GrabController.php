@@ -13,6 +13,7 @@ use App\Models\ForumThread;
 use Illuminate\Http\Request;
 use App\Models\DiffUsername;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Endpoints\RenderController;
 use App\Http\Middleware\SiteSettingChecker;
@@ -81,6 +82,7 @@ class GrabController extends Controller
 
     public function UpdateAvatar(Request $request)
     {
+        \Log::info('UpdateAvatar request received for user ID: ' . Auth::id() . ', action: ' . $request->action . ', request data: ' . json_encode($request->all()));
         /** @var \App\Models\User $user **/
         $avatar = Auth::user()->avatar();
 
