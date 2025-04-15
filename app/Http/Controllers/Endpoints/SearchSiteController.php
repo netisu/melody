@@ -28,7 +28,7 @@ class SearchSiteController extends Controller
             return response()->json([]);
         }
 
-        $json['results'] = [];
+        $formattedResults = [];
 
         foreach ($results as $result) {
             switch ($result->getTable()) {
@@ -51,16 +51,17 @@ class SearchSiteController extends Controller
                     break;
 
                 default:
-                    continue 2;
+                    continue;
             }
 
-            $json['results'][] = [
+            $formattedResults[] = [
                 'name' => $name,
                 'image' => $image,
-                'url' => $url
+                'url' => $url,
+                'type' => $result->getTable(),
             ];
         }
 
-        return response()->json($json);
+        return response()->json(formattedResults);
     }
 }
