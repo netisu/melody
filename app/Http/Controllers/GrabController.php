@@ -155,7 +155,7 @@ class GrabController extends Controller
 
                 // Check if the avatar's current color for the specified body part matches the requested color
                 if ($avatar->{"color_{$request->body_part}"} == $request->color) {
-                    Log::info('Color already matches, skipping regeneration for user ID:' . Auth::id());
+                    Log::info('Color already matches, skipping regeneration for user ID: ' . Auth::id());
                     return Auth::user()->thumbnail();
                 }
 
@@ -163,8 +163,10 @@ class GrabController extends Controller
                 $avatar->{"color_{$request->body_part}"} = $request->color;
                 $avatar->save();
                 Log::info('Saving Color for:' . $avatar->user_id);
-
+            
+                Log::info('About to call $this->regenerate() for user ID: ' . $avatar->user_id);
                 $this->regeneratewithID($avatar->user_id);
+                \Log::info('$this->regenerate() called for user ID: ' . $avatar->user_id);
 
                 return Auth::user()->thumbnail();
 
