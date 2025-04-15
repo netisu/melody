@@ -204,14 +204,16 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
             });
         });
     });
-    Route::get('/butterfly/eastermorn/shiningmoonlight/silverplate/whiterabbit/chocolatebasket/eastertide/sunnysideup/treasurehunt/onlysaymorning', function () {
+    
+    Route::get('/romeo', function () {
         if (config('Values.in_event') == true) {
             $eventItem = Item::where('id', 194)->first();
             $event = new Event;
             $event->grantItem($eventItem, Auth::user(), 'gettrolled', false);
         };
-        return redirect()->to(route('store.item', 199));
+        return redirect()->to(route('store.item', 194));
     });
+    
     Route::get('/brokenegg', function () {
         if (config('Values.in_event') == true && !Auth::user()->ownsItem(199)) {
             $eventItem = Item::where('id', 199)->first();
