@@ -41,9 +41,18 @@ class UserRenderer implements ShouldQueue
      */
     public function handle(): void
     {
+        \Log::info('--- UserRenderer job started for user ID: ' . $this->userID . ' ---');
 
-        $newVrcInstance = new RenderController();
-        $vrs = $newVrcInstance;
-        $vrs->UserRender($this->userID);
+        try {
+            $newVrcInstance = new RenderController();
+            $vrs = $newVrcInstance;
+            \Log::info('Calling RenderController::UserRender() with user ID: ' . $this->userID);
+            $vrs->UserRender($this->userID);
+            \Log::info('RenderController::UserRender() finished for user ID: ' . $this->userID);
+
+        } catch (\Exception $e) {
+            \Log::error('*** Error in UserRenderer job for user ID ' . $this->userID . ' ***: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            // $this->fail($e);
+        }
     }
 }
