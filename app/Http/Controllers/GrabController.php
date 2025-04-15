@@ -150,18 +150,21 @@ class GrabController extends Controller
                 }
 
 
-                
+                Log::info('Current color of ' . $request->body_part . ': ' . $avatar->{"color_{$request->body_part}"});
+                Log::info('Requested color: ' . $request->color);
 
                 // Check if the avatar's current color for the specified body part matches the requested color
                 if ($avatar->{"color_{$request->body_part}"} == $request->color) {
+                    Log::info('Color already matches, skipping regeneration for user ID:' . Auth::id());
                     return Auth::user()->thumbnail();
                 }
 
                 // Update the avatar's color for the specified body part
                 $avatar->{"color_{$request->body_part}"} = $request->color;
                 $avatar->save();
+                Log::info('Saving Color for:' . $avatar->user_id);
 
-                $this->regenerate();
+                $this->regeneratewithID($avatar->user_id);
 
                 return Auth::user()->thumbnail();
 
