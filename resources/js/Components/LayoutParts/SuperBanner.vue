@@ -4,7 +4,7 @@ import { usePage } from "@inertiajs/vue3";
 
 <template>
         <main :class="{
-            'container-alert': usePage<any>().props.site_config.announcement,
+            'container-alert container': usePage<any>().props.site_config.announcement,
             'container-navbar': !usePage<any>().props.site.frontend.sidebar_menu,
             'container': usePage<any>().props.site.frontend.sidebar_menu && usePage<any>().props.site_config.announcement,
         }">
