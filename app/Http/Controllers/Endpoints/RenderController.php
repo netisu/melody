@@ -10,19 +10,21 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class RenderController extends Controller
 {
-    function getAvatarRecord($id)
+    function getAvatarRecord($id) : Avatar
     {
         return Avatar::where('user_id', $id)->first();
     }
 
-    public function UserRender($id)
+    public function UserRender($id): string
     {
         // Retrieve parameters for the request
         // Verify the encryption or any other required validations
         $avatar = $this->getAvatarRecord($id);
+        Log::info('Retrieved avatar for userID: {id}', ['id' => $avatar->user_id]);
 
         $avatar_thumbnail_name = bin2hex(random_bytes(22));
 
@@ -30,12 +32,15 @@ class RenderController extends Controller
 
         // Make HTTP request to the rendering server
         $this->makeRenderRequest($requestData);
+        Log::info('Fowarded to external render service');
 
         // Update the user's image and save
         $avatar->image = $avatar_thumbnail_name;
         $avatar->save();
+        Log::info('Thumbnail Saved To DB');
 
         // Return the rendered image as a response
+        Log::info('Finished');
         return $this->getAvatarRenderHash($avatar->user_id);
     }
 
