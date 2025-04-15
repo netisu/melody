@@ -14,6 +14,7 @@ class Event
         'crackingup' => 199,
         'enigmaticEgg' => 209,
         'invertedeggy212' => 212,
+        'gettrolled' => 194,
     ];  // Array of key strings associated with item IDs (key => item ID)
 
     public function grantItem(Item $item, User $user, string $key, bool $internalRedeem = false): bool
