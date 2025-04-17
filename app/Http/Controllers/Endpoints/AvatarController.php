@@ -26,7 +26,7 @@ class AvatarController extends Controller
             ->pluck('item_id');
 
         // Now return Items
-        $items = Item::whereIn('id', $itemIds)->orderBy('created_at', 'asc')->jsonPaginate(24)->through(function ($item) {
+        $items = Item::whereIn('id', $itemIds)->orderBy('created_at', 'desc')->jsonPaginate(24)->through(function ($item) {
             return [
                 'id' => $item->id,
                 'name' => $item->name,
