@@ -36,22 +36,22 @@ class SearchSiteController extends Controller
                     $name = $result->username;
                     $image = $result->headshot();
                     $url = route('user.profile', $result->username);
-                    break;
+                    continue;
 
                 case 'items':
                     $name = $result->name;
                     $image = $result->thumbnail();
                     $url = route('store.item', $result->id);
-                    break;
+                    continue;
 
                 case 'spaces':
                     $name = $result->name;
                     $image = $result->thumbnail();
                     $url = route('spaces.view', [$result->id, $result->slug()]);
-                    break;
+                    continue;
 
                 default:
-                    continue;
+                    continue 2;
             }
 
             $formattedResults[] = [
@@ -62,6 +62,6 @@ class SearchSiteController extends Controller
             ];
         }
 
-        return response()->json(formattedResults);
+        return response()->json($formattedResults);
     }
 }

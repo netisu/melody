@@ -78,8 +78,7 @@ provide("selectedSubCategory", selectedSubCategory);
         <template #SuperBanner>
             <SuperBanner>
                 <template #bannerAsset>
-                    <i class="text-5xl fad fa-store text-info"></i>
-
+                    <i class="text-5xl fad fa-bag-shopping text-info"></i>
                 </template>
 
                 <template #bannerName>

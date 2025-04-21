@@ -51,3 +51,7 @@ database/mysql-database-test-data/*
 /storage/s3-data/*
 /storage/*
 storage/mail-tata/*
+
+**/caddy
+frankenphp
+frankenphp-worker.php
