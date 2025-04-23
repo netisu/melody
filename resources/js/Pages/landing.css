@@ -1,7 +1,7 @@
 header.masthead-landing {
     z-index: 2;
     position: relative;
-    background-color: var(--info-600);
+    background: linear-gradient(to bottom, var(--info-400), var(--info-400), var(--info-600));
     height:auto;
     /* soon background-image: linear-gradient(to top, var(--info-400), var(--info-600)); */
 
@@ -10,7 +10,7 @@ header.masthead-landing img {
     position: absolute;
     top: 0px;
     right: 0px;
-    background-color: var(--info-600);
+    background: linear-gradient(to bottom, var(--info-400), var(--info-400), var(--info-600));
     height: 100%;
     width: inherit;
 
@@ -46,11 +46,11 @@ header.bh-landing {
     border-radius: 50px;
     display: inline-block;
     text-decoration: none;
-    border: 3px solid rgb(var(--button-border-color), 0.2);
+    border: 1px solid rgb(var(--button-border-color), 0.2);
     display: inline-block;
     text-decoration: none;
-    height: 42px;
-    line-height: 35px;
+    height: 35px;
+    line-height: 32px;
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.2);
     box-shadow: 0 1px 3px rgb(0, 0, 0, 0.2);
     cursor: pointer;

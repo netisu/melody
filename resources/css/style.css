@@ -23,7 +23,6 @@
 
 * *::before *::after {
     -webkit-tap-highlight-color: transparent;
-    tap-highlight-color: transparent;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -31,12 +30,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
-    font-family: Lexend Deca, Sans-Serif !important;
+    font-family: 'Lexend Deca', sans-serif !important;
 }
 ::-webkit-file-upload-button {
     display: none;
 }
-::file-selector-button {
+::-webkit-file-selector-button {
     display: none;
 }
 
@@ -397,9 +396,8 @@ body {
 html,
 body {
     height: 100%;
-}
-
-body {
+    position: relative !important; /* For layering pseudo-elements */
+    overflow-x: hidden; /* Prevent horizontal scrollbar if streaks extend slightly */
     font-weight: 500;
     background: var(--body-bg);
     color: var(--body-color) !important;

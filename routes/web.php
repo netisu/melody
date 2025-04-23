@@ -48,7 +48,7 @@ use App\Http\Controllers\ArgAssetsController;
 |
 */
 // Auth::loginUsingId(1);
-Route::domain(app()->environment('production') ? config('Values.production.domains.main') : 'http://melody.test')->group(function () {
+Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->group(function () {
     $validSteps = implode('|', array_keys(app(ArgassetsController::class)->getAssetSteps()));
 
     Route::group(['as' => 'maintenance.', 'prefix' => 'maintenance'], function () {

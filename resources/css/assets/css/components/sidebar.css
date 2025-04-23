@@ -54,6 +54,7 @@
 }
 .sidebar .side-link:active {
     background: rgb(var(--black-rgb), 0.1);
+    
 }
 .sidebar .side-link.active {
     background: rgb(var(--sidebar-active-bg));

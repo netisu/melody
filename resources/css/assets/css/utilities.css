@@ -99,7 +99,7 @@
     color: #ffffff !important;
 }
 .alert-danger {
-    background: var(--danger-500);
+    background: linear-gradient(to bottom, var(--danger-300), var(--danger-400), var(--danger-500));
     color: #ffffff !important;
 }
 .alert-info {

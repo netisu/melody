@@ -36,19 +36,19 @@ class SearchSiteController extends Controller
                     $name = $result->username;
                     $image = $result->headshot();
                     $url = route('user.profile', $result->username);
-                    continue;
+                    break;
 
                 case 'items':
                     $name = $result->name;
                     $image = $result->thumbnail();
                     $url = route('store.item', $result->id);
-                    continue;
+                    break;
 
                 case 'spaces':
                     $name = $result->name;
                     $image = $result->thumbnail();
                     $url = route('spaces.view', [$result->id, $result->slug()]);
-                    continue;
+                    break;
 
                 default:
                     continue 2;

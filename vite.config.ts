@@ -66,7 +66,7 @@ export default {
                 },
             },
         }),
-        basicSsl(),
+        // basicSsl(),
         viteImagemin({}),
         compression()
     ],

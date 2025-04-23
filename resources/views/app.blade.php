@@ -221,7 +221,7 @@ Unauthorized use of this code (Not Mendcore) is strictly prohibited.
 
 
 function initializeTheme() {
-  let theme = 'light'; // Default theme
+  let theme = 'dark'; // Default theme
 
   // Use Promise to handle asynchronous nature of storage access if needed in your context.
   // If not needed, you can remove the Promise wrapper.
