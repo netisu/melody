@@ -202,6 +202,7 @@ const getItemsbyCategory = async (category) => {
     try {
         const response = await axios.get(route(`api.avatar.items`, { category: category }));
         CategoryItems.value = response.data;
+        console.log(CategoryItems);
         currentcat.value = category;
     } catch (error) {
         console.error("Error fetching all items:", error);
