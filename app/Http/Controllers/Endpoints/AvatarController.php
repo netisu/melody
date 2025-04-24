@@ -16,27 +16,28 @@ use Illuminate\Http\JsonResponse;
 
 class AvatarController extends Controller
 {
-    public function getItemsByCategory($category)
+    public function getItemsByCategory(string $category = "hat")
     {
-        // Select only item IDs from inventory with matching category
-        $itemIds = Inventory::where('user_id', Auth::id())
+        $inventory = Inventory::where('user_id', $userID)
             ->whereHas('item', function ($query) use ($category) {
-                $query->where('item_type', '=', $category);
+                $query->where('item_type', $category);
             })
-            ->pluck('item_id');
+            ->paginate(10);
+        // Paginate the inventory with 10 items per page, filtered by item_type
 
-        // Now return Items
-        $items = Item::whereIn('id', $itemIds)->orderBy('created_at', 'desc')->jsonPaginate(24)->through(function ($item) {
-            return [
-                'id' => $item->id,
-                'name' => $item->name,
-                'type' => $item->item_type,
-                'thumbnail' => $item->thumbnail(),
-            ];
-        });
+        $paginatedItems = $inventory->through(function ($itemData) {
+            $item = $itemData->item;
+            if ($item) {
+                $item->creator = $item->creator;
+                $item->thumbnail = $item->thumbnail();
+                return $item;
+            }
+            return null;
+        })->filter();
 
-        return $items;
+        return response()->json($inventory);
     }
+ 
 
     private function regenerate(): void
     {

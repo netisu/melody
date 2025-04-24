@@ -414,26 +414,21 @@ class UserController extends Controller
         return response()->json(['error' => false, 'message' => 'OK'], 200);
     }
 
-    public function getUserItems(int $userID, string $category = "hat")
+    public function getUserItems($userID)
     {
-        $inventory = Inventory::where('user_id', $userID)
-            ->whereHas('item', function ($query) use ($category) {
-                $query->where('item_type', $category);
-            })
-            ->paginate(10);
-        // Paginate the inventory with 10 items per page, filtered by item_type
+        $inventory = Inventory::where('user_id', $userID)->get();
+        // Changed 'first()' to 'get()' to retrieve all items
 
-        $paginatedItems = $inventory->through(function ($itemData) {
+        $items = $inventory->map(function ($itemData) {
             $item = $itemData->item;
             if ($item) {
                 $item->creator = $item->creator;
                 $item->thumbnail = $item->thumbnail();
                 return $item;
             }
-            return null;
         })->filter();
 
-        return response()->json($inventory);
+        return response()->json($items);
     }
 
     public function getUserCurrentlyWearing($userID)
