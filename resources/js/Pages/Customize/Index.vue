@@ -16,16 +16,16 @@ import VLazyImage from "v-lazy-image";
 const colors = usePage<any>().props.colors;
 const currentcat = ref("hat");
 const CategoryItems = ref<{
-  current_page: number;
-  last_page: number;
-  total: number;
-  data: any[]; // Adjust the type of your data
+    current_page: number;
+    last_page: number;
+    total: number;
+    data: any[]; // Adjust the type of your data
 } | null>(null);
 const wearingItems = ref([]);
 const wearingHats = ref([]);
 const SelectedItemID = ref<Number>();
 const slotValue = ref<Number>();
-
+const selectHatSlot = ref(false);
 
 var userAvatar = reactive({
     color_head: computed<any>(
@@ -71,13 +71,13 @@ function showModal(modalId: string): void {
 }
 
 const getItemList = async (category: Ref<string, string>, page: number) => {
-  try {
-    const response = await axios.get(route(`api.avatar.items`, { category: category, page: page}));
-    const data =  response.data;
-    CategoryItems.value = data;
-  } catch (error) {
-    console.error('Error fetching users:', error);
-  }
+    try {
+        const response = await axios.get(route(`api.avatar.items`, { category: category, page: page }));
+        const data = response.data;
+        CategoryItems.value = data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
 };
 
 const handlePageClick = (page: number) => {
@@ -185,15 +185,14 @@ const SortItemByType = async (id: number, type: string, action: string) => {
     if (action === "wear") {
         if (type === "hat") {
             SelectedItemID.value = id;
-            showModal("SlotModal");
+            selectHatSlot.value = true;
         } else {
-
             WearItem(id, "none");
         }
     } else {
         if (type === "hat") {
             SelectedItemID.value = id;
-            showModal("RemoveSlotModal");
+            selectHatSlot.value = true;
         } else {
             TakeOffItem(id, "none");
         }
@@ -274,9 +273,9 @@ function setSlotValue(e) {
 }
 
 onMounted(() => {
-    getItemsbyCategory(currentcat), 
-    getCurrentlyWearingItems(), 
-    getCurrentlyWearingHats();
+    getItemsbyCategory(currentcat.value),
+        getCurrentlyWearingItems(),
+        getCurrentlyWearingHats();
 });
 </script>
 <style scoped>
@@ -510,10 +509,48 @@ onMounted(() => {
 
         <div class="cell medium-9">
             <div class=" flex-container gap-2">
-                <span class="text-xl fw-semibold">Current Outfit</span>
+                <span class="text-xl fw-semibold">{{ selectHatSlot ? 'Pick a Hat Slot' : 'Current Outfit' }}</span>
             </div>
             <div class="mb-3 card-body">
                 <div class="grid-x">
+                    <div v-show="selectHatSlot === true" class="text-center cell medium-12">
+                        <div
+                            class="flex-container text-start flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
+                            <div class="grid-x grid-margin-x grid-padding-y">
+                                <template v-for="n in 6" :key="n" :value="n">
+                                    <div class="cell large-3 medium-3 small-6" v-if="wearingHats[n - 1]">
+                                        <div class="d-block"
+                                            @click="SortItemByType(wearingHats[n - 1].id, wearingHats[n - 1].item_type, 'remove')">
+                                            <div class="p-2 mb-1 card card-item position-relative">
+                                                <img :src="wearingHats[n - 1].thumbnail"
+                                                    :id="wearingHats[n - 1].thumbnail"
+                                                    @error="onImgErrorSmall(wearingHats[n - 1].thumbnail)" />
+                                            </div>
+                                            <Link as="p" style="cursor:pointer;"
+                                                :href="route(`store.item`, { id: wearingHats[n - 1].id })"
+                                                class="text-body text-center fw-semibold text-truncate">
+                                            {{ wearingHats[n - 1].name }}
+                                            </Link>
+                                        </div>
+                                    </div>
+                                    <div class="cell large-3 medium-3 small-6" v-else>
+                                        <div class="d-block">
+                                            <div class="p-2 mb-1 card card-item position-relative d-flex align-items-center justify-content-center"
+                                                style="min-height: 100px; cursor: pointer;"
+                                                @click="setSlotValue(n)">
+                                                <i class="fa-solid fa-hat-beach fa-3x"></i>
+                                                <div class="position-absolute bottom-0 start-0 w-100 text-center p-1"
+                                                    style="background-color: rgba(0, 0, 0, 0.05);">
+                                                    <p style="margin-bottom: 0; font-size: 0.8rem; color: #555;">Hat
+                                                        Slot {{ n }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
                     <div class="text-center cell medium-4 align-left">
                         <div class="text-center flex-container align-center">
                             <div class="text-center" style="transform:scale(0.7);margin-top:-25px;">
@@ -625,22 +662,23 @@ onMounted(() => {
                 <div class="gap-3 text-center flex-container flex-dir-column">
                     <div class="grid-x grid-margin-x">
                         <div v-if="CategoryItems && CategoryItems.data">
-                        <div v-for="item in CategoryItems.data" class="cell large-2 medium-3 small-3"
-                            @click="SortItemByType(item.id, item.type, 'wear')">
-                            <div class="d-block">
-                                <div class="p-2 mb-1 card card-inner position-relative">
-                                    <img :src="item.thumbnail" />
+                            <div v-for="item in CategoryItems.data" class="cell large-2 medium-3 small-3"
+                                @click="SortItemByType(item.id, item.type, 'wear')">
+                                <div class="d-block">
+                                    <div class="p-2 mb-1 card card-inner position-relative">
+                                        <img :src="item.thumbnail" />
+                                    </div>
+                                    <Link as="p" style="cursor:pointer;" :href="route(`store.item`, { id: item.id })"
+                                        class="text-body fw-semibold text-truncate">
+                                    {{ item.name }}
+                                    </Link>
                                 </div>
-                                <Link as="p" style="cursor:pointer;" :href="route(`store.item`, { id: item.id })"
-                                    class="text-body fw-semibold text-truncate">
-                                {{ item.name }}
-                                </Link>
                             </div>
-                        </div>
                         </div>
                     </div>
                 </div>
-                <JsonPagination v-if="CategoryItems && CategoryItems.data" @page-clicked="handlePageClick" :pagedata="CategoryItems" />
+                <JsonPagination v-if="CategoryItems && CategoryItems.data" @page-clicked="handlePageClick"
+                    :pagedata="CategoryItems" />
                 <div v-if="!CategoryItems || !CategoryItems.data.length"
                     class="gap-3 text-center flex-container flex-dir-column">
                     <i class="text-5xl fad fa-crate-apple text-muted"></i>
