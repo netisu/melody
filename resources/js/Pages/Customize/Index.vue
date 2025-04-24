@@ -4,6 +4,8 @@ import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import AppHead from '@/Components/AppHead.vue';
 import { ref, onMounted, reactive, computed } from "vue";
+import type { Ref } from "vue";
+
 import axios from "axios"; // Import Axios
 import { route } from "momentum-trail"
 import JsonPagination from '@/Components/JsonPagination.vue';
@@ -67,7 +69,8 @@ function showModal(modalId: string): void {
         modal.classList.toggle("active");
     }
 }
-const getItemList = async (page: number) => {
+
+const getItemList = async (category: Ref<string, string>, page: number) => {
   try {
     const response = await axios.get(route(`api.avatar.items`, { category: category, page: page}));
     const data =  response.data;
@@ -78,7 +81,7 @@ const getItemList = async (page: number) => {
 };
 
 const handlePageClick = (page: number) => {
-    getItemList(page);
+    getItemList(currentcat, page);
 };
 
 // Mapping of internal part names to user-friendly names
@@ -646,8 +649,8 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-                <JsonPagination v-if="CategoryItems" @page-clicked="handlePageClick" :pagedata="CategoryItems" />
-                <div v-if="!ategoryItems.data || !ategoryItems.data.length"
+                <JsonPagination v-if="CategoryItems && CategoryItems.data" @page-clicked="handlePageClick" :pagedata="CategoryItems" />
+                <div v-if="!CategoryItems && !CategoryItems.data || !CategoryItems.data.length"
                     class="gap-3 text-center flex-container flex-dir-column">
                     <i class="text-5xl fad fa-crate-apple text-muted"></i>
                     <div style="line-height: 16px">
