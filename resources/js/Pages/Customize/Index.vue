@@ -275,7 +275,7 @@ function setSlotValue(e) {
 }
 
 onMounted(() => {
-    getCurrentlyWearingItems(), getCurrentlyWearingHats();
+    getItemsbyCategory(currentcat), getCurrentlyWearingItems(), getCurrentlyWearingHats();
 });
 </script>
 <style scoped>
