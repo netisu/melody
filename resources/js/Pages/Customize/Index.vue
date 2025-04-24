@@ -511,9 +511,9 @@ onMounted(() => {
             <div class=" flex-container gap-2">
                 <span class="text-xl fw-semibold">{{ selectHatSlot ? 'Pick a Hat Slot' : 'Current Outfit' }}</span>
             </div>
-            <div class="mb-3 card-body">
+            <div class="mb-3">
                 <div class="grid-x">
-                    <div v-show="selectHatSlot === true" class="text-center cell medium-12">
+                    <template v-if="selectHatSlot === true" class="text-center cell medium-12">
                         <div
                             class="flex-container text-start flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
                             <div class="grid-x grid-margin-x grid-padding-y">
@@ -550,7 +550,8 @@ onMounted(() => {
                                 </template>
                             </div>
                         </div>
-                    </div>
+                    </template>
+                    <template v-else>
                     <div class="text-center cell medium-4 align-left">
                         <div class="text-center flex-container align-center">
                             <div class="text-center" style="transform:scale(0.7);margin-top:-25px;">
@@ -637,6 +638,7 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
+                </template>
                 </div>
             </div>
         </div>
