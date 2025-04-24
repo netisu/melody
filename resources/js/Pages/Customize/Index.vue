@@ -631,7 +631,7 @@ onMounted(() => {
             <div class="section">
                 <div class="gap-3 text-center flex-container flex-dir-column">
                     <div class="grid-x grid-margin-x">
-                        <div v-for="item in CategoryItems.data" class="cell large-2 medium-3 small-3"
+                        <div v-for="item in CategoryItems" class="cell large-2 medium-3 small-3"
                             @click="SortItemByType(item.id, item.type, 'wear')">
                             <div class="d-block">
                                 <div class="p-2 mb-1 card card-inner position-relative">
@@ -646,7 +646,7 @@ onMounted(() => {
                     </div>
                 </div>
                 <JsonPagination v-if="CategoryItems" @page-clicked="handlePageClick" :pagedata="CategoryItems" />
-                <div v-if="!CategoryItems.data || !CategoryItems.data.length"
+                <div v-if="!CategoryItems || !CategoryItems.length"
                     class="gap-3 text-center flex-container flex-dir-column">
                     <i class="text-5xl fad fa-crate-apple text-muted"></i>
                     <div style="line-height: 16px">
