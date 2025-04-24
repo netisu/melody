@@ -10,13 +10,14 @@ import path from "path";
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import viteImagemin from 'vite-plugin-imagemin'
 import compression from 'vite-plugin-compression2'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default {
     server: {
-        host: 'localhost',
+        host: '100.115.92.197',
         cors: true,
         hmr: {
-            host: 'localhost',
+            host: '100.115.92.197',
         },
         watch: {
             usePolling: false,
@@ -35,6 +36,7 @@ export default {
 
     },
     plugins: [
+        vueDevTools(),
         VitePWA({
             registerType: "autoUpdate",
             devOptions: {
@@ -66,7 +68,7 @@ export default {
                 },
             },
         }),
-        // basicSsl(),
+        basicSsl(),
         viteImagemin({}),
         compression()
     ],

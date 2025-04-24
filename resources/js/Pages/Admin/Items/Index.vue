@@ -2,7 +2,7 @@
 import { route } from "momentum-trail"
 
 import { usePage } from "@inertiajs/vue3";
-import Navbar from "@/Components/LayoutParts/Admin/AdminNavbar.vue";
+import Navbar from "@/Components/LayoutParts/Admin/AdminNav.vue";
 import AppHead from "@/Components/AppHead.vue";
 import AdminPagination from "@/Components/AdminPagination.vue";
 

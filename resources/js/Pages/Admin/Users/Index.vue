@@ -2,15 +2,22 @@
 import { route } from "momentum-trail"
 
 import { usePage } from "@inertiajs/vue3";
-import Navbar from "@/Components/LayoutParts/Admin/AdminNavbar.vue";
+import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import AppHead from "@/Components/AppHead.vue";
-import AdminPagination from "@/Components/AdminPagination.vue";
+import Pagination from "@/Components/Pagination.vue";
+import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
+import AdminNav from "@/Components/LayoutParts/Admin/AdminNav.vue";
 
 </script>
 
 <template>
   <AppHead pageTitle="User Index" description="Login to" :url="route('auth.login.page')" />
-  <Navbar>
+  <Navbar />
+  <Sidebar>
+    <div class="cell medium-3">
+            <AdminNav />
+        </div>
+        <div class="cell medium-9">
     <div class="card">
       <div class="card-content">
         <div class="columns">
@@ -65,11 +72,12 @@ import AdminPagination from "@/Components/AdminPagination.vue";
           </div>
           <div class="media-right"></div>
         </article>
-        <AdminPagination :pagedata="usePage<any>().props.users"></AdminPagination>
+        <Pagination :pagedata="usePage<any>().props.users"></Pagination>
         <div v-if="!usePage<any>().props.users.data.length">
-          No users found
+          ERR T100: No users found
         </div>
       </div>
     </div>
-  </Navbar>
+  </div>
+</Sidebar>
 </template>

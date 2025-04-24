@@ -13,28 +13,18 @@ import VLazyImage from "v-lazy-image";
 
 const colors = usePage<any>().props.colors;
 const currentcat = ref("hat");
-const CategoryItems = ref([]);
+const CategoryItems = ref<{
+  current_page: number;
+  last_page: number;
+  total: number;
+  data: any[]; // Adjust the type of your data
+} | null>(null);
 const wearingItems = ref([]);
 const wearingHats = ref([]);
 const SelectedItemID = ref<Number>();
 const slotValue = ref<Number>();
 
-const AdvancedEditor = ref(false);
-const getUserList = (page) =>{
-    if (page == undefined) {
-        var pageUrl = '/user/discover';
-    } else {
-        var pageUrl = '/user/discover/?page=' + page;
-    }
 
-    axios.get(pageUrl).then(function (response) {
-        if (response.data.hasOwnProperty('success')) {
-            CategoryItems.value = response.data.users;
-        }
-    }).catch(function (error) {
-        console.log(error);
-    });
-}
 var userAvatar = reactive({
     color_head: computed<any>(
         () => (usePage<any>().props.avatar as Record<string, unknown>)?.["color_head"]
@@ -77,6 +67,19 @@ function showModal(modalId: string): void {
         modal.classList.toggle("active");
     }
 }
+const getItemList = async (page: number) => {
+  try {
+    const response = await axios.get(route(`api.avatar.items`, { category: category, page: page}));
+    const data =  response.data;
+    CategoryItems.value = data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+
+const handlePageClick = (page: number) => {
+    getItemList(page);
+};
 
 // Mapping of internal part names to user-friendly names
 const partNames = {
@@ -172,11 +175,7 @@ function setColor(color: string): void {
 }
 
 function handlePartSelection(part: string): void {
-    if (AdvancedEditor.value == true) {
-        showModal("PartsModalAdvanced");
-    } else {
-        showModal("PartsModal");
-    }
+    showModal("PartsModal");
     selectPart(part);
 }
 const SortItemByType = async (id: number, type: string, action: string) => {
@@ -289,6 +288,7 @@ onMounted(() => {
     height: 100%;
     cursor: pointer;
 }
+
 .fade-in-avatar {
     animation: fadeIn 0.5s;
     -webkit-animation: fadeIn 0.5s;
@@ -446,6 +446,9 @@ onMounted(() => {
                             height: '32px',
                         }"></div>
                     </div>
+                    <input class="ColorPickerItem" type="color" style="background: linear-gradient(in hsl longer hue 45deg, red 0 100%);display: inline-block;
+                            width: 32px;
+                            height: 32px;" @change="setColor($event.target.value.replace('#', ''))">
                     <div class="text-xs text-muted fw-semibold">
                         After changing your avatar part your avatar will rerender with the changes
                         applied.
@@ -457,40 +460,6 @@ onMounted(() => {
                         <input v-if="selectedPart && !VrcRequest" @click="changeColor(selectedColor, selectedPart)"
                             type="submit" class="btn btn-success" value="Submit" />
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal" id="PartsModalAdvanced">
-            <div class="modal-card modal-card-body modal-card-sm">
-                <div class="section-borderless">
-                    <div class="gap-2 align-middle flex-container align-justify">
-                        <div v-if="selectedPart" class="text-lg fw-semibold">
-                            Change {{ partNames[selectedPart] }} Color
-                        </div>
-                        <div v-else class="text-lg fw-semibold">
-                            Select a part to change its color
-                        </div>
-                        <button @click="showModal('PartsModalAdvanced')" class="btn-circle"
-                            data-toggle-modal="#PartsModal" style="margin-right: -10px">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="mr-2 flex-wrap gap-1 flex-container align-center section-borderless grid-x">
-                    <div class="color-picker">
-                        <input type="color" @change="setColor($event.target.value.replace('#', ''))">
-                    </div>
-                </div>
-                <div class="text-xs text-muted fw-semibold">
-                    After changing your avatar part your avatar will rerender with the changes
-                    applied.
-                </div>
-                <div class="flex-wrap gap-2 flex-container justify-content-end section-borderless">
-                    <button class="btn btn-secondary" @click="showModal('PartsModalAdvanced')">
-                        Cancel
-                    </button>
-                    <input v-if="selectedPart && !VrcRequest" @click="changeColor(selectedColor, selectedPart)"
-                        type="submit" class="btn btn-success" value="Submit" />
                 </div>
             </div>
         </div>
@@ -537,8 +506,6 @@ onMounted(() => {
         <div class="cell medium-9">
             <div class=" flex-container gap-2">
                 <span class="text-xl fw-semibold">Current Outfit</span>
-                <button @click="AdvancedEditor = !AdvancedEditor" class="btn btn-info btn-xs text-truncate">Advanced
-                    Editor</button>
             </div>
             <div class="mb-3 card-body">
                 <div class="grid-x">
@@ -678,8 +645,7 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-                <JsonPagination v-if="CategoryItems" v-on:page-clicked="getUserList" v-bind:pagedata="CategoryItems" />
-
+                <JsonPagination v-if="CategoryItems" @page-clicked="handlePageClick" :pagedata="CategoryItems" />
                 <div v-if="!CategoryItems.data || !CategoryItems.data.length"
                     class="gap-3 text-center flex-container flex-dir-column">
                     <i class="text-5xl fad fa-crate-apple text-muted"></i>

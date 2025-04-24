@@ -12,7 +12,6 @@ import SearchResultSkeleton from "../SearchResultSkeleton.vue";
 import VLazyImage from "v-lazy-image";
 import PageLoader from "../Loaders/PageLoader.vue";
 import throttle from "lodash/throttle";
-import "../../../css/style.css";
 
 // Define the SearchResult interface
 interface SearchResult {

@@ -1,119 +1,142 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from "vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { ref, reactive, watch } from "vue";
+import { usePage } from "@inertiajs/vue3";
 import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
-import { route } from "momentum-trail"
+import { route } from "momentum-trail";
 
 import AppHead from "@/Components/AppHead.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import axios from "axios";
-import debounce from "lodash/debounce";
 import VLazyImage from "v-lazy-image";
-const form = useForm({
-    username: "",
-    displayname: "",
-    birthdate: reactive({
-        month: "",
-        day: "",
-        year: "",
+import * as z from 'zod';
+import { toTypedSchema } from '@vee-validate/zod';
+import { Field, ErrorMessage, useForm } from 'vee-validate';
+
+import { router } from '@inertiajs/vue3'
+
+const registerFormSchema = toTypedSchema(z.object({
+    username: z
+        .string()
+        .min(3, {
+            message: 'Username must be at least 3 characters.',
+        })
+        .max(20, {
+            message: 'Username must not be longer than 20 characters.',
+        }),
+    displayName: z
+        .string()
+        .min(3, {
+            message: 'Display name must be at least 3 characters.',
+        })
+        .max(30, {
+            message: 'Display name must not be longer than 30 characters.',
+        }),
+    password: z
+        .string()
+        .min(8, {
+            message: 'Your password must be at least 8 characters.',
+        }),
+    password_confirmation: z
+        .string()
+        .min(8, {
+            message: 'Password confirmation must be at least 8 characters.',
+        }),
+    birthdate: z.object({
+        month: z.number({
+            required_error: 'Please select your birth month.',
+        }),
+        day: z.number({
+            required_error: 'Please select your birth day.',
+        }),
+        year: z.number({
+            required_error: 'Please select your birth year.',
+        }),
     }),
-    starter_item: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
+    country: z
+        .string({
+            required_error: 'Please select a country.',
+        }),
+    email: z
+        .string({
+            required_error: 'Please enter your email address.',
+        })
+        .email({ message: 'Please enter a valid email address.' }),
+    bio: z
+        .string()
+        .max(160, { message: 'Bio must not be longer than 160 characters.' })
+        .min(2, { message: 'Bio must be at least 2 characters.' })
+        .optional(),
+}).refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords don't match",
+    path: ['password_confirmation'],
+}));
+
+const generateRandomNumber = (min: number, max: number): number => {
+    if (min > max) {
+        throw new Error("Minimum value cannot be greater than maximum value.");
+    }
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const placeholderUsername = usePage<any>().props.site.name + generateRandomNumber(1, 999);
+
+const { handleSubmit, values, errors, setErrors } = useForm({
+    validationSchema: registerFormSchema,
+    initialValues: {
+        username: placeholderUsername,
+        displayName: placeholderUsername,
+        country: 'jp', // fetch this dynamically later.
+        bio: 'Greetings! im new to ' + usePage<any>().props.site.name,
+        email: '',
+        password: '',
+        password_confirmation: '',
+        birthdate: {
+            month: generateRandomNumber(1, 12),
+            day: generateRandomNumber(1, 25),
+            year: generateRandomNumber(1925, 2025),
+        },
+        starter_item: '', // not used atm used in the form?
+    },
+});
+
+const submit = handleSubmit(async (formValues) => {
+    try {
+        await axios.post(route('auth.register.validate'), formValues);
+        router.visit(route('my.dashboard.page'));
+    } catch (error: any) {
+        if (error.response && error.response.status === 422) {
+            setErrors(error.response.data.errors);
+            return 'There were errors in your registration.';
+        } else {
+            return 'An unexpected error occurred during registration.';
+            console.error('Registration error:', error);
+        }
+    }
 });
 
 defineProps<{
     themes?: Object;
     items?: Object;
-    errors?: Object;
+    errors?: Record<string, string>;
 }>();
 
+watch(() => usePage<any>().props.errors, (newErrors) => {
+    if (newErrors) {
+        setErrors(newErrors);
+    }
+}, { immediate: true });
+
 const currentTheme = localStorage.getItem("theme") || null;
-
-
-let currentStep = ref(1);
+const currentStep = ref(1);
 const isStepOk = ref(false);
-
 const totalSteps = 6;
 
-const site = computed(() => usePage<any>().props.site);
-const SetValue = () => {
-    isStepOk.value = true;
-};
 const nextStep = () => {
     if (currentStep.value < totalSteps) {
         currentStep.value++;
-        isStepOk.value = false;
     }
 };
-const checkStepOne = debounce(async (email) => {
-    try {
-        await axios.get(`/sanctum/csrf-cookie`);
-        const response = await axios.get(route(`api.user.email-validate`, { email: email }));
-        if (response.data.error === true && response.data.message) {
-            // Set ForumError value here (assuming response.data.json.message contains the error message)
-            formError.value = response.data.message;
-            isStepOk.value = false;
-
-        } else {
-            // Handle successful response (e.g., set isStepOk.value to true)
-            formError.value = "";
-            isStepOk.value = true;
-        }
-    } catch (error) {
-        // Handle errors during API call or CSRF token retrieval
-        console.error("Error checking email :", error);
-        // You can display an error message to the user here
-    }
-}, 1000);
-
-const checkStepTwo = debounce(async (name) => {
-    try {
-        await axios.get(`/sanctum/csrf-cookie`);
-        const response = await axios.get(route(`api.user.name-availability`, { name: name }));
-        if (response.data.error === true && response.data.message) {
-            // Set ForumError value here (assuming response.data.json.message contains the error message)
-            formError.value = response.data.message;
-            isStepOk.value = false;
-
-        } else {
-            // Handle successful response (e.g., set isStepOk.value to true)
-            formError.value = "";
-            isStepOk.value = true;
-        }
-    } catch (error) {
-        // Handle errors during API call or CSRF token retrieval
-        console.error("Error checking name availability:", error);
-        // You can display an error message to the user here
-    }
-}, 1000);
-
-const checkStepThree = debounce(async (password, confirm) => {
-    try {
-        await axios.get(`/sanctum/csrf-cookie`);
-        const response = await axios.get(route(`api.user.password-validate`, { password: password, password_confirmation: confirm }));
-        if (response.data.error === true && response.data.message) {
-            // Set ForumError value here (assuming response.data.json.message contains the error message)
-            formError.value = response.data.message ?? response.data.errors.password;
-            isStepOk.value = false;
-
-        } else {
-            // Handle successful response (e.g., set isStepOk.value to true)
-            formError.value = "";
-            isStepOk.value = true;
-        }
-    } catch (error) {
-        // Handle errors during API call or CSRF token retrieval
-        console.error("Error checking password:", error);
-        // You can display an error message to the user here
-    }
-}, 1000);
-
-const isPreviousButtonDisabled = computed(() => {
-    return currentStep.value === 1;
-});
 
 const previousStep = () => {
     currentStep.value--;
@@ -163,16 +186,6 @@ const getStepSdesc = () => {
     }
 };
 
-const formError = ref("");
-
-const submit = () => {
-    axios.get(`/sanctum/csrf-cookie`).then(() => {
-        form.post(route(`auth.register.validate`), {
-            onFinish: () => form.reset("password"),
-        });
-    });
-};
-
 var days = reactive(
     [...Array(31).keys()].map((day) => ({
         value: day + 1,
@@ -202,19 +215,25 @@ const years = [...Array(currentYear - 1919 + 1).keys()]
     .reverse();
 
 function updateDays() {
-    const selectedMonthNumber = Number(form.birthdate.month);
+    const selectedMonthNumber = Number(values.birthdate.month);
     const daysLimit = selectedMonthNumber === 2 ? 28 : 30;
 
-    days = [...Array(daysLimit).keys()].map((day) => ({
-        value: day + 1,
-        label: (day + 1).toString(),
-    }));
+    days.length = 0; // Clear the existing array
+    days.push(
+        ...[...Array(daysLimit).keys()].map((day) => ({
+            value: day + 1,
+            label: (day + 1).toString(),
+        }))
+    );
 }
 
-updateDays(); // Call the function initially to set the days based on the default month
-
 // Watch for changes in the selected month
-watch(() => form.birthdate.month, updateDays);
+watch(() => values.birthdate.month, updateDays);
+
+// Initialize days based on the initial month value (if any)
+if (values.birthdate.month) {
+    updateDays();
+}
 </script>
 
 <template>
@@ -223,16 +242,10 @@ watch(() => form.birthdate.month, updateDays);
     <Navbar />
     <Sidebar>
         <div class="cell large-8 medium-10">
-            <div v-if="formError" class="alert alert-danger mb-2">
-                {{ formError }}
-            </div>
             <div class="card">
                 <div class="card-body">
                     <div class="progress-bar">
                         <span class="progress" :style="{ width: getProgressWidth() }"></span>
-                    </div>
-                    <div v-if="form.errors.length" class="alert alert-danger mt-2">
-                        {{ form.errors }}
                     </div>
 
                     <div class="mx-1 my-3 divider"></div>
@@ -245,7 +258,7 @@ watch(() => form.birthdate.month, updateDays);
                         </div>
                         <div class="cell medium-9">
                             <div class="text-2xl fw-semibold">
-                                Welcome to {{ site.name }}!
+                                Welcome to {{ usePage<any>().props.site.name }}!
                             </div>
                             <div class="gap-1 mb-2 flex-container flex-dir-column">
                                 <div class="text-sm text-muted fw-semibold">
@@ -259,117 +272,126 @@ watch(() => form.birthdate.month, updateDays);
                                 </div>
                             </div>
                             <form @submit.prevent="submit">
-                                <div v-if="currentStep === 1">
+                                <div v-show="currentStep === 1">
                                     <!-- First section content -->
-                                    <div class="text-xs fw-bold text-muted text-uppercase">
+                                    <div class="text-xs fw-bold text-muted text-uppercase" :class="{
+                                        'text-danger': errors.email,
+                                    }">
                                         Email Address
                                     </div>
-                                    <input v-model="form.email" @input="checkStepOne(form.email)" type="text"
-                                        class="form" placeholder="Email Address..." />
+                                    <Field v-model="values.email" type="email" class="form"
+                                        placeholder="Email Address..." name="email" />
+                                    <ErrorMessage name="email" class="text-xs text-danger fw-semibold" />
                                 </div>
-                                <div v-else-if="currentStep === 2">
+                                <div v-show="currentStep === 2">
                                     <!-- Second section content -->
                                     <div class="mb-2">
                                         <div :class="{
                                             'text-danger':
-                                                form.errors.username,
-                                        }" class="text-xs fw-bold text-danger text-uppercase">
+                                                errors.username,
+                                        }" class="text-xs fw-bold text-muted text-uppercase">
                                             Username
                                         </div>
-                                        <input type="text" v-model="form.username" name="username" class="form"
-                                            placeholder="@Username..." @input="checkStepTwo(form.username)" />
-                                        <div v-if="form.errors.username" class="text-xs text-danger fw-semibold">
-                                            {{ form.errors.username }}
-                                        </div>
+                                        <Field type="text" v-model="values.username" name="username" class="form"
+                                            placeholder="@Username..." />
+                                        <ErrorMessage name="username" class="text-xs text-danger fw-semibold" />
                                     </div>
                                     <div class="mt-2">
                                         <div :class="{
                                             'text-danger':
-                                                form.errors.displayname,
+                                                errors.displayName,
                                         }" class="text-xs fw-bold text-muted text-uppercase">
                                             Display Name
                                         </div>
-                                        <input type="text" v-model="form.displayname" name="displayname" class="form"
+                                        <Field type="text" v-model="values.displayName" name="displayName" class="form"
                                             placeholder="Display Name..." />
-                                        <div v-if="form.errors.displayname" class="text-xs text-danger fw-semibold">
-                                            {{ form.errors.displayname }}
-                                        </div>
+                                        <ErrorMessage name="displayName" class="text-xs text-danger fw-semibold" />
                                     </div>
                                 </div>
 
-                                <div v-else-if="currentStep === 3">
+                                <div v-show="currentStep === 3">
                                     <!-- Third section content -->
                                     <div class="mb-2">
                                         <div class="text-xs fw-bold text-muted text-uppercase">
                                             Password
                                         </div>
-                                        <input class="form" placeholder="Password..." v-model="form.password"
+                                        <Field class="form" placeholder="Password..." v-model="values.password"
                                             type="password" name="password" />
+                                        <ErrorMessage name="password" class="text-xs text-danger fw-semibold" />
+
                                     </div>
                                     <div class="mt-2">
                                         <div class="text-xs fw-bold text-muted text-uppercase">
                                             Confirm Password
                                         </div>
-                                        <input class="form" placeholder="Confirm Password..."
-                                            v-model="form.password_confirmation"
-                                            @input="checkStepThree(form.password, form.password_confirmation)"
-                                            type="password" name="password_confirmation" />
+                                        <Field class="form" placeholder="Confirm Password..."
+                                            v-model="values.password_confirmation" type="password"
+                                            name="password_confirmation" />
+                                        <ErrorMessage name="password_confirmation"
+                                            class="text-xs text-danger fw-semibold" />
                                     </div>
                                 </div>
-                                <div v-else-if="currentStep === 4">
+                                <div v-show="currentStep === 4">
                                     <!-- Fourth section content -->
                                     <div class="grid-x grid-margin-x grid-padding-y">
                                         <div class="cell medium-4">
                                             <div class="mb-1 text-xs fw-bold text-muted text-uppercase">
                                                 Month
                                             </div>
-                                            <select v-model="form.birthdate.month" class="form form-select"
-                                                name="birth_month" @change="updateDays">
+                                            <Field as="select" v-model="values.birthdate.month" class="form form-select"
+                                                name="birthdate.month">
                                                 <option value="">
                                                     Select Month
                                                 </option>
                                                 <option v-for="month in months" :key="month.value" :value="month.value">
                                                     {{ month.label }}
                                                 </option>
-                                            </select>
+                                            </Field>
+                                            <ErrorMessage name="birthdate.month"
+                                                class="text-xs text-danger fw-semibold" />
+
                                         </div>
                                         <div class="cell medium-4">
                                             <div class="mb-1 text-xs fw-bold text-muted text-uppercase">
                                                 Day
                                             </div>
-                                            <select v-model="form.birthdate.day" class="form form-select"
-                                                name="birth_day">
+                                            <Field as="select" v-model="values.birthdate.day" class="form form-select"
+                                                name="birthdate.day">
                                                 <option value="">
                                                     Select Day
                                                 </option>
                                                 <option v-for="day in days" :key="day.value" :value="day.value">
                                                     {{ day.label }}
                                                 </option>
-                                            </select>
+                                            </Field>
+                                            <ErrorMessage name="birthdate.day"
+                                                class="text-xs text-danger fw-semibold" />
+
                                         </div>
                                         <div class="cell medium-4">
                                             <div class="mb-1 text-xs fw-bold text-muted text-uppercase">
                                                 Year
                                             </div>
-                                            <select v-model="form.birthdate.year" class="form form-select"
-                                                name="birth_year" @change="updateDays()">
+                                            <Field as="select" v-model="values.birthdate.year" class="form form-select"
+                                                name="birthdate.year">
                                                 <option value="">
                                                     Select Year
                                                 </option>
                                                 <option v-for="year in years" :key="year.value" :value="year.value">
                                                     {{ year.label }}
                                                 </option>
-                                            </select>
+                                            </Field>
+                                            <ErrorMessage name="birthdate.year"
+                                                class="text-xs text-danger fw-semibold" />
                                         </div>
-                                        <button type="button" @click="SetValue" class="btn btn-xs w-100 btn-success">
-                                            Set </button>
+
                                     </div>
                                 </div>
-                                <div v-else-if="currentStep === 5">
+                                <div v-show="currentStep === 5">
                                     <!-- Fifth section content -->
                                     <div class="grid-x grid-margin-x grid-padding-y">
                                         <div class="cell large-6" v-for="(
-                                                theme, index
+theme, index
                                             ) in themes" :key="index">
                                             <div :class="{
                                                 active:
@@ -400,13 +422,12 @@ watch(() => form.birthdate.month, updateDays);
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="button" @click="SetValue" class="btn btn-xs w-100 btn-success">
-                                            Set </button>
+
 
                                     </div>
                                 </div>
 
-                                <div v-else-if="currentStep === 6">
+                                <div v-show="currentStep === 6">
                                     <!-- Seventh section content -->
                                     <div class="gap-2 flex-container-lg">
                                         <button class="mb-2 btn btn-gray btn-block mb-lg-0">
@@ -421,7 +442,7 @@ watch(() => form.birthdate.month, updateDays);
                                 </div>
 
                                 <!-- Add more sections as needed -->
-                                <div v-if="currentStep === 1">
+                                <div v-show="currentStep === 1">
                                     <div class="gap-1 mt-2 mb-2 flex-container flex-dir-column">
                                         <div class="text-xs text-muted fw-semibold">
                                             You can skip this step by signing up
@@ -438,29 +459,27 @@ watch(() => form.birthdate.month, updateDays);
                                                             rgb(0, 0, 0, 0.2)
                                                     );
                                                 " />
-                                             Google Sign Up
+                                            Google Sign Up
                                         </button>
                                         <button class="btn btn-discord btn-block">
                                             <i class="fab fa-discord me-1"></i>
-                                             Discord Sign Up
+                                            Discord Sign Up
                                         </button>
                                     </div>
                                 </div>
                                 <div class="mx-1 my-3 divider"></div>
                                 <div class="flex-container align-justify">
                                     <button type="button" v-if="currentStep > 1" @click="previousStep"
-                                        class="px-4 btn btn-danger" :class="{
-                                            disabled: isPreviousButtonDisabled,
-                                        }">
+                                        class="px-4 btn btn-danger">
                                         Previous
                                     </button>
                                     <button type="button" v-if="currentStep !== totalSteps" class="px-4 btn btn-success"
-                                        @click="nextStep" :disabled="!isStepOk">
+                                        @click="nextStep">
                                         Next
                                     </button>
 
                                     <button v-if="currentStep === totalSteps" type="submit" class="px-4 btn btn-success"
-                                        :disabled="form.processing">
+                                        :disabled="Object.keys(errors).length > 0">
                                         Sign Me Up!
                                     </button>
                                 </div>

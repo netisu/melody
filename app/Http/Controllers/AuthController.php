@@ -149,7 +149,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'username' => 'required|alpha_num|min:3|max:25|profane|unique:' . User::class,
-            'displayname' => 'required|alpha_num|min:3|max:25|profane',
+            'displayName' => 'required|alpha_num|min:3|max:25|profane',
             'birthdate.day' => 'required|numeric|min:1|max:31',
             'birthdate.month' => 'required|numeric|min:1|max:12',
             'birthdate.year' => 'required|numeric|min:1900|max:' . date('Y'),
@@ -166,7 +166,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'username' => $request->username,
-            'display_name' => $request->displayname,
+            'display_name' => $request->displayName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'birthdate' => $birthdate,

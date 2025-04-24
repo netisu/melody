@@ -119,31 +119,16 @@ provide("selectedSubCategory", selectedSubCategory);
                                     left: 10px;
                                 ">
                             <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
-                                <i class="fas fa-calendar-star" style="width: 18px"></i>Event
+                                <i class="fad fa-calendar-star" style="width: 18px"></i>
                             </div>
                             <div v-else-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                <i class="fas fa-star" style="width: 18px"></i>Rare
+                                <i class="fad fa-star" style="width: 18px"></i>
                             </div>
-                            <div v-else-if="item.sale_ongoing" class="mb-1 badge badge-danger fw-semibold">
-                                <i class="fas fa-badge-percent" style="width: 18px"></i>{{ item.percent_off + "%" }} off
-                            </div>
-
                             <div v-else-if="item.time_off_sale != null" class="mb-1 badge badge-warning fw-semibold">
-                                <i class="fas fa-clock" style="width: 18px"></i>Timed
+                                <i class="fad fa-clock" style="width: 18px"></i>
                             </div>
-                            <div v-if="!item.onsale" class="mb-1 badge badge-secondary fw-semibold">
-                                <i class="fas fa-shield" style="width: 18px"></i>Offsale
-                            </div>
-                            <div v-else>
-                                <div class="min-w-0 gap-1 mt-3 flex-container align-center">
-                                    <div class="mb-1 badge badge-success fw-semibold">
-                                        <i class="fad fa-money-bill-1-wave" style="width: 18px"></i>{{ item.cost_bucks
-                                        }}
-                                    </div>
-                                    <div class="mb-1 badge badge-warning fw-semibold">
-                                        <i class="fad fa-coins" style="width: 18px"></i>{{ item.cost_coins }}
-                                    </div>
-                                </div>
+                            <div v-else-if="!item.onsale" class="mb-1 badge badge-secondary fw-semibold">
+                                <i class="fad fa-wheat-slash"style="width: 18px"></i>
                             </div>
                         </div>
                         <img :src="item.thumbnail" :id="item.thumbnail" @error="onImgErrorSmall(item.thumbnail)" />
@@ -187,8 +172,7 @@ provide("selectedSubCategory", selectedSubCategory);
                             </div>
                             <div class="text-muted fw-semibold">
                                 <p class="text-xs">
-                                    There are currently no items in this
-                                    category.
+                                    There are currently no items in {{ selectedCategory }}.
                                 </p>
                             </div>
                         </div>

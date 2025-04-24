@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Navbar from "@/Components/LayoutParts/Admin/AdminNavbar.vue";
+import Navbar from "@/Components/LayoutParts/Admin/AdminNav.vue";
 import AppHead from "@/Components/AppHead.vue";
 defineProps<{
     permission: string,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { route } from "momentum-trail"
 
-import Navbar from "@/Components/LayoutParts/Admin/AdminNavbar.vue";
+import Navbar from "@/Components/LayoutParts/Admin/AdminNav.vue";
 import AppHead from "@/Components/AppHead.vue";
 </script>
 

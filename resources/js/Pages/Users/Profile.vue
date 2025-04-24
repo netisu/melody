@@ -448,64 +448,7 @@ watch(following, (newValue, oldValue) => {
             <div v-if="ActiveCategory === 'Inventory'">
                 <span class="text-xl fw-semibold">Current Outfit</span>
                 <div class="grid-x grid-margin-x">
-                    <div class="text-center cell large-5">
-                        <div style="max-width: 100vw">
-                            <div class="flex-container align-center-sm">
-                                <div class="text-center" style="transform: scale(0.6);margin-top:-25px">
-                                    <div style="margin-bottom: 5px">
-                                        <button class="avatar-body-part" id="head" :style="{
-                                                backgroundColor: '#' + userAvatar.color_head,
-                                                padding: '5px',
-                                                borderRadius: '15px',
-                                                marginTop: '-1px',
-                                                width: '60',
-                                                height: '50',
-                                            }">
-                                            <VLazyImage :src="userAvatar.current_face"
-                                                :src-placeholder="usePage<any>().props.site.production.domains.storage + '/assets/default.png'"
-                                                width="50" height="50" />
-                                        </button>
-                                    </div>
-                                    <div style="margin-bottom: 5px">
-                                        <button class="avatar-body-part" id="right_arm" :style="{
-                                                backgroundColor: '#' + userAvatar.color_right_arm,
-                                                padding: '45px 20px',
-                                                marginRight: '5px',
-                                            }"></button>
-
-
-                                        <button class="avatar-body-part" id="torso" :style="{
-                                                backgroundColor: '#' + userAvatar.color_torso,
-                                                padding: '45px',
-                                            }"></button>
-
-                                        <button class="avatar-body-part" id="left_arm" :style="{
-                                                backgroundColor: '#' + userAvatar.color_left_arm,
-                                                padding: '45px 20px',
-                                                marginLeft: '5px',
-                                            }"></button>
-
-                                    </div>
-                                    <div>
-                                        <button class="avatar-body-part" name="right_leg" :style="{
-                                                backgroundColor: '#' + userAvatar.color_right_leg,
-                                                marginRight: '5px',
-                                                paddingRight: '18px',
-                                                padding: '45px 20px',
-
-                                            }"></button>
-
-                                        <button class="avatar-body-part" name="left_leg" :style="{
-                                                backgroundColor: '#' + userAvatar.color_left_leg,
-                                                padding: '45px 20px',
-                                                paddingRight: '18px',
-                                            }"></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center cell large-7">
+                    <div class="text-center cell large-12">
                         <div
                             class="flex-container align-center-sm text-start flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
                             <div v-if="ItemLoading || (items && items.length > 0)"
@@ -544,7 +487,7 @@ watch(following, (newValue, oldValue) => {
                                     </div>
                                 </div>
                             </div>
-                            <div v-if="!CurentlyWearingItems.length"
+                            <div v-if="!ItemLoading && !CurentlyWearingItems.length"
                                 class="align-center justify-center text-center flex-container">
                                 <div class="pb-0 card-body">
                                     <div
