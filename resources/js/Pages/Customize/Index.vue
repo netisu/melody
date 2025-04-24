@@ -202,7 +202,6 @@ const SortItemByType = async (id: number, type: string, action: string) => {
 };
 
 const getItemsbyCategory = async (category) => {
-    console.log(CategoryItems);
     try {
         const response = await axios.get(route(`api.avatar.items`, { category: category }));
         CategoryItems.value = response.data;
@@ -275,7 +274,9 @@ function setSlotValue(e) {
 }
 
 onMounted(() => {
-    getItemsbyCategory(currentcat), getCurrentlyWearingItems(), getCurrentlyWearingHats();
+    getItemsbyCategory(currentcat), 
+    getCurrentlyWearingItems(), 
+    getCurrentlyWearingHats();
 });
 </script>
 <style scoped>
@@ -640,7 +641,7 @@ onMounted(() => {
                     </div>
                 </div>
                 <JsonPagination v-if="CategoryItems && CategoryItems.data" @page-clicked="handlePageClick" :pagedata="CategoryItems" />
-                <div v-if="!CategoryItems && !CategoryItems.data || !CategoryItems.data.length"
+                <div v-if="!CategoryItems || !CategoryItems.data.length"
                     class="gap-3 text-center flex-container flex-dir-column">
                     <i class="text-5xl fad fa-crate-apple text-muted"></i>
                     <div style="line-height: 16px">
