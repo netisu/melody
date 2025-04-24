@@ -416,19 +416,20 @@ class UserController extends Controller
 
     public function getUserItems($userID)
     {
-        $inventory = Inventory::where('user_id', $userID)->get();
-        // Changed 'first()' to 'get()' to retrieve all items
+        $inventory = Inventory::where('user_id', $userID)->paginate(10);
+        // Paginate the inventory with 10 items per page
 
-        $items = $inventory->map(function ($itemData) {
+        $paginatedItems = $inventory->through(function ($itemData) {
             $item = $itemData->item;
             if ($item) {
                 $item->creator = $item->creator;
                 $item->thumbnail = $item->thumbnail();
                 return $item;
             }
+            return null;
         })->filter();
 
-        return response()->json($items);
+        return response()->json($inventory);
     }
 
     public function getUserCurrentlyWearing($userID)
