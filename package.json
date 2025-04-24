@@ -103,7 +103,6 @@
     "esbuild",
     "gifsicle",
     "javascript-obfuscator",
-    "jpegtran-bin",
     "mozjpeg",
     "optipng-bin",
     "pngquant-bin"
