@@ -414,10 +414,14 @@ class UserController extends Controller
         return response()->json(['error' => false, 'message' => 'OK'], 200);
     }
 
-    public function getUserItems($userID)
+    public function getUserItems(int $userID, string $category = "hat")
     {
-        $inventory = Inventory::where('user_id', $userID)->paginate(10);
-        // Paginate the inventory with 10 items per page
+        $inventory = Inventory::where('user_id', $userID)
+            ->whereHas('item', function ($query) use ($category) {
+                $query->where('item_type', $category);
+            })
+            ->paginate(10);
+        // Paginate the inventory with 10 items per page, filtered by item_type
 
         $paginatedItems = $inventory->through(function ($itemData) {
             $item = $itemData->item;
