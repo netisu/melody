@@ -18,7 +18,7 @@ class AvatarController extends Controller
 {
     public function getItemsByCategory(string $category = "hat")
     {
-        $inventory = Inventory::where('user_id', $userID)
+        $inventory = Inventory::where('user_id', Auth::id())
             ->whereHas('item', function ($query) use ($category) {
                 $query->where('item_type', $category);
             })
@@ -37,8 +37,7 @@ class AvatarController extends Controller
 
         return response()->json($inventory);
     }
- 
-
+    
     private function regenerate(): void
     {
         UserRenderer::dispatch(Auth::user()->id)->onQueue('user-render');
