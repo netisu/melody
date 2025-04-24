@@ -202,13 +202,13 @@ const SortItemByType = async (id: number, type: string, action: string) => {
 };
 
 const getItemsbyCategory = async (category) => {
+    console.log(CategoryItems);
     try {
         const response = await axios.get(route(`api.avatar.items`, { category: category }));
         CategoryItems.value = response.data;
-        console.log(CategoryItems);
         currentcat.value = category;
     } catch (error) {
-        console.error("Error fetching all items:", error);
+        console.error("Error fetching items:", error);
         return [];
     }
 };
@@ -580,18 +580,6 @@ onMounted(() => {
                                     :key="index">
                                     <div class="d-block" @click="SortItemByType(item.id, item.item_type, 'remove')">
                                         <div class="p-2 mb-1 card card-item position-relative">
-                                            <div style="
-                                    position: absolute;
-                                    bottom: 10px;
-                                    left: 10px;
-                                ">
-                                                <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
-                                                    <i class="fas fa-calendar-star" style="width: 18px"></i>Event
-                                                </div>
-                                                <div v-else-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                                    <i class="fas fa-star" style="width: 18px"></i>Rare
-                                                </div>
-                                            </div>
                                             <img :src="item.thumbnail" :id="item.thumbnail"
                                                 @error="onImgErrorSmall(item.thumbnail)" />
                                         </div>
@@ -635,6 +623,7 @@ onMounted(() => {
             <div class="section">
                 <div class="gap-3 text-center flex-container flex-dir-column">
                     <div class="grid-x grid-margin-x">
+                        <div v-if="CategoryItems && CategoryItems.data">
                         <div v-for="item in CategoryItems.data" class="cell large-2 medium-3 small-3"
                             @click="SortItemByType(item.id, item.type, 'wear')">
                             <div class="d-block">
@@ -646,6 +635,7 @@ onMounted(() => {
                                 {{ item.name }}
                                 </Link>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
