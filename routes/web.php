@@ -129,7 +129,6 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
         Route::get('/chocolateBunny/starMaps/thanksgivingCheer', [ArgassetsController::class, 'stepFour']);
         Route::get('/chocolateBunny/starMaps/thanksgivingCheer/hiddenGems', [ArgassetsController::class, 'stepFive']);
         Route::get('/chocolateBunny/starMaps/thanksgivingCheer/hiddenGems/springRenewal', [ArgassetsController::class, 'endStep']);
-
     });
 
     Route::get('/subscription-checkout', function (Request $request) {

@@ -101,8 +101,7 @@ Route::group(['as' => 'api.'], function () {
             return redirect()->to(config('Values.production.domains.main'));
         });
         Route::get('/{category}', [AvatarController::class, 'getItemsByCategory'])->name('items');
-        Route::get('/wearing', [AvatarController::class, 'getWearingIhtems'])->name('wearing-items');
-        Route::get('/wearing-hats', [AvatarController::class, 'getWearingHats'])->name('wearing-hats');
+        Route::get('/wearing/hats', [AvatarController::class, 'getWearingHats'])->name('wearing-hats');
 
         Route::get('/wear/{id}/{slot}', [AvatarController::class, 'WearItem'])->name('wear-item');
         Route::get('/take-off/{id}/{slot}', [AvatarController::class, 'RemoveItem'])->name('remove-item');

@@ -81,7 +81,7 @@ const getItemList = async (category: Ref<string, string>, page: number) => {
 };
 
 const handlePageClick = (page: number) => {
-    getItemList(currentcat, page);
+    getItemList(currentcat.value, page);
 };
 
 // Mapping of internal part names to user-friendly names
@@ -268,8 +268,19 @@ const TakeOffItem = async (id, slot) => {
     }
 };
 
-function setSlotValue(e) {
-    slotValue.value = e.target.value;
+function fillSlot(slotNumber) {
+    console.log('Clicked on Hat Slot:', slotNumber);
+
+    slotValue.value = slotNumber;
+    WearItem(SelectedItemID.value, slotValue.value)
+}
+
+function onImgErrorSmall(id) {
+    let source = document.getElementById(id) as HTMLImageElement;
+    source.src = "/assets/img/dummy-error.png";
+    source.onerror = null;
+
+    return true;
 }
 
 onMounted(() => {
@@ -355,72 +366,6 @@ onMounted(() => {
     <AppHead pageTitle="Customize" description="Customize your charcter." :url="route('auth.login.page')" />
     <Navbar />
     <Sidebar>
-        <div class="modal" id="RemoveSlotModal">
-            <div class="modal-card modal-card-body modal-card-sm">
-                <div class="section-borderless">
-                    <div class="gap-2 align-middle flex-container align-justify">
-                        <div class="text-lg fw-semibold">Pick a Slot</div>
-                        <button @click="showModal('RemoveSlotModal')" class="btn-circle"
-                            data-toggle-modal="#RemoveSlotModal" style="margin-right: -10px">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="section-borderless">
-                    <div class="mb-2">
-                        <div class="flex-wrap gap-1 flex-container align-center">
-                            <button class="btn btn-info" v-for="n in 6" :key="n" :value="n"
-                                @click="setSlotValue($event)">
-                                <i class="mr-1 fa-solid fa-hat-beach"></i>
-                                Slot {{ n }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap gap-2 flex-container justify-content-end section-borderless">
-                    <button type="button" class="btn btn-secondary" @click="showModal('RemoveSlotModal')">
-                        Cancel
-                    </button>
-                    <button v-if="!VrcRequest" type="submit" class="btn btn-success"
-                        @click="TakeOffItem(SelectedItemID, slotValue)">
-                        Take Off
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="modal" id="SlotModal">
-            <div class="modal-card modal-card-body modal-card-sm">
-                <div class="section-borderless">
-                    <div class="gap-2 align-middle flex-container align-justify">
-                        <div class="text-lg fw-semibold">Pick a Slot</div>
-                        <button @click="showModal('SlotModal')" class="btn-circle" data-toggle-modal="#SlotModal"
-                            style="margin-right: -10px">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="section-borderless">
-                    <div class="mb-2">
-                        <div class="flex-wrap gap-1 flex-container align-center">
-                            <button class="btn btn-info" v-for="n in 6" :key="n" :value="n"
-                                @click="setSlotValue($event)">
-                                <i class="mr-1 fa-solid fa-hat-beach"></i>
-                                Slot {{ n }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap gap-2 flex-container justify-content-end section-borderless">
-                    <button type="button" class="btn btn-secondary" @click="showModal('SlotModal')">
-                        Cancel
-                    </button>
-                    <button v-if="!VrcRequest" type="submit" class="btn btn-success"
-                        @click="WearItem(SelectedItemID, slotValue)">
-                        Wear
-                    </button>
-                </div>
-            </div>
-        </div>
         <div class="modal" id="PartsModal">
             <div class="modal-card modal-card-body modal-card-sm">
                 <div class="section-borderless">
@@ -452,7 +397,7 @@ onMounted(() => {
                     </div>
                     <input class="ColorPickerItem" type="color" style="background: linear-gradient(in hsl longer hue 45deg, red 0 100%);display: inline-block;
                             width: 32px;
-                            height: 32px;" @change="setColor($event.target.value.replace('#', ''))">
+                            height: 32px;" @change="setColor(($event.target as HTMLInputElement).value.replace('#', ''))">
                     <div class="text-xs text-muted fw-semibold">
                         After changing your avatar part your avatar will rerender with the changes
                         applied.
@@ -519,9 +464,8 @@ onMounted(() => {
                             <div class="grid-x grid-margin-x grid-padding-y">
                                 <template v-for="n in 6" :key="n" :value="n">
                                     <div class="cell large-3 medium-3 small-6" v-if="wearingHats[n - 1]">
-                                        <div class="d-block"
-                                            @click="SortItemByType(wearingHats[n - 1].id, wearingHats[n - 1].item_type, 'remove')">
-                                            <div class="p-2 mb-1 card card-item position-relative">
+                                        <div class="d-block">
+                                            <div @click="SortItemByType(wearingHats[n - 1].id, wearingHats[n - 1].item_type, 'wear')" class="p-2 mb-1 card card-item position-relative">
                                                 <img :src="wearingHats[n - 1].thumbnail"
                                                     :id="wearingHats[n - 1].thumbnail"
                                                     @error="onImgErrorSmall(wearingHats[n - 1].thumbnail)" />
@@ -537,8 +481,8 @@ onMounted(() => {
                                         <div class="d-block">
                                             <div class="p-2 mb-1 card card-item position-relative d-flex align-items-center justify-content-center"
                                                 style="min-height: 100px; cursor: pointer;"
-                                                @click="setSlotValue(n)">
-                                                <i class="fa-solid fa-hat-beach fa-3x"></i>
+                                                @click="fillSlot(n)">
+                                                <i class="fa-solid fa-hat-beach text-2xl"></i>
                                                 <div class="position-absolute bottom-0 start-0 w-100 text-center p-1"
                                                     style="background-color: rgba(0, 0, 0, 0.05);">
                                                     <p style="margin-bottom: 0; font-size: 0.8rem; color: #555;">Hat
@@ -613,7 +557,7 @@ onMounted(() => {
                     </div>
                     <div class="text-center cell medium-8">
                         <div
-                            class="flex-container text-start  flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
+                            class="flex-container text-start flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
                             <div class="grid-x grid-margin-x grid-padding-y">
                                 <div class="cell large-3 medium-3 small-6" v-for="(item, index) in wearingItems"
                                     :key="index">
@@ -649,7 +593,7 @@ onMounted(() => {
                 </div>
                 <div class="cell large-3">
                     <div class="gap-2 align-middle flex-container-lg">
-                        <select @change="getItemsbyCategory($event.target.value)"
+                        <select @change="getItemsbyCategory(($event.target as HTMLInputElement).value)"
                             class="mb-2 form form-xs form-select form-has-section-color">
                             <option v-for="category in usePage<any>().props.categories" :key="category.internal"
                                 :value="category.internal" :active="currentcat === category.internal">
@@ -663,11 +607,10 @@ onMounted(() => {
             <div class="section">
                 <div class="gap-3 text-center flex-container flex-dir-column">
                     <div class="grid-x grid-margin-x">
-                        <div v-if="CategoryItems && CategoryItems.data">
-                            <div v-for="item in CategoryItems.data" class="cell large-2 medium-3 small-3"
-                                @click="SortItemByType(item.id, item.type, 'wear')">
+                        <template v-if="CategoryItems && CategoryItems.data">
+                            <div v-for="item in CategoryItems.data" class="cell large-2 medium-3 small-6">
                                 <div class="d-block">
-                                    <div class="p-2 mb-1 card card-inner position-relative">
+                                    <div @click="SortItemByType(item.id, item.item_type, 'wear')" class="p-2 mb-1 card card-inner position-relative">
                                         <img :src="item.thumbnail" />
                                     </div>
                                     <Link as="p" style="cursor:pointer;" :href="route(`store.item`, { id: item.id })"
@@ -676,7 +619,7 @@ onMounted(() => {
                                     </Link>
                                 </div>
                             </div>
-                        </div>
+                        </template>
                     </div>
                 </div>
                 <JsonPagination v-if="CategoryItems && CategoryItems.data" @page-clicked="handlePageClick"

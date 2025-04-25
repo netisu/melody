@@ -22,8 +22,8 @@ class AvatarController extends Controller
             ->whereHas('item', function ($query) use ($category) {
                 $query->where('item_type', $category);
             })
-            ->paginate(10);
-        // Paginate the inventory with 10 items per page, filtered by item_type
+            ->paginate(24);
+        // Paginate the inventory with 24 items per page, filtered by item_type
 
         $paginatedItems = $inventory->through(function ($itemData) {
             $item = $itemData->item;
@@ -37,7 +37,7 @@ class AvatarController extends Controller
 
         return response()->json($inventory);
     }
-    
+
     private function regenerate(): void
     {
         UserRenderer::dispatch(Auth::user()->id)->onQueue('user-render');
@@ -177,29 +177,36 @@ class AvatarController extends Controller
 
 
     public function getWearingHats()
-    {
-        // Return Wearing Hats
-        $cacheKey = 'wearing_items_hats'; // Use a specific cache key for hat searches
+{
+    $cacheKey = 'wearing_hats.' . Auth::id();
 
-        $items = Cache::remember($cacheKey, now()->addMinutes(5), function () {
-            return Avatar::where(function ($query) {
-                $hatColumns = ['hat_1', 'hat_2', 'hat_3', 'hat_4', 'hat_5', 'hat_6']; // Hat database columns
+    $items = Cache::remember($cacheKey, now()->addMinutes(5), function () {
+        $avatar = Avatar::where('user_id', Auth::id())->first();
 
-                // Constrain the query using OR clauses for each hat column
-                foreach ($hatColumns as $column) {
-                    $query->orWhere($column, '!=', null); // Filter for non-null values
+        if (!$avatar) {
+            return collect(); // Return an empty collection if no avatar is found for the user
+        }
+
+        $hatColumns = ['hat_1', 'hat_2', 'hat_3', 'hat_4', 'hat_5', 'hat_6'];
+        $wearingHats = collect();
+
+        foreach ($hatColumns as $column) {
+            if ($avatar->{$column} !== null) {
+                $hat = Item::find($avatar->{$column});
+                if ($hat) {
+                    $wearingHats->push([
+                        'id' => $hat->id,
+                        'type' => $hat->item_type,
+                        'name' => $hat->name,
+                        'thumbnail' => $hat->thumbnail(),
+                    ]);
                 }
-            })->where('user_id', '=', Auth::id())
-                ->through(function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'type' => $item->item_type,
-                        'name' => $item->name,
-                        'thumbnail' => $item->thumbnail(),
-                    ];
-                });
-        });
+            }
+        }
 
-        return response()->json($items);
-    }
+        return $wearingHats;
+    });
+
+    return response()->json($items);
+}
 }
