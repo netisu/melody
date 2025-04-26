@@ -94,6 +94,13 @@
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.2);
     box-shadow: 0 1px 3px rgb(0, 0, 0, 0.2);
 }
+.alert-maintenance {
+    background-image: url('/assets/img/site-banners/netisuxTyphoon.png') !important; 
+    background-repeat: no-repeat;
+    color: #ffffff !important;
+    border: none;
+
+}
 .alert-success {
     background: var(--success-500);
     color: #ffffff !important;

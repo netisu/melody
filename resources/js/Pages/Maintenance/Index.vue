@@ -8,20 +8,27 @@ import "../../../css/style.css";
 
 const { props } = usePage<any>();
 </script>
-<style scoped>
-.fa-gradient.text-info {
-    background: -webkit-gradient(linear, left top, left bottom, from(var(--info-600)), to(#fff));
+<style>
+body {
+  background-image: url('/assets/img/site-banners/netisuxTyphoon.png') !important; 
+  background-repeat: no-repeat;
+}
+.fa-gradient.text-success {
+    background: -webkit-gradient(linear, left top, left bottom, from(var(--success-500)), to(#fff));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 .fa-gradient.text-danger {
     background: -webkit-gradient(linear, left top, left bottom, from(var(--danger-600)), to(#fff));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 .fa-gradient.text-warning {
     background: -webkit-gradient(linear, left top, left bottom, from(var(--warning-600)), to(#fff));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 </style>
@@ -65,7 +72,7 @@ const { props } = usePage<any>();
         </form>
     </div>
     <main class="container px-4 text-center flex-dir-column loading-page">
-        <i class="fas fa-screwdriver-wrench fa-gradient text-info text-7xl " focusable="false" id="icon"
+        <i class="fas fa-screwdriver-wrench fa-gradient text-success text-7xl " focusable="false" id="icon"
             @click="countClicks"></i>
         <h1 class="mt-3 mb-0">We'll be back soon!</h1>
         <h3 class="mt-0 text-muted">We're performing some maintenance at the moment.</h3>
@@ -107,7 +114,7 @@ export default {
         "text-muted",
         "text-upgrade",
         "text-danger",
-        "text-info",
+        "text-success",
         "text-warning",
       ],
     };
