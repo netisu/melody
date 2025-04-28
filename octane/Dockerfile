@@ -3,11 +3,11 @@ ARG WWWGROUP=www-data
 ARG NODE_VERSION=20
 ARG PHP_VERSION=8.4
 
-FROM ubuntu:25.04 AS base
+FROM ubuntu:24.04 AS base
 
 WORKDIR /var/www/html
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
