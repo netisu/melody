@@ -67,7 +67,7 @@ RUN php artisan migrate --force
 
 # Run frontend builds in production
 RUN npm i bun -g
-RUN bun install --production
+RUN bun install
 RUN bun run build
 
 # --- FrankenPHP Stage ---
