@@ -12,12 +12,14 @@ services:
                 NODE_VERSION: '${NODE_VERSION:-23}'
         restart: unless-stopped
         ports:
-            - '${APP_PORT:-8000}:80' # FrankenPHP listens on port 80 by default
+            - '${APP_PORT:-8000}:8000'
+            - '${REDIS_PORT:-6379}:6379'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '${VITE_REVERB_PORT:-8080}:${VITE_REVERB_PORT:-8080}'
             - '443:443' 
             - '443:443/udp' 
         environment:
             WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-debug}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
         volumes:
