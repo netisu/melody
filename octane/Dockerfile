@@ -58,7 +58,7 @@ RUN cp .env.example .env
 # Change APP_ENV and APP_DEBUG to be production ready
 RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
 
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+RUN composer install --ignore-platform-reqs --no-dev -a
 RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan config:cache
