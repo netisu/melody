@@ -48,6 +48,16 @@ RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 # Copy application code
 COPY --chown=${WWWUSER}:${WWWGROUP} . /var/www/html
 
+# Remove the tests and other unneeded files to save space
+# Alternatively, add these files to a .dockerignore file
+RUN rm -Rf tests/
+
+# Copy .env file
+RUN cp .env.example .env
+
+# Change APP_ENV and APP_DEBUG to be production ready
+RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
+
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 RUN php artisan event:cache
 RUN php artisan route:cache
