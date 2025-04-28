@@ -1,37 +1,65 @@
+version: '3.8'
+
 services:
     web:
         build:
             context: ./
             dockerfile: ./octane/Dockerfile
+            target: frankenphp
             args:
-                WWWGROUP: '${WWWGROUP}'
+                WWWUSER: '${WWWUSER:-www-data}'
+                WWWGROUP: '${WWWGROUP:-www-data}'
+                PHP_VERSION: '${PHP_VERSION:-8.4}'
+                NODE_VERSION: '${NODE_VERSION:-20}'
+        restart: unless-stopped
         ports:
-            - '${APP_PORT:-8000}:8000'
-            - '${REDIS_PORT:-6379}:6379'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-            - '${VITE_REVERB_PORT:-8080}:${VITE_REVERB_PORT:-8080}'
+            - '${APP_PORT:-8000}:80' # FrankenPHP listens on port 80 by default
             - '443:443'
-            - '443:443/udp'
         environment:
-            SUPERVISOR_PHP_COMMAND: "/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --host=localhost --port=443 --admin-port=2019 --https"
-            XDG_CONFIG_HOME:  /var/www/html/config
-            XDG_DATA_HOME:  /var/www/html/data
+            FRANKENPHP_CONFIG: |
+                server {
+                    root /var/www/html/public;
+                    listen :80
+                    listen :443 {
+                        tls_cert = "/etc/frankenphp/certs/fullchain.pem"
+                        tls_key = "/etc/frankenphp/certs/privkey.pem"
+                    }
+
+                    location / {
+                        try_files $uri $uri/ /index.php?$query_string;
+                    }
+
+                    location ~ ^/(assets|build|favicon\.ico|robots\.txt) {
+                        expires max;
+                    }
+
+                    location ~ \.php$ {
+                        fastcgi_pass [::1]:9000;
+                        fastcgi_index index.php;
+                        include fastcgi_params;
+                        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    }
+                }
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-debug}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
         volumes:
-            - './:${WORKDIR}'
-            - './vendor/:${WORKDIR}/vendor'
-        networks:
-            - sail
+            - .:/var/www/html:ro
+            # - ./path/to/your/ssl/fullchain.pem:/etc/frankenphp/certs/fullchain.pem
+            # - ./path/to/your/ssl/privkey.pem:/etc/frankenphp/certs/privkey.pem:ro
+            - ./octane/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+            - ./octane/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
         depends_on:
             - mysql
             - redis
             - minio
-            - mailpit
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
+            - meilisearch
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-80}/up"] # health check endpoint
+            interval: 5s
+            timeout: 3s
+            retries: 3
     mysql:
         image: 'mysql/mysql-server:${MYSQL_VERSION:-8.0}'
         ports:
@@ -42,11 +70,9 @@ services:
             MYSQL_DATABASE: '${DB_DATABASE}'
             MYSQL_USER: '${DB_USERNAME}'
             MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_ALLOW_EMPTY_PASSWORD: 0
         volumes:
             - '${DB_VOLUME_LOCAL:-./database/mysql-test-data}:/var/lib/mysql'
-        networks:
-            - sail
         healthcheck:
             test:
                 - CMD
@@ -61,8 +87,6 @@ services:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
             - '${REDIS_VOLUME_LOCAL:-./database/redis-data}:/data'
-        networks:
-            - sail
         healthcheck:
             test:
                 - CMD
@@ -80,8 +104,6 @@ services:
             MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD:-password}'
         volumes:
             - '${MINIO_VOLUME_LOCAL:-./storage/minio-data}:/data'
-        networks:
-            - sail
         command: 'minio server /data/minio --console-address ":${FORWARD_MINIO_CONSOLE_PORT}"'
         healthcheck:
             test:
@@ -96,24 +118,6 @@ services:
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-        volumes:
-            - '${MP_VOLUME_LOCAL:-./storage/mail-data}:/data'
-        networks:
-            - sail
-    phpmyadmin:
-        depends_on:
-            - mysql
-        image: phpmyadmin/phpmyadmin
-        restart: always
-        container_name: pma
-        environment:
-            PMA_HOST: mysql
-            MYSQL_USERNAME: '${DB_USERNAME}'
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-        ports:
-            - '8081:80'
-        networks:
-            - sail
     meilisearch:
         image: 'getmeili/meilisearch:latest'
         container_name: meilisearch
@@ -124,16 +128,5 @@ services:
             MEILI_NO_ANALYTICS: '${MEILISEARCH_NO_ANALYTICS}'
             MEILI_NO_SENTRY: '${MEILISEARCH_NO_SENTRY}'
             MEILI_MASTER_KEY: '${MEILISEARCH_KEY}'
-        networks:
-            - sail
         volumes:
             - './meilisearch-data:/meilisearch-data'
-    memcached:
-        image: 'memcached:alpine'
-        ports:
-            - '${FORWARD_MEMCACHED_PORT:-11211}:11211'
-        networks:
-            - sail
-networks:
-    sail:
-        driver: bridge
