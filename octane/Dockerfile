@@ -64,7 +64,6 @@ RUN php artisan route:cache
 RUN php artisan config:cache
 RUN php artisan view:cache
 RUN php artisan migrate --force
-RUN php artisan queue:restart
 
 # Run frontend builds in production
 RUN bun install --frozen-lockfile --production
