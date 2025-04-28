@@ -24,6 +24,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends php${PHP_VERSION}-cli php${PHP_VERSION}-fpm php${PHP_VERSION}-pgsql php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-gd php${PHP_VERSION}-imagick \
     php${PHP_VERSION}-curl php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-zip php${PHP_VERSION}-bcmath php${PHP_VERSION}-gmp php${PHP_VERSION}-intl php${PHP_VERSION}-mysql
 
+RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
+
 # Install Composer
 RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
@@ -86,13 +88,14 @@ RUN mkdir -p /etc/frankenphp/certs
 COPY --chown=WWWUSER:WWWGROUP . /var/www/html
 
 # Copy PHP configuration files
+COPY ./octane/start-container /usr/local/bin/start-container
 COPY ./octane/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./octane/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Set permissions for storage and bootstrap cache
 RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 80 443
+EXPOSE 8000 443
 
 # Run FrankenPHP
 ENTRYPOINT ["/usr/local/bin/frankenphp", "run", "--config=/etc/frankenphp/config.toml"]

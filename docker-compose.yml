@@ -13,7 +13,8 @@ services:
         restart: unless-stopped
         ports:
             - '${APP_PORT:-8000}:80' # FrankenPHP listens on port 80 by default
-            - '443:443'
+            - '443:443' 
+            - '443:443/udp' 
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
