@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Facades\Event;
 use Inertia\Ssr\Gateway;
 use App\Http\Ssr\HttpGateway;
+use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         Model::unguard();
+        if (class_exists(TelescopeApplicationServiceProvider::class)) {
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**
