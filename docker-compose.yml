@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
     web:
@@ -16,30 +15,6 @@ services:
             - '${APP_PORT:-8000}:80' # FrankenPHP listens on port 80 by default
             - '443:443'
         environment:
-            FRANKENPHP_CONFIG: |
-                server {
-                    root /var/www/html/public;
-                    listen :80
-                    listen :443 {
-                        tls_cert = "/etc/frankenphp/certs/fullchain.pem"
-                        tls_key = "/etc/frankenphp/certs/privkey.pem"
-                    }
-
-                    location / {
-                        try_files $uri $uri/ /index.php?$query_string;
-                    }
-
-                    location ~ ^/(assets|build|favicon\.ico|robots\.txt) {
-                        expires max;
-                    }
-
-                    location ~ \.php$ {
-                        fastcgi_pass [::1]:9000;
-                        fastcgi_index index.php;
-                        include fastcgi_params;
-                        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                    }
-                }
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-debug}'
