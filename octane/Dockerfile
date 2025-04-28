@@ -98,4 +98,4 @@ RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 EXPOSE 8000 443
 
 # Run FrankenPHP
-ENTRYPOINT ["/usr/local/bin/frankenphp", "run", "--config=/etc/frankenphp/config.toml"]
+ENTRYPOINT ["start-container"]
