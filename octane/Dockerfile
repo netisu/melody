@@ -1,5 +1,5 @@
-ARG ${WWWUSER}=www-data
-ARG ${WWWGROUP}=www-data
+ARG WWWUSER=www-data
+ARG WWWGROUP=www-data
 ARG NODE_VERSION=23
 ARG PHP_VERSION=8.4
 
@@ -39,14 +39,14 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create system user for PHP-FPM/FrankenPHP
-RUN addgroup --system ${WWWGROUP} && \
-    adduser --system --gid ${WWWGROUP} --home /var/www --shell /bin/bash ${WWWUSER}
+RUN addgroup --system WWWGROUP && \
+    adduser --system --gid WWWGROUP --home /var/www --shell /bin/bash WWWUSER
 
 # Set file permissions
-RUN chown -R ${WWWUSER}:${WWWGROUP} /var/www/html
+RUN chown -R WWWUSER:WWWGROUP /var/www/html
 
 # Copy application code
-COPY --chown=${WWWUSER}:${WWWGROUP} . /var/www/html
+COPY --chown=WWWUSER:WWWGROUP . /var/www/html
 
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 RUN php artisan event:cache
@@ -63,8 +63,8 @@ RUN bun run build
 # --- FrankenPHP Stage ---
 FROM base AS frankenphp
 
-ARG ${WWWUSER}
-ARG ${WWWGROUP}
+ARG WWWUSER
+ARG WWWGROUP
 
 # Install FrankenPHP
 RUN curl -fsSL https://get.frankenphp.dev/install.sh | bash
@@ -73,7 +73,7 @@ RUN curl -fsSL https://get.frankenphp.dev/install.sh | bash
 RUN mkdir -p /etc/frankenphp/certs
 
 # Copy application (again, to ensure correct user in final image)
-COPY --chown=${WWWUSER}:${WWWGROUP} . /var/www/html
+COPY --chown=WWWUSER:WWWGROUP . /var/www/html
 
 # Copy PHP configuration files
 COPY ./octane/php.ini /usr/local/etc/php/conf.d/php.ini
