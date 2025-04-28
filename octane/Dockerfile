@@ -43,10 +43,10 @@ RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
 
 # Set file permissions
-RUN chown -R WWWUSER:WWWGROUP /var/www/html
+RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
 # Copy application code
-COPY --chown=WWWUSER:WWWGROUP . /var/www/html
+COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
 
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 RUN php artisan event:cache
