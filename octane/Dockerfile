@@ -39,8 +39,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create system user for PHP-FPM/FrankenPHP
-RUN addgroup --system WWWGROUP && \
-    adduser --system --gid WWWGROUP --home /var/www --shell /bin/bash WWWUSER
+RUN groupadd --system --gid 1000 $WWWGROUP || true && \
+    useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
 
 # Set file permissions
 RUN chown -R WWWUSER:WWWGROUP /var/www/html
