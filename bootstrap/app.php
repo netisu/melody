@@ -116,13 +116,13 @@ return Application::configure(basePath: dirname(__DIR__))
                     };
 
                     if ($request->user() && config('Values.in_event')) {
-                         $response['user']['event_currency'] = shortNum($request->user()->event_currency);
+                        $response['user']['event_currency'] = shortNum($request->user()->event_currency);
                     };
 
-                    if ($request->user() && $request->route()->named('user.settings.page')){
-                             $response['user']['email'] = preg_replace('/[^@]+@([^\s]+)/', ''.substr($request->user()->email, 0, 3).'********@$1', $request->user()->email);
-                             $response['user']['birthdate'] = $request->user()->birthdate;
-                             $response['user']['email_verified_at'] = $request->user()->email_verified_at;
+                    if ($request->user() && $request->route()->named('user.settings.page')) {
+                        $response['user']['email'] = preg_replace('/[^@]+@([^\s]+)/', '' . substr($request->user()->email, 0, 3) . '********@$1', $request->user()->email);
+                        $response['user']['birthdate'] = $request->user()->birthdate;
+                        $response['user']['email_verified_at'] = $request->user()->email_verified_at;
                     };
 
                     return $response;
@@ -171,13 +171,36 @@ return Application::configure(basePath: dirname(__DIR__))
             \Monicahq\Cloudflare\Http\Middleware\TrustProxies::class
         );
 
-        $middleware->trustProxies(
-            headers: Request::HEADER_X_FORWARDED_FOR |
-                Request::HEADER_X_FORWARDED_HOST |
-                Request::HEADER_X_FORWARDED_PORT |
-                Request::HEADER_X_FORWARDED_PROTO |
-                Request::HEADER_X_FORWARDED_AWS_ELB
-        );
+        $environment = env('APP_ENV');
+
+        switch ($environment) {
+            case 'production':
+                // AWS ELB Configuration
+                $middleware->trustProxies(
+                    at: '*',
+                    headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_TRAEFIK | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_AWS_ELB
+                );
+                break;
+
+            case 'staging':
+                // Digital Ocean Configuration
+                $middleware->trustProxies(
+                    at: '*',
+                    headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
+                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST |
+                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT |
+                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO
+                );
+                break;
+
+            default:
+                // Local/Development Configuration
+                $middleware->trustProxies(
+                    at: ['127.0.0.1', '::1'],
+                    headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
+                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO
+                );
+        }
         $middleware->validateCsrfTokens(except: [
             //
         ]);
