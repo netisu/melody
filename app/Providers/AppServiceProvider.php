@@ -19,7 +19,7 @@ use Laravel\Cashier\Cashier;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Facades\Event;
 use Inertia\Ssr\Gateway;
-use App\Http\Ssr\HttpGateway;
+use App\Http\InertiaHttpGateway;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
+        $this->app->bind(Gateway::class, InertiaHttpGateway::class);
+
     }
 
     /**
@@ -42,8 +44,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(UrlGenerator $url): void
     {
-
-
         $this->bootRoute();
         if (!$this->app->environment('local')) {
             $url->forceScheme('https');
