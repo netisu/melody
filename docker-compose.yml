@@ -9,7 +9,7 @@ services:
                 WWWUSER: '${WWWUSER:-www-data}'
                 WWWGROUP: '${WWWGROUP:-www-data}'
                 PHP_VERSION: '${PHP_VERSION:-8.4}'
-                NODE_VERSION: '${NODE_VERSION:-20}'
+                NODE_VERSION: '${NODE_VERSION:-23}'
         restart: unless-stopped
         ports:
             - '${APP_PORT:-8000}:80' # FrankenPHP listens on port 80 by default
