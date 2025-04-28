@@ -93,6 +93,7 @@ COPY ./octane/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./octane/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Set permissions for storage and bootstrap cache
+RUN chmod +x /usr/local/bin/start-container
 RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 8000 443

@@ -4,7 +4,7 @@ services:
         build:
             context: ./
             dockerfile: ./octane/Dockerfile
-            target: frankenphp
+            entrypoint: php artisan octane:frankenphp --max-requests=1
             args:
                 WWWUSER: '${WWWUSER:-www-data}'
                 WWWGROUP: '${WWWGROUP:-www-data}'
@@ -30,10 +30,13 @@ services:
             # - ./path/to/your/ssl/privkey.pem:/etc/frankenphp/certs/privkey.pem:ro
             - ./octane/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
             - ./octane/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+        networks:
+            - netisu
         depends_on:
             - mysql
             - redis
             - minio
+            - mailpit
             - meilisearch
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-80}/up"] # health check endpoint
@@ -53,6 +56,8 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 0
         volumes:
             - '${DB_VOLUME_LOCAL:-./database/mysql-test-data}:/var/lib/mysql'
+        networks:
+            - netisu
         healthcheck:
             test:
                 - CMD
@@ -67,6 +72,8 @@ services:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
             - '${REDIS_VOLUME_LOCAL:-./database/redis-data}:/data'
+        networks:
+            - netisu
         healthcheck:
             test:
                 - CMD
@@ -85,6 +92,8 @@ services:
         volumes:
             - '${MINIO_VOLUME_LOCAL:-./storage/minio-data}:/data'
         command: 'minio server /data/minio --console-address ":${FORWARD_MINIO_CONSOLE_PORT}"'
+        networks:
+            - netisu
         healthcheck:
             test:
                 - CMD
@@ -110,6 +119,13 @@ services:
             MEILI_MASTER_KEY: '${MEILISEARCH_KEY}'
         volumes:
             - './meilisearch-data:/meilisearch-data'
+        networks:
+            - netisu
+
+networks:
+    netisu:
+        driver: bridge
+
 volumes:
     laravel_storage:
     laravel_bootstrap_cache:
