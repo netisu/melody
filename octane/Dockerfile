@@ -28,8 +28,9 @@ RUN apt-get update \
 RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install Node.js and npm (use npm to globally install bun and build the frontend assets)
-RUN curl -sSL "https://deb.nodesource.com/setup_${NODE_VERSION}.x" | bash - \
-    && apt-get update \
+RUN curl -sSL "https://deb.nodesource.com/setup_${NODE_VERSION}.x" | bash - 
+
+RUN apt-get update \
     && apt-get install -y --no-install-recommends nodejs
 
 RUN apt-get update \
