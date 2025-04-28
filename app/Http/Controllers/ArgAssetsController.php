@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 
-class ArgassetsController extends Controller
+class ArgAssetsController extends Controller
 {
     protected $assetSteps = [
         'floralEaster' => 'moonlight.png',

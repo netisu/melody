@@ -122,15 +122,6 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
             ->name('validate');
     });
 
-    Route::prefix('floralEaster')->group(function () {
-        Route::get('/', [ArgassetsController::class, 'stepOne']);
-        Route::get('/chocolateBunny', [ArgassetsController::class, 'stepTwo']);
-        Route::get('/chocolateBunny/starMaps', [ArgassetsController::class, 'stepThree']);
-        Route::get('/chocolateBunny/starMaps/thanksgivingCheer', [ArgassetsController::class, 'stepFour']);
-        Route::get('/chocolateBunny/starMaps/thanksgivingCheer/hiddenGems', [ArgassetsController::class, 'stepFive']);
-        Route::get('/chocolateBunny/starMaps/thanksgivingCheer/hiddenGems/springRenewal', [ArgassetsController::class, 'endStep']);
-    });
-
     Route::get('/subscription-checkout', function (Request $request) {
         $checkout = $request->user()
             ->newSubscription('default', 'price_basic_monthly')
