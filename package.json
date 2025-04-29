@@ -101,7 +101,6 @@
     "@parcel/watcher",
     "cwebp-bin",
     "esbuild",
-    "gifsicle",
     "javascript-obfuscator",
     "mozjpeg",
     "optipng-bin",
