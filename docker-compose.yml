@@ -8,40 +8,31 @@ services:
                 WWWUSER: '${WWWUSER:-www-data}'
                 WWWGROUP: '${WWWGROUP:-www-data}'
                 PHP_VERSION: '${PHP_VERSION:-8.4}'
-                NODE_VERSION: '${NODE_VERSION:-23}'
+                NODE_VERSION: '${NODE_VERSION:-20}'
         restart: unless-stopped
         ports:
-            - '${APP_PORT:-8000}:8000'
+            - '${APP_PORT:-8000}:8000' # Expose Swoole port
             - '${REDIS_PORT:-6379}:6379'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
             - '${VITE_REVERB_PORT:-8080}:${VITE_REVERB_PORT:-8080}'
             - '443:443' 
-            - '443:443/udp' 
-        environment:
-            WWWUSER: '${WWWUSER}'
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-debug}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            - '443:443/udp'
         volumes:
             - .:/var/www/html:ro
             - laravel_storage:/var/www/html/storage
             - laravel_bootstrap_cache:/var/www/html/bootstrap/cache
-            # - ./path/to/your/ssl/fullchain.pem:/etc/frankenphp/certs/fullchain.pem
-            # - ./path/to/your/ssl/privkey.pem:/etc/frankenphp/certs/privkey.pem:ro
-            - ./octane/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
-            - ./octane/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
-        networks:
-            - netisu
         depends_on:
+            - nginx
             - mysql
             - redis
-            - minio
-            - mailpit
+            - minio 
             - meilisearch
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-80}/up"] # health check endpoint
+            test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-8000}/_health"] # Implement a health check endpoint for Octane
             interval: 5s
             timeout: 3s
             retries: 3
+    
     mysql:
         image: 'mysql/mysql-server:${MYSQL_VERSION:-8.0}'
         ports:

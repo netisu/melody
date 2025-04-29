@@ -1,13 +1,12 @@
 ARG WWWUSER=www-data
 ARG WWWGROUP=www-data
-ARG NODE_VERSION=23
 ARG PHP_VERSION=8.4
 
-FROM --platform=linux/amd64 dunglas/frankenphp:static-builder
+FROM ubuntu:24.04 AS production
 
 WORKDIR /var/www/html
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=UTC
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -21,82 +20,42 @@ RUN apt-get update \
     && curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c" | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
     && echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
     && apt-get update \
-    && apt-get install -y --no-install-recommends php${PHP_VERSION}-cli php${PHP_VERSION}-fpm php${PHP_VERSION}-pgsql php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-gd php${PHP_VERSION}-imagick \
-    php${PHP_VERSION}-curl php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-zip php${PHP_VERSION}-bcmath php${PHP_VERSION}-gmp php${PHP_VERSION}-intl php${PHP_VERSION}-mysql
+    && apt-get install -y --no-install-recommends php${PHP_VERSION}-cli php${PHP_VERSION}-dev php${PHP_VERSION}-pgsql php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-gd php${PHP_VERSION}-imagick \
+    php${PHP_VERSION}-curl php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-zip php${PHP_VERSION}-bcmath php${PHP_VERSION}-intl php${PHP_VERSION}-mysql \
+    php${PHP_VERSION}-redis
 
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
+# Install PECL and the Swoole extension
+RUN apt-get install -y --no-install-recommends php-pear php${PHP_VERSION}-dev
+RUN pecl install swoole
+RUN docker-php-ext-enable swoole
 
 # Install Composer
 RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
-# Install Node.js and npm (use npm to globally install bun and build the frontend assets)
-RUN curl -sSL "https://deb.nodesource.com/setup_23.x" | bash - 
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends nodejs
-
-RUN apt-get update \
-    && apt-get -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Create system user for PHP-FPM/FrankenPHP
+# Create system user for PHP-FPM/Swoole
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
 
 # Set file permissions
 RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
-# Copy application code
-COPY --chown=${WWWUSER}:${WWWGROUP} . /var/www/html
+# Copy application code (excluding node_modules and potentially build artifacts)
+COPY --chown=$WWWUSER:$WWWGROUP --exclude=node_modules --exclude=public/build . /var/www/html
 
-# Remove the tests and other unneeded files to save space
-# Alternatively, add these files to a .dockerignore file
-RUN rm -Rf tests/
+# Copy built frontend assets from the builder stage
+COPY --from=builder /app/public/build /var/www/html/public/build
 
-# Copy .env file
-RUN cp .env.example .env
-
-# Change APP_ENV and APP_DEBUG to be production ready
-RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
-
-RUN composer install --ignore-platform-reqs --no-dev -a
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan config:cache
 RUN php artisan view:cache
 RUN php artisan migrate --force
+RUN php artisan queue:restart
 
-# Run frontend builds in production
-RUN npm i bun -g
-RUN bun install
-RUN bun run build
+# Expose the port Swoole will listen on
+EXPOSE 8000
 
-# --- FrankenPHP Stage ---
-FROM base AS frankenphp
-
-ARG WWWUSER
-ARG WWWGROUP
-
-# Install FrankenPHP
-RUN curl -fsSL https://get.frankenphp.dev/install.sh | bash
-
-# Create necessary directories
-RUN mkdir -p /etc/frankenphp/certs
-
-# Copy application (again, to ensure correct user in final image)
-COPY --chown=WWWUSER:WWWGROUP . /var/www/html
-
-# Copy PHP configuration files
-COPY ./octane/start-container /usr/local/bin/start-container
-COPY ./octane/php.ini /usr/local/etc/php/conf.d/php.ini
-COPY ./octane/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-
-# Set permissions for storage and bootstrap cache
-RUN chmod +x /usr/local/bin/start-container
-RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
-
-EXPOSE 8000 443
-
-# Run FrankenPHP
-ENTRYPOINT ["start-container"]
+# Start the Octane Swoole server
+USER $WWWUSER
+ENTRYPOINT ["php", "/var/www/html/artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=8000"]
