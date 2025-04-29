@@ -1,8 +1,8 @@
-ARG WWWUSER=www-data
-ARG WWWGROUP=www-data
-ARG PHP_VERSION=8.4
-
 FROM ubuntu:24.04 AS production
+
+ARG WWWUSER
+ARG WWWGROUP
+ARG PHP_VERSION
 
 WORKDIR /var/www/html
 
@@ -39,7 +39,7 @@ RUN groupadd --system --gid 1000 $WWWGROUP || true && \
 # Set file permissions
 RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
-# Copy application code (excluding node_modules and build artifacts)
+# Copy application code (excluding specific directories)
 RUN rsync -av --exclude='node_modules' --exclude='public/build' . /var/www/html
 
 # Copy built frontend assets from the builder stage
