@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 11.44.4.
+ * Generated for Laravel 11.44.7.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -22925,27 +22925,6 @@ namespace Barryvdh\Debugbar\Facades {
             }
     }
 
-namespace L5Swagger {
-    /**
-     * 
-     *
-     */
-    class L5SwaggerFacade {
-        /**
-         * 
-         *
-         * @throws L5SwaggerException
-         * @static 
-         */
-        public static function generateDocs()
-        {
-            /** @var \L5Swagger\Generator $instance */
-            return $instance->generateDocs();
-        }
-
-            }
-    }
-
 namespace Laravel\Octane\Facades {
     /**
      * 
@@ -28720,7 +28699,6 @@ namespace  {
     class View extends \Illuminate\Support\Facades\View {}
     class Vite extends \Illuminate\Support\Facades\Vite {}
     class Debugbar extends \Barryvdh\Debugbar\Facades\Debugbar {}
-    class L5Swagger extends \L5Swagger\L5SwaggerFacade {}
     class Octane extends \Laravel\Octane\Facades\Octane {}
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
     class Purifier extends \Mews\Purifier\Facades\Purifier {}
