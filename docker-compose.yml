@@ -26,6 +26,8 @@ services:
             - redis
             - minio 
             - meilisearch
+        networks:
+            - netisu
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-8000}/_health"] # Implement a health check endpoint for Octane
             interval: 5s
