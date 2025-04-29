@@ -3,7 +3,7 @@ ARG WWWGROUP=www-data
 ARG NODE_VERSION=23
 ARG PHP_VERSION=8.4
 
-FROM ubuntu:24.04 AS base
+FROM --platform=linux/amd64 dunglas/frankenphp:static-builder
 
 WORKDIR /var/www/html
 
