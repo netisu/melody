@@ -102,7 +102,6 @@
     "cwebp-bin",
     "esbuild",
     "javascript-obfuscator",
-    "mozjpeg",
     "optipng-bin",
     "pngquant-bin"
   ]
