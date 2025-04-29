@@ -1,3 +1,21 @@
+ARG WWWUSER=www-data
+ARG WWWGROUP=www-data
+ARG NODE_VERSION=20
+ARG PHP_VERSION=8.4
+
+FROM node:${NODE_VERSION}-alpine AS builder
+
+WORKDIR /app
+
+COPY package.json bun.lockb ./
+
+RUN bun install
+
+COPY . .
+
+RUN bun run build
+
+# --- Final Production Stage ---
 FROM ubuntu:24.04 AS production
 
 ARG WWWUSER
@@ -14,7 +32,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gnupg gosu curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev python3 dnsutils librsvg2-bin fswatch ffmpeg
 
-# Install PHP and essential extensions
+# Install PHP and essential extensions for Swoole
 RUN apt-get update \
     && mkdir -p /etc/apt/keyrings \
     && curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c" | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
@@ -22,12 +40,7 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install -y --no-install-recommends php${PHP_VERSION}-cli php${PHP_VERSION}-dev php${PHP_VERSION}-pgsql php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-gd php${PHP_VERSION}-imagick \
     php${PHP_VERSION}-curl php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-zip php${PHP_VERSION}-bcmath php${PHP_VERSION}-intl php${PHP_VERSION}-mysql \
-    php${PHP_VERSION}-redis
-
-# Install PECL and the Swoole extension
-RUN apt-get install -y --no-install-recommends php-pear php${PHP_VERSION}-dev
-RUN pecl install swoole
-RUN docker-php-ext-enable swoole
+    php${PHP_VERSION}-redis php${PHP_VERSION}-swoole
 
 # Install Composer
 RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
@@ -39,8 +52,8 @@ RUN groupadd --system --gid 1000 $WWWGROUP || true && \
 # Set file permissions
 RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
-# Copy application code (excluding specific directories)
-RUN rsync -av --exclude='node_modules' --exclude='public/build' . /var/www/html
+# Copy application code (excluding node_modules and potentially build artifacts)
+COPY --chown=$WWWUSER:$WWWGROUP --exclude=node_modules --exclude=public/build . /var/www/html
 
 # Copy built frontend assets from the builder stage
 COPY --from=builder /app/public/build /var/www/html/public/build
