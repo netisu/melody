@@ -39,8 +39,8 @@ RUN groupadd --system --gid 1000 $WWWGROUP || true && \
 # Set file permissions
 RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
-# Copy application code (excluding node_modules and potentially build artifacts)
-COPY --chown=$WWWUSER:$WWWGROUP --exclude=node_modules --exclude=public/build . /var/www/html
+# Copy application code (excluding node_modules and build artifacts)
+RUN rsync -av --exclude='node_modules' --exclude='public/build' . /var/www/html
 
 # Copy built frontend assets from the builder stage
 COPY --from=builder /app/public/build /var/www/html/public/build
