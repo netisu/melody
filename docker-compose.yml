@@ -22,7 +22,6 @@ services:
             - laravel_storage:/var/www/html/storage
             - laravel_bootstrap_cache:/var/www/html/bootstrap/cache
         depends_on:
-            - nginx
             - mysql
             - redis
             - minio 
