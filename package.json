@@ -101,7 +101,5 @@
     "@parcel/watcher",
     "esbuild",
     "javascript-obfuscator",
-    "optipng-bin",
-    "pngquant-bin"
   ]
 }
