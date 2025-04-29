@@ -61,7 +61,6 @@ COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
 COPY --from=builder /app/public/build /var/www/html/public/build
 
 RUN composer install --no-dev --optimize-autoloader --no-scripts
-RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan config:cache
 RUN php artisan view:cache
