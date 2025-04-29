@@ -120,3 +120,4 @@ networks:
 volumes:
     laravel_storage:
     laravel_bootstrap_cache:
+        driver: bridge
