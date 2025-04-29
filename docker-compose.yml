@@ -4,7 +4,6 @@ services:
         build:
             context: ./
             dockerfile: ./octane/Dockerfile
-            entrypoint: php artisan octane:frankenphp --max-requests=1
             args:
                 WWWUSER: '${WWWUSER:-www-data}'
                 WWWGROUP: '${WWWGROUP:-www-data}'
