@@ -99,7 +99,6 @@
   },
   "trustedDependencies": [
     "@parcel/watcher",
-    "cwebp-bin",
     "esbuild",
     "javascript-obfuscator",
     "optipng-bin",
