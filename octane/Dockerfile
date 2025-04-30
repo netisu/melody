@@ -61,7 +61,7 @@ COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
 COPY --from=builder /app/public/build /var/www/html/public/build
 
 # Install Composer dependencies
-RUN composer install --ignore-platform-reqs --no-dev -a
+RUN composer install --ignore-platform-reqs --no-dev -a --no-interaction --verbose
 RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan config:cache

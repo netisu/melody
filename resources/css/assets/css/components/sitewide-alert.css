@@ -1,6 +1,6 @@
 .sitewide-alert {
     z-index: 1;
-    padding-top:55px;
+    position: sticky;
     left: 0;
     right: 0;
 }

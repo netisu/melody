@@ -459,8 +459,6 @@ onMounted(() => {
             <div class="mb-3">
                 <div class="grid-x">
                     <template v-if="selectHatSlot === true" class="text-center cell medium-12">
-                        <div
-                            class="flex-container text-start flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
                             <div class="grid-x grid-margin-x grid-padding-y">
                                 <template v-for="n in 6" :key="n" :value="n">
                                     <div class="cell large-3 medium-3 small-6" v-if="wearingHats[n - 1]">
@@ -493,10 +491,9 @@ onMounted(() => {
                                     </div>
                                 </template>
                             </div>
-                        </div>
                     </template>
                     <template v-else>
-                    <div class="text-center cell medium-4 align-left">
+                    <div class="text-center cell medium-3 align-left">
                         <div class="text-center flex-container align-center">
                             <div class="text-center" style="transform:scale(0.7);margin-top:-25px;">
                                 <div style="margin-bottom: 5px">
@@ -555,9 +552,8 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="text-center cell medium-8">
-                        <div
-                            class="flex-container text-start flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
+                    <div class="text-center cell medium-9">
+                        
                             <div class="grid-x grid-margin-x grid-padding-y">
                                 <div class="cell large-3 medium-3 small-6" v-for="(item, index) in wearingItems"
                                     :key="index">
@@ -574,7 +570,6 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
                         <div v-if="!wearingItems.length" class="gap-3 text-start flex-container flex-dir-column">
                             <div class="text-md text-muted fw-semibold">

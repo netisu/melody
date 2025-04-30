@@ -120,7 +120,7 @@ const left = [
 const right = [
     {
         url: route(`leaderboard.page`),
-        ActiveLink: route(`leaderboard.page`),
+        ActiveLink: "leaderboard.page",
         icon: "fad fa-list-ol",
         en: { title: "Leaderboard" },
         es: { title: "Tabla de clasificación" },
@@ -130,7 +130,7 @@ const right = [
     {
         url: "#",
         icon: "fad fa-rocket-launch",
-        ActiveLink: "upgade.*",
+        ActiveLink: "upgrade.*",
         en: { title: "Upgrade" },
         es: { title: "Mejora" },
         ru: { title: "Подписки" },
@@ -289,15 +289,17 @@ const props = usePage<any>().props;
 
     <nav class="navbar" :class="{ 'navbar-landing': landing }">
         <ul class="navbar-nav grid-x">
-            <li
+            <Link as="li"
                 class="nav-item cell shrink show-for-small hide-for-large me-1"
-                @click="sidebarOpen()"
+                style="cursor:pointer;" :href="route(`Welcome`)"
             >
-                <button class="btn-circle squish" id="sidebar-toggler">
-                    <i class="text-xl fad fa-bars"></i>
-                </button>
-            </li>
-            <Link as="li" class="nav-item cell shrink" :href="route(`Welcome`)">
+            <v-lazy-image
+                    :src="props.site.icon"
+                    class="show-for-medium"
+                    width="180"
+                />
+            </Link>
+            <Link as="li" class="nav-item cell shrink" style="cursor:pointer;" :href="route(`Welcome`)">
                 <v-lazy-image
                     :src="props.site.logo"
                     class="show-for-medium"
@@ -308,6 +310,7 @@ const props = usePage<any>().props;
                 <NavLink
                     :link="topbarlinks.url"
                     :ActiveLink="topbarlinks.ActiveLink"
+                    :showForLarge=true
                 >
                     <i :class="topbarlinks.icon"></i> &nbsp;
                     <span>{{ topbarlinks[lang].title }}</span>
@@ -634,7 +637,7 @@ const props = usePage<any>().props;
                 </a>
             </Link>
             <li
-                v-if="props.auth?.user && props.site.frontend.sidebar_menu"
+                v-if="props.auth?.user"
                 class="dropdown position-relative nav-item cell shrink ms-1"
                 id="user_dropdown"
             >
@@ -683,38 +686,18 @@ const props = usePage<any>().props;
 
     <nav
         class="navbar bottom_nav"
-        v-if="!props.site.frontend.sidebar_menu"
-        :class="{ 'navbar-landing': landing }"
+        v-if="!props.site.frontend.sidebar_menu && !landing"
     >
         <ul class="navbar-nav grid-x">
-            <li
-                class="nav-item cell shrink show-for-small hide-for-large me-1"
-                @click="sidebarOpen()"
-            >
-                <button class="btn-circle squish" id="sidebar-toggler">
-                    <i class="text-xl fad fa-bars"></i>
-                </button>
-            </li>
             <NavLink
                 v-for="leftside in left"
                 :link="leftside.url"
                 :ActiveLink="leftside.ActiveLink"
+                :showForLarge=false
             >
                 <i :class="leftside.icon"></i> &nbsp;
                 <span>{{ leftside[lang].title }}</span>
             </NavLink>
-            <li class="nav-item text-danger cell shrink show-for-large">
-                <div class="side-item">
-                    <a
-                        v-if="props.auth?.user && props.auth?.user?.staff"
-                        :href="route('admin.page')"
-                        class="nav-link"
-                    >
-                        <i class="fad fa-gavel"></i> &nbsp;
-                        <span>Admin</span>
-                    </a>
-                </div>
-            </li>
             <li
                 class="mx-1 align-middle nav-item cell auto nav-search mx-md-3"
             ></li>
@@ -726,24 +709,6 @@ const props = usePage<any>().props;
                 <i :class="rightside.icon"></i> &nbsp;
                 <span>{{ rightside[lang].title }}</span>
             </NavLink>
-            <li
-                v-if="props.auth?.user"
-                class="dropdown position-relative nav-item cell shrink ms-1"
-                id="user_dropdown"
-            >
-                <button
-                    @click="showModal('profile-modal')"
-                    class="gap-2 align-middle flex-container squish"
-                >
-                    <v-lazy-image
-                        :src="usePage<any>().props.auth?.user?.headshot"
-                        width="30"
-                        class="headshot"
-                        alt="Avatar"
-                        src-placeholder="assets/img/dummy_headshot.png"
-                    />
-                </button>
-            </li>
         </ul>
     </nav>
 

@@ -110,7 +110,7 @@ provide("selectedSubCategory", selectedSubCategory);
                 <template v-if="ItemLoading">
                     <ItemCardSkeleton v-for="n in 12" :key="n" />
                 </template>
-                <div v-else class="cell large-3 medium-3 small-6" v-for="(item, index) in items" :key="index">
+                <div v-else class="cell large-2 medium-3 small-6" v-for="(item, index) in items" :key="index">
                     <Link :href="itemRoute(item.id)" class="d-block">
                     <div class="p-2 mb-1 card card-item position-relative">
                         <div style="

@@ -13,7 +13,7 @@ return [
     'version' => "melody",
     'frontend' => [
         'page_loader' => false,
-        'sidebar_menu' => true,
+        'sidebar_menu' => false,
         'search_bar' => true,
         'loading_messages' => false,
     ],

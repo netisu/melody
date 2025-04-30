@@ -21,7 +21,7 @@
 }
 
 .container-navbar {
-    padding-top: 75px;
+    padding-top: 35px;
     padding-left: 65px;
     padding-right: 65px;
     max-width: 1400px;
@@ -41,6 +41,10 @@
         flex-direction: column !important;
     }
     .container {
+        padding-left: 20px !important;
+    }
+    .container-navbar { 
+        padding-right: 20px !important;
         padding-left: 20px !important;
     }
     .align-center-sm {

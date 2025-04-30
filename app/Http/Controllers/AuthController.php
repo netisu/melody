@@ -21,13 +21,15 @@ use App\Models\Item;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Foundation\Auth\ResetsPasswords;
 
 /**
  * @OA\Info(title="Netisu API", version="1.22")
  */
 class AuthController extends Controller
 {
-    use AuthenticatesUsers;
+    use AuthenticatesUsers, SendsPasswordResetEmails, ResetsPasswords;
 
     public function LoginVal(Request $request): RedirectResponse
     {
