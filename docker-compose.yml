@@ -18,7 +18,7 @@ services:
             - '443:443' 
             - '443:443/udp'
         volumes:
-            - ./:/var/www/html
+            - .:/var/www/html
             - laravel_storage:/var/www/html/storage
             - laravel_bootstrap_cache:/var/www/html/bootstrap/cache
         depends_on:
