@@ -252,9 +252,9 @@ watch(
     <nav v-if="props.site_config.announcement" class="sitewide-alert">
         <div class="py-2 text-center alert alert-danger alert-wide fw-semibold">
             <div class="gap-2 text-center align-middle flex-container align-center">
-                <div>
+                <span class="text-wrap text-truncate">
                     {{ props.site_config.announcement_message }}
-                </div>
+                </span>
             </div>
         </div>
     </nav>

@@ -23,16 +23,33 @@ class USController extends Controller
     public function edit(Request $request): Response
     {
         $countries = Country::all();
-        switch ($request->category) {
-            case '':
-            case 'general':
-            case 'account':
-            case 'billing':
-                $categories = ['General', 'Security & Privacy', 'Billing'];
-                break;
-            default:
-                abort(404);
-        }
+
+        $categories = [
+            'Profile' => [
+                'description' => 'This is how others will see you on the site.',
+                'icon' => 'fad fa-user'
+            ],
+            'Account' => [
+                'description' => 'Manage your account settings, including password and security.',
+                'icon' => 'fad fa-cog'
+            ],
+            'Appearance' => [
+                'description' => 'Customize the look and feel of the site.',
+                'icon' => 'fad fa-palette'
+            ],
+            'Notifications' => [
+                'description' => 'Control which notifications you receive.',
+                'icon' => 'fad fa-bell'
+            ],
+            'Display' => [
+                'description' => 'Adjust how content is displayed to you.',
+                'icon' => 'fad fa-tv'
+            ],
+            'Billing' => [
+                'description' => 'Manage your billing information.',
+                'icon' => 'fad fa-money-bill'
+            ],
+        ];
 
         return inertia('Settings/Edit', [
             'hasVerifiedEmail' => $request->user()->hasVerifiedEmail(),

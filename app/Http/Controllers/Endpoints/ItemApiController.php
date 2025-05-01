@@ -267,8 +267,6 @@ class ItemApiController extends Controller
     {
         $item = Item::where('id', $itemId)->firstOrFail();
         if (env('APP_ENV') != 'local') {
-
-
             if (!Auth::user()->isStaff() && !$item->public_view) {
                 abort(403);
             }
@@ -316,7 +314,6 @@ class ItemApiController extends Controller
                 ],
                 500
             );
-            return back()->withErrors(['You cannot buy your own item.']);
         }
 
         if ($currencyType != 'bucks') {

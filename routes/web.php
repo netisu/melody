@@ -288,8 +288,11 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 Route::post('/email/verification-notification', function (Request $request) {
     if (env('APP_ENV') === 'production') {
         UserSettings::where('id', Auth::id())->update(['verified_email' => true]);
+        if (!$request->user()->hasVerifiedEmail()) {
+            $request->user()->sendEmailVerificationNotification();
+        }
         $request->user()->sendEmailVerificationNotification();
     } else {
         User::where('id', Auth::id())->update(['email_verified_at' => now()]);
     }
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+})->middleware(middleware: 'throttle:6,1')->name('verification.send');

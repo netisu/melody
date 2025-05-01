@@ -18,7 +18,7 @@ class ArgAssetsController extends Controller
         'hiddenGems' => 'usePastLetters.png',
         'springRenewal' => true,
     ];
-    
+
     protected $assetBaseUrl = 'assets/img/wmciws/';
 
     public function stepOne()
@@ -50,24 +50,17 @@ class ArgAssetsController extends Controller
     {
         $step = 'springRenewal';
 
-        if (isset($this->assetSteps[$step]) && $this->assetSteps[$step] === true) {
-            if (config('Values.in_event') == true && Auth::user()) {
+        if (isset($this->assetSteps[$step])) {
+            if (config(key: 'Values.in_event') == true && Auth::user()) {
                 $eventItem = Item::where('id', 209)->first();
-                if ($eventItem) {
-                    $event = new Event;
-                    $event->grantItem($eventItem, Auth::user(), 'enigmaticEgg', false);
-                    return redirect()->to(route('store.item', 209));
-                } else {
-                    return response()->json(['error' => 'Event item not found.'], 404);
-                }
-            } else {
-                // Optionally, a response if the conditions aren't met
-                // make troll response later
-                return response()->json(['message' => 'No item granted at this time.']);
-            }
-        } else {
-            return response()->json(['error' => 'Invalid end step.'], 400);
+                $event = new Event;
+                $event->grantItem($eventItem, Auth::user(), 'enigmaticEgg', false);
+                return redirect()->to(route('store.item', 209));
+            } 
+            return response()->json(['message' => 'No item granted at this time.']);
         }
+
+        return response()->json(['error' => 'Invalid end step.'], 400);
     }
 
     protected function loadAsset($step)

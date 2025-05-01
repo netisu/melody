@@ -290,13 +290,12 @@ const props = usePage<any>().props;
     <nav class="navbar" :class="{ 'navbar-landing': landing }">
         <ul class="navbar-nav grid-x">
             <Link as="li"
-                class="nav-item cell shrink show-for-small hide-for-large me-1"
+                class="nav-item cell shrink show-for-small-only me-1"
                 style="cursor:pointer;" :href="route(`Welcome`)"
             >
             <v-lazy-image
                     :src="props.site.icon"
-                    class="show-for-medium"
-                    width="180"
+                    width="30"
                 />
             </Link>
             <Link as="li" class="nav-item cell shrink" style="cursor:pointer;" :href="route(`Welcome`)">
@@ -412,17 +411,17 @@ const props = usePage<any>().props;
                 v-if="!props.auth?.user"
                 :link="route('auth.register.page')"
                 ColorClass="btn-success"
-                class="nav-item cell show-for-large shrink me-1"
+                class="nav-item cell shrink me-1"
             >
-                <i class="fad fa-person-to-portal"></i> &nbsp; Get Started
+                <i class="fad fa-person-to-portal"></i><span class="show-for-large">&nbsp; Get Started</span> 
             </Button>
             <Button
                 v-if="!props.auth?.user"
                 :link="route('auth.login.page')"
                 ColorClass="btn-info"
-                class="nav-item cell show-for-large shrink me-1"
+                class="nav-item cell  shrink me-1"
             >
-                <i class="fad fa-door-open"></i> &nbsp; Login
+                <i class="fad fa-door-open"></i><span class="show-for-large">&nbsp; Login</span>
             </Button>
             <li
                 v-if="
