@@ -77,10 +77,10 @@ RUN chown -R $WWWUSER:$WWWGROUP .
 COPY --chown=$WWWUSER:$WWWGROUP . .
 
 # Copy built frontend assets from the builder stage
-COPY --from=builder /app/public/build ./public/build
+COPY --from=builder /app/public/build public/build
 
 # Copy composer vendor folder
-COPY --from=composer /app/vendor ./vendor
+COPY --from=composer /app/vendor vendor
 
 # ensure .env
 RUN cp -a .env.example .env
