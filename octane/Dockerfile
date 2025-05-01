@@ -23,9 +23,8 @@ FROM composer:latest AS composer
 WORKDIR /app
 
 COPY database/ database/
-COPY composer.json composer.json
-COPY composer.lock composer.lock
 
+COPY . .
 RUN composer install \
     -a \
     --verbose \
@@ -35,7 +34,6 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
-COPY . .
 RUN composer dump-autoload
 
 FROM ubuntu:24.04 AS production
