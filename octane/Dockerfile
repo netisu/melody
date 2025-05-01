@@ -1,4 +1,4 @@
-ARG WWWUSER=www-data
+.ARG WWWUSER=www-data
 ARG WWWGROUP=www-data
 ARG NODE_VERSION=20
 ARG PHP_VERSION=8.4
@@ -75,7 +75,7 @@ RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
 # Copy application code
 COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
-
+COPY --chown=$WWWUSER:$WWWGROUP ./.env  /var/www/html/.env
 # Copy built frontend assets from the builder stage
 COPY --from=builder /app/public/build /var/www/html/public/build
 
