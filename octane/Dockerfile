@@ -18,7 +18,7 @@ COPY . .
 RUN bun run build
 
 # --- Get Composer ---
-FROM composer:latest as composer
+FROM composer:latest AS composer
 
 WORKDIR /app
 
