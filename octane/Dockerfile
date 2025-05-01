@@ -85,6 +85,7 @@ COPY --from=builder /app/public/build /var/www/html/public/build
 COPY --from=composer /app/vendor /var/www/html/vendor
 
 # Install Composer dependencies
+RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan config:cache
 RUN php artisan view:cache
