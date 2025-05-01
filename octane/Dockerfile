@@ -75,12 +75,15 @@ RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
 # Copy application code
 COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
-COPY --chown=$WWWUSER:$WWWGROUP .env  /var/www/html/.env
+
 # Copy built frontend assets from the builder stage
 COPY --from=builder /app/public/build /var/www/html/public/build
 
 # Copy composer vendor folder
 COPY --from=composer /app/vendor /var/www/html/vendor
+
+# ensure .env
+RUN cp -a .env.example .env
 
 # Cache all values
 RUN php artisan event:cache
