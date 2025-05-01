@@ -22,9 +22,10 @@ FROM composer:latest AS composer
 
 WORKDIR /app
 
+COPY composer.json composer.lock ./
 COPY database/ database/
-
 COPY . .
+
 RUN composer install \
     -a \
     --verbose \
@@ -34,7 +35,7 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
-RUN composer dump-autoload
+    RUN composer dump-autoload --optimize
 
 FROM ubuntu:24.04 AS production
 
@@ -81,7 +82,7 @@ COPY --from=builder /app/public/build /var/www/html/public/build
 # Copy composer vendor folder
 COPY --from=composer /app/vendor /var/www/html/vendor
 
-# Install Composer dependencies
+# Cache all values
 RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan config:cache
