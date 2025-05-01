@@ -27,6 +27,8 @@ COPY composer.json composer.json
 COPY composer.lock composer.lock
 
 RUN composer install \
+    -a \
+    --verbose \
     --no-interaction \
     --ignore-platform-reqs \
     --no-plugins \
