@@ -98,6 +98,8 @@ services:
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - netisu
     meilisearch:
         image: 'getmeili/meilisearch:latest'
         container_name: meilisearch
@@ -116,13 +118,6 @@ services:
 networks:
     netisu:
         driver: bridge
-        driver_opts:
-            com.docker.network.driver.mtu: "1450"
-            com.docker.network.bridge.default_bridge: "true"
-            com.docker.network.bridge.enable_icc: "true"
-            com.docker.network.bridge.enable_ip_masquerade: "true"
-            com.docker.network.bridge.host_binding_ipv4: "0.0.0.0"
-            com.docker.network.bridge.name: "docker0"
 
 volumes:
     laravel_storage:
