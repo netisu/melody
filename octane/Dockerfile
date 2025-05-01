@@ -17,7 +17,25 @@ COPY . .
 
 RUN bun run build
 
-# --- Final Production Stage ---
+# --- Get Composer ---
+FROM composer:2.8 as composer
+
+WORKDIR /app
+
+COPY database/ database/
+COPY composer.json composer.json
+COPY composer.lock composer.lock
+
+RUN composer install \
+    --no-interaction \
+    --no-plugins \
+    --no-scripts \
+    --no-dev \
+    --prefer-dist
+
+COPY . .
+RUN composer dump-autoload
+
 FROM ubuntu:24.04 AS production
 
 ARG WWWUSER
@@ -60,8 +78,10 @@ COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
 # Copy built frontend assets from the builder stage
 COPY --from=builder /app/public/build /var/www/html/public/build
 
+# Copy composer vendor folder
+COPY --from=composer /app/vendor /var/www/html/vendor
+
 # Install Composer dependencies
-RUN composer install --ignore-platform-reqs --no-dev -a --no-interaction --verbose
 RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan config:cache

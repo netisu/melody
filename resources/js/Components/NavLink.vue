@@ -9,9 +9,9 @@ defineProps<{
 }>();
 </script>
 <template>
-    <li class="nav-item cell shrink show-for-large">
+    <li class="nav-item cell shrink" :class="{ 'show-for-large': showForLarge }">
         <div class="side-item">
-            <Link class="nav-link" :href="link" :class="[{ 'show-for-large': showForLarge }, { 'active': current(ActiveLink) }]" prefetch>
+            <Link class="nav-link" :href="link" :class="{'active': current(ActiveLink) }" prefetch>
                 <slot />
             </Link>
         </div>

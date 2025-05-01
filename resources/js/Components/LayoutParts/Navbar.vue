@@ -704,6 +704,7 @@ const props = usePage<any>().props;
                 v-for="rightside in right"
                 :link="rightside.url"
                 :ActiveLink="rightside.ActiveLink"
+                :showForLarge=false
             >
                 <i :class="rightside.icon"></i> &nbsp;
                 <span>{{ rightside[lang].title }}</span>

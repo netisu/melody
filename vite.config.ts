@@ -16,6 +16,7 @@ export default {
     server: {
         host: '100.115.92.197',
         cors: true,
+        strictPort: true,
         hmr: {
             host: '100.115.92.197',
         },
