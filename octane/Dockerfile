@@ -28,6 +28,7 @@ COPY composer.lock composer.lock
 
 RUN composer install \
     --no-interaction \
+    ----ignore-platform-reqs \
     --no-plugins \
     --no-scripts \
     --no-dev \
