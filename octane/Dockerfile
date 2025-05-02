@@ -47,7 +47,6 @@ WORKDIR /var/www/html
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
-
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update \
@@ -74,6 +73,10 @@ RUN groupadd --system --gid 1000 $WWWGROUP || true && \
 RUN chown -R $WWWUSER:$WWWGROUP .
 
 # Copy application code
+COPY ./octane/start-container /usr/local/bin/start-container
+COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
+
 COPY --chown=$WWWUSER:$WWWGROUP . .
 
 # Copy built frontend assets from the builder stage
@@ -97,4 +100,4 @@ EXPOSE 8000
 
 # Start the Octane Swoole server
 USER $WWWUSER
-ENTRYPOINT ["php", "/var/www/html/artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=8000"]
+ENTRYPOINT ["start-container"]
