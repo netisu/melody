@@ -62,10 +62,6 @@ RUN apt-get update \
     php${PHP_VERSION}-curl php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-zip php${PHP_VERSION}-bcmath php${PHP_VERSION}-gmp php${PHP_VERSION}-intl php${PHP_VERSION}-mysql \
     php${PHP_VERSION}-redis php${PHP_VERSION}-swoole
 
-# Install Composer
-RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-
-# Create system user for PHP-FPM/Swoole
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
 
