@@ -95,6 +95,9 @@ RUN php artisan route:cache
 RUN php artisan view:cache
 RUN php artisan key:generate
 
+# Install Swoole Binary
+RUN php artisan octane:install --server="swoole"
+
 # Expose the port Swoole will listen on
 EXPOSE 8000
 
