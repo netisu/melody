@@ -100,3 +100,5 @@ EXPOSE 8000
 # Start the Octane Swoole server
 USER $WWWUSER
 ENTRYPOINT ["start-container"]
+
+HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD healthcheck || exit 1
