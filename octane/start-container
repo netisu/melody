@@ -4,6 +4,11 @@ if [ ! -z "$WWWUSER" ]; then
     usermod -u $WWWUSER sail
 fi
 
+if ! grep -q "^APP_KEY=" .env; then
+    echo "Generating application key..."
+    php /var/www/html/artisan key:generate --ansi
+fi
+
 if [ ! -d /.composer ]; then
     mkdir /.composer
 fi
