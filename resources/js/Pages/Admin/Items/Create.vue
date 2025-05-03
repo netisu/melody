@@ -4,7 +4,8 @@ import axios from "axios";
 import { route } from "momentum-trail"
 
 import { useForm } from "@inertiajs/vue3";
-import Navbar from "@/Components/LayoutParts/Admin/AdminNav.vue";
+import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
+import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import AppHead from "@/Components/AppHead.vue";
 
 const Uploading = ref(false);
@@ -41,92 +42,93 @@ const handleModalUpload = (event) => {
     <AppHead pageTitle="Create Item" description="Create a brand new item."
         :url="route('admin.items.create.create-item')" />
     <Navbar>
-        <div class="columns">
-            <div class="column is-3"></div>
-            <div class="column">
-                <br />
-                <p class="title is-4">Create Item</p>
-                <div class="card">
-                    <div class="card-content">
+        <Sidebar>
+        <div class="cell medium-5 px-4">
+            <div class="mb-2">
+                <div class="text-2xl fw-semibold">Create Item</div>
+                <div class="text-sm text-danger fw-semibold" v-if="usePage<any>().props.auth.user.staff">
+                    <i class="fad fa-exclamation-triangle"></i> Staff can create content here, but for privileged items,
+                    use the admin portal.
+                </div>
+
+                <div class="text-sm text-muted fw-semibold" v-else>
+                    Need the template? Download it
+                    <a href="#" class="d-inline-block squish">here</a>
+                </div>
+            </div>
+            <div></div>
+            <div class="card card-body">
                         <form @submit.prevent="submit">
-                            <label><strong>Item Type</strong></label>
-                            <br />
+                            <div :class="{ 'text-danger': form.errors.type }"
+                            class="text-xs fw-bold text-muted text-uppercase">
+                            Item Type
+                        </div>
                             <div class="select title is-6 is-fullwidth">
-                                <select v-model="form.type">
+                                <select class="form form-select" v-model="form.type">
                                     <option value="hat">Hat</option>
                                     <option value="addon">Add-on</option>
                                     <option value="tool">Tool</option>
                                     <option value="face">Face</option>
                                     <option value="head">Head</option>
                                 </select>
-                                <div v-if="form.errors.type" class="subtitle text-danger">
+                                <div v-if="form.errors.type" class="text-xs text-danger fw-semibold">
                                     {{ form.errors.type }}
                                 </div>
                             </div>
-                            <br />
-                            <label><strong>Item Name</strong></label>
-                            <br />
-                            <div class="title is-6 is-fullwidth">
-                                <input v-model="form.name" class="input" placeholder="Item Name">
-                                <div v-if="form.errors.name" class="subtitle text-danger">
-                                    {{ form.errors.name }}
-                                </div>
+                            <div class="mb-2">
+                        <div :class="{ 'text-danger': form.errors.name }"
+                            class="text-xs fw-bold text-muted text-uppercase">
+                            Item Name
+                        </div>
+                        <input type="text" v-model="form.name" class="form" placeholder="Item Name..." />
+                        <div v-if="form.errors.name" class="text-xs text-danger fw-semibold">
+                            {{ form.errors.name }}
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div :class="{ 'text-danger': form.errors.description }"
+                            class="text-xs fw-bold text-muted text-uppercase">
+                            Description
+                        </div>
+                        <textarea  v-model="form.description" class="mb-2 form pe-5" rows="3"
+                            placeholder="Description...."></textarea>
+                        <div v-if="form.errors.description" class="text-xs text-danger fw-semibold">
+                            {{ form.errors.description }}
+                        </div>
+                    </div>
+                    <div class="gap-3 mb-2 text-sm flex-container align-center">
+                        <div class="w-100">
+                            <div class="text-xs fw-bold text-muted text-uppercase">Price Coins</div>
+                            <input type="text" v-model="form.coins" class="form" placeholder="1" />
+                            <div v-if="form.errors.coins" class="text-xs text-danger fw-semibold">
+                                {{ form.errors.coins }}
                             </div>
-                            <p class="title is-6">Item Description</p>
-                            <div class="field">
-                                <p class="control">
-                                    <textarea v-model="form.description" class="textarea has-fixed-size"
-                                        placeholder="Description" />
-                                <div v-if="form.errors.description" class="subtitle text-danger">
-                                    {{ form.errors.description }}
-                                </div>
-                                </p>
+                        </div>
+                        <div class="w-100">
+                            <div class="text-xs fw-bold text-muted text-uppercase">Price Bucks</div>
+                            <input type="text" v-model="form.bucks" class="form" placeholder="10" />
+                            <div v-if="form.errors.bucks" class="text-xs text-danger fw-semibold">
+                                {{ form.errors.bucks }}
                             </div>
-                            <div class="columns">
-                                <div class="column is-6">
-                                    <div class="title is-6 is-fullwidth">
-                                        Cost Coins
-                                    </div>
-                                    <input v-model="form.price_coins" class="input" type="text"
-                                        placeholder="Cost Coins" />
-                                    <div v-if="form.errors.price_coins" class="subtitle text-danger">
-                                        {{ form.errors.price_coins }}
-                                    </div>
-                                </div>
-                                <div class="column is-6 is-fullwidth">
-                                    <div class="title is-6 is-fullwidth">
-                                        Cost Bucks
-                                    </div>
-                                    <input v-model="form.price_bucks" class="input" type="text"
-                                        placeholder="Cost Bucks" />
-                                    <div v-if="form.errors.price_bucks" class="subtitle text-danger">
-                                        {{ form.errors.price_bucks }}
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="gap-3 text-sm flex-container align-center">
+                        <div class="w-100">
+                            <div class="text-xs fw-bold text-muted text-uppercase">Image</div>
+                            <input class="form text-body" @input="form.image = $event.target.files[0]" type="file" />
+                            <div v-if="form.errors.image" class="text-xs text-danger fw-semibold">
+                                {{ form.errors.image }}
                             </div>
-                            <div class="content">
-                                <div class="columns">
-                                    <div class="column is-6"
-                                        :class="{ 'is-6': form && form.type !== 'face', 'is-12': form && form.type === 'face' }">
-                                        <div class="title is-6 is-fullwidth">
-                                            Image
-                                        </div>
-                                        <input class="input" @change="handleImageUpload($event)" type="file" />
-                                        <div v-if="form.errors.image"
-                                            class="has-text-weight-semibold is-size-6 has-text-danger">
-                                            {{ form.errors.image }}
-                                        </div>
-                                    </div>
-                                    <div class="column is-6 is-fullwidth" v-if="form && form.type !== 'face'">
-                                        <div class="title is-6 is-fullwidth">
-                                            Modal
-                                        </div>
-                                        <input class="input" @change="handleModalUpload($event)" type="file" />
-                                        <div v-if="form.errors.modal" class="subtitle text-danger">
-                                            {{ form.errors.modal }}
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="w-100" v-if="form && form.type !== 'face'">
+                            <div class="text-xs fw-bold text-muted text-uppercase">Modal</div>
+                            <input  class="form text-body" @change="handleModalUpload($event)" type="file" />
+
+                            <div v-if="form.errors.image" class="text-xs text-danger fw-semibold">
+                                {{ form.errors.image }}
+                            </div>
+                        </div>
+                    </div>
                                 <span v-if="form.image">
                                     File Output {{ form.image.name }}
                                 </span>
@@ -135,7 +137,7 @@ const handleModalUpload = (event) => {
                                 </span>
                                 <button :disabled="form.processing" @click="AttemptUpload"
                                     v-bind:class="{ 'is-loading': Uploading }" type="submit"
-                                    class="button has-text-white is-danger is-fullwidth">
+                                    class="btn btn-info w-100">
                                     <i class="fas fa-cloud">&nbsp;</i>
                                     Upload</button>
                             </div>
@@ -145,5 +147,6 @@ const handleModalUpload = (event) => {
             </div>
             <div class="column is-3"></div>
         </div>
+    </Sidebar>
     </Navbar>
 </template>

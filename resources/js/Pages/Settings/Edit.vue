@@ -30,7 +30,7 @@ function showModal(modalId: string): void {
 };
 
 const bannerVisible = ref(usePage<any>().props.auth.user.settings.profile_banner_enabled);
-const ActiveCategory: Ref<string> = ref("General");
+const ActiveCategory: Ref<string> = ref("Profile");
 
 function setActiveCategory(category): void {
     ActiveCategory.value = category;
@@ -92,61 +92,6 @@ const isVerifiedEmail = computed(() => {
     <Sidebar :alertsEnabled="false"
         :image="usePage<any>().props.auth.user.settings.profile_banner_enabled ? usePage<any>().props.auth.user.settings.profile_banner_url : null"
         :superBanActive="true" :OfficialImageBackground="false">
-        <template #SuperBanner>
-            <SuperBanner>
-                <template #bannerAsset>
-                    <v-lazy-image :style="usePage<any>().props.auth.user.settings.calling_card_enabled
-                        ? {
-                            margin: '0',
-                            'background-image':
-                                'url(' +
-                                usePage<any>().props.auth.user.settings.calling_card_url +
-                                ')',
-                            'background-repeat': 'no-repeat',
-                            'background-size': 'cover',
-                            'box-shadow':
-                                'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
-                        }
-                        : null
-                        " :src="usePage<any>().props.auth.user.headshot" width="100" class="space-image" alt="Headshot"
-                        src-placeholder="assets/img/space-error.png" />
-                </template>
-
-                <template #bannerName>
-                    <div class="text-xl" style="line-height: 16px">
-                        <div class="mb-1 flex-container align-middle gap-1 fw-semibold">
-                            {{ usePage<any>().props.auth.user.display_name }}
-                                <i v-if="usePage<any>().props.auth.user.staff"
-                                    :content="usePage<any>().props.auth.user.staff.Position"
-                                    v-tippy="{ placement: 'bottom' }" class="fad fa-gavel text-danger"></i>
-                                <i v-else-if="usePage<any>().props.auth.user.settings.beta_tester"
-                                    class="fad fa-hard-hat text-success"></i>
-                                <v-lazy-image
-                                    :src="'/assets/img/flags/' + usePage<any>().props.auth.user.settings.country_code + '.svg'"
-                                    alt="Country Flag" style="width: auto;height: 20px;"
-                                    src-placeholder="/assets/img/flags/other/pirate.svg" />
-                        </div>
-                        <div class="text-sm text-muted fw-semibold">
-                            Profile Preview
-                        </div>
-                    </div>
-                </template>
-                <template #bannerButtons>
-                    <button @click="showModal('picture-modal')" class="text-lg text-success squish"
-                        content="Change Profile Picture" v-tippy="{ placement: 'bottom' }">
-                        <i class="fad fa-user"></i>
-                    </button>
-                    <button class="text-lg text-warning squish" content="Change Calling Card"
-                        v-tippy="{ placement: 'bottom' }">
-                        <i class="fad fa-cards"></i>
-                    </button>
-                    <button @click="showModal('banner-modal')" class="text-lg text-info squish" content="Change Banner"
-                        v-tippy="{ placement: 'bottom' }">
-                        <i class="fad fa-pen"></i>
-                    </button>
-                </template>
-            </SuperBanner>
-        </template>
         <div class="modal" id="email-modal">
             <div class="modal-card modal-card-body modal-card-sm">
                 <div class="section-borderless">
@@ -341,22 +286,98 @@ const isVerifiedEmail = computed(() => {
                 </div>
             </div>
         </div>
+        <div class="cell medium-12">
+
+                    <div class="pb-4">
+                        <h3 class="text-lg font-medium">
+                            <div class=" text-xl fw-semibold">Settings</div>
+                        </h3>
+                        <p class="text-sm text-muted">
+                            Manage your account settings and set e-mail preferences.
+                        </p>
+                    </div>
+                    <div class="divider mx-1 my-1 mb-2" />
+                </div>
 
         <div class="cell medium-3">
-            <div class="mb-2 text-xl fw-semibold">Account Settings</div>
             <ul class="tabs flex-dir-column">
-                <li class="tab-item" v-for="category in categories">
-                    <a href="#" @click="setActiveCategory(category)" :class="{ active: category === ActiveCategory }"
+                <li class="tab-item" v-for="(categoryData, categoryName) in categories">
+                    <a href="#" @click="setActiveCategory(categoryName)" :class="{ active: categoryName === ActiveCategory }"
                         class="tab-link squish">
-                        {{ capitalized(category) }}
+                        <i :class="categoryData.icon"></i>
+                        {{ capitalized(categoryName) }}
                     </a>
                 </li>
             </ul>
         </div>
-        <div class="cell medium-8">
-            <div v-if="ActiveCategory === 'General'">
+        <div class="cell medium-9">
+            <template v-for="(categoryData, categoryName) in categories" :key="categoryName">
+                <div v-if="categoryName === ActiveCategory">
+                    <div class="pb-4">
+                        <h3 class="text-lg fw-semibold">
+                            <i :class="categoryData.icon"></i>
+
+                            {{ capitalized(categoryName) }}
+                        </h3>
+                        <p class="text-sm text-muted">
+                            {{ categoryData.description }} </p>
+                    </div>
+                    <div class="divider mx-1 my-1 mb-2" />
+
+                </div>
+            </template>
+            <div v-show="ActiveCategory === 'Profile'">
+                <div class="gap-4 align-middle flex-container" style="z-index: 1; position: relative">
+                    <v-lazy-image :style="usePage<any>().props.auth.user.settings.calling_card_enabled
+                        ? {
+                            margin: '0',
+                            'background-image':
+                                'url(' +
+                                usePage<any>().props.auth.user.settings.calling_card_url +
+                                ')',
+                            'background-repeat': 'no-repeat',
+                            'background-size': 'cover',
+                            'box-shadow':
+                                'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
+                        }
+                        : null
+                        " :src="usePage<any>().props.auth.user.headshot" width="100" class="space-image" alt="Headshot"
+                        src-placeholder="assets/img/space-error.png" />
+
+                        <div class="text-start">
+                            <div class="text-xl" style="line-height: 16px">
+                        <div class="mb-1 flex-container align-middle gap-1 fw-semibold">
+                            {{ usePage<any>().props.auth.user.display_name }}
+                                <i v-if="usePage<any>().props.auth.user.staff"
+                                    :content="usePage<any>().props.auth.user.staff.Position"
+                                    v-tippy="{ placement: 'bottom' }" class="fad fa-gavel text-danger"></i>
+                                <i v-else-if="usePage<any>().props.auth.user.settings.beta_tester"
+                                    class="fad fa-hard-hat text-success"></i>
+                                <v-lazy-image
+                                    :src="'/assets/img/flags/' + usePage<any>().props.auth.user.settings.country_code + '.svg'"
+                                    alt="Country Flag" style="width: auto;height: 20px;"
+                                    src-placeholder="/assets/img/flags/other/pirate.svg" />
+                        </div>
+                        <div class="text-sm text-muted fw-semibold">
+                            Profile Preview
+                        </div>
+                    </div>
+                    <button @click="showModal('picture-modal')" class="text-lg text-success squish"
+                        content="Change Profile Picture" v-tippy="{ placement: 'bottom' }">
+                        <i class="fad fa-user"></i>
+                    </button>
+                    <button class="text-lg text-warning squish" content="Change Calling Card"
+                        v-tippy="{ placement: 'bottom' }">
+                        <i class="fad fa-cards"></i>
+                    </button>
+                    <button @click="showModal('banner-modal')" class="text-lg text-info squish" content="Change Banner"
+                        v-tippy="{ placement: 'bottom' }">
+                        <i class="fad fa-pen"></i>
+                    </button>
+                </div>
+            </div>
                 <div class="mb-2 gap-4 align-middle flex-container align-justify">
-                    <div class="mb-2 text-xl fw-semibold">General</div>
+                    <div class="mb-2 text-xl fw-semibold">Profile</div>
                     <div class="gap-2 align-middle flex-container-lg">
                         <select @change="changeCountry($event.target.value)"
                             class="mb-2 form form-xs form-select form-has-section-color">
@@ -369,6 +390,7 @@ const isVerifiedEmail = computed(() => {
                 </div>
 
                 <div class="section-borderless">
+                    
                     <div class="card card-body">
                         <div class="mb-2 text-xl fw-semibold">
                             Account Information
@@ -468,9 +490,10 @@ const isVerifiedEmail = computed(() => {
                             </div>
                             <div class="mb-3 position-relative">
                                 <form>
-                                    <textarea class="form form-has-button pe-5" rows="5">{{ usePage<any>().props.auth.user.about_me
-                                }}</textarea>
-                                <input type="submit" class="btn btn-success btn-sm" value="Update" style="
+                                    <textarea class="form form-has-button pe-5" rows="5">{{ usePage<any>
+                                        ().props.auth.user.about_me
+                                    }}</textarea>
+                                    <input type="submit" class="btn btn-success btn-sm" value="Update" style="
                                             position: absolute;
                                             bottom: 10px;
                                             right: 10px;
@@ -520,7 +543,7 @@ const isVerifiedEmail = computed(() => {
                     </div>
                 </div>
             </div>
-            <div v-if="ActiveCategory === 'Security & Privacy'">
+            <div v-show="ActiveCategory === 'Security & Privacy'">
                 <div class="mb-1 text-xl fw-semibold">
                     Security & Privacy
                 </div>
@@ -675,7 +698,7 @@ const isVerifiedEmail = computed(() => {
                     </div>
                 </div>
             </div>
-            <div v-if="ActiveCategory === 'Billing'">
+            <div v-show="ActiveCategory === 'Billing'">
                 <div class="mb-2 align-middle flex-container align-justify">
                     <div class="text-xl fw-semibold">Billing</div>
                     <a href="#" class="btn btn-upgrade btn-sm"><i class="fad fa-rocket-launch me-2"></i>Upgrade</a>
