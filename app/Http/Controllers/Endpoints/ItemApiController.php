@@ -100,6 +100,7 @@ class ItemApiController extends Controller
                     'creator' => [
                         'username' => $item->creator->username,
                         'staff' => $item->creator->isStaff(),
+                        'verified' => $item->creator->settings->verified,
                     ],
                 ];
             })

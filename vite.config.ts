@@ -21,7 +21,7 @@ export default {
             host: '100.115.92.197',
         },
         watch: {
-            usePolling: false,
+            usePolling: true,
         },
     },
     css: {

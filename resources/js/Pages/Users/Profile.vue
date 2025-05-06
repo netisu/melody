@@ -293,34 +293,6 @@ watch(following, (newValue, oldValue) => {
                     </div>
                 </div>
             </Link>
-            <div class="mb-1 text-xl fw-semibold">Statistics</div>
-            <div class="mb-3 card card-body">
-                <div class="gap-1 align-middle flex-container flex-dir-column">
-                    <div class="text-sm text-membership fw-semibold w-100">
-                        <i class="text-center fad fa-rocket-launch text-membership" style="width: 26px"></i>
-                        Premium Subscriber
-                    </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-medal text-muted" style="width: 26px"></i>
-                        {{ "Rank Lvl. " + usePage<any>().props.user.level }}
-                    </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-users-medical text-muted" style="width: 26px"></i>
-                        Joined on {{ usePage<any>().props.user.joindate }}
-                    </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-clock text-muted" style="width: 26px"></i>
-                        Last seen {{ usePage<any>().props.user.DateHum }}
-                    </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-messages text-muted" style="width: 26px"></i>
-                        {{ usePage<any>().props.user.posts }} Discussion Posts
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="cell medium-6">
-            <div v-if="ActiveCategory === 'Profile'">
                 <div class="mb-1 text-xl fw-semibold">About Me</div>
                 <div class="mb-3 card card-body">
                     {{ usePage<any>().props.user.about_me }}
@@ -356,7 +328,33 @@ watch(following, (newValue, oldValue) => {
                     </div>
 
                 </div>
+            <div class="mb-1 text-xl fw-semibold">Statistics</div>
+            <div class="mb-3 card card-body">
+                <div class="gap-1 align-middle flex-container flex-dir-column">
+                    <div class="text-sm text-membership fw-semibold w-100">
+                        <i class="text-center fad fa-rocket-launch text-membership" style="width: 26px"></i>
+                        Premium Subscriber
+                    </div>
+                    <div class="text-sm w-100">
+                        <i class="text-center fad fa-medal text-muted" style="width: 26px"></i>
+                        {{ "Rank Lvl. " + usePage<any>().props.user.level }}
+                    </div>
+                    <div class="text-sm w-100">
+                        <i class="text-center fad fa-users-medical text-muted" style="width: 26px"></i>
+                        Joined on {{ usePage<any>().props.user.joindate }}
+                    </div>
+                    <div class="text-sm w-100">
+                        <i class="text-center fad fa-clock text-muted" style="width: 26px"></i>
+                        Last seen {{ usePage<any>().props.user.DateHum }}
+                    </div>
+                    <div class="text-sm w-100">
+                        <i class="text-center fad fa-messages text-muted" style="width: 26px"></i>
+                        {{ usePage<any>().props.user.posts }} Discussion Posts
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="cell medium-6">
             <div v-if="ActiveCategory === 'Posts'">
                 <div class="mb-1 text-xl fw-semibold">Posts</div>
                 <div class="mb-3 card card-body">

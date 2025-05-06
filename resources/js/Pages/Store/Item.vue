@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Sidebar from '@/Components/LayoutParts/Sidebar.vue';
 import Navbar from '@/Components/LayoutParts/Navbar.vue';
+import ItemPreviewer from '@/Components/ItemPreviewer.vue';
+
 import Footer from '@/Components/LayoutParts/Footer.vue';
 import AppHead from '@/Components/AppHead.vue';
 import { usePage } from '@inertiajs/vue3';
@@ -19,6 +21,7 @@ const JSONDATA = ref<{ message: string; type: string } | null>(null);
 const thumbnail = ref<HTMLImageElement>(null);
 
 let isPreview = ref(false);
+let is3d = ref(false);
 
 const itemOwnership = ref(usePage<any>().props.itemOwnership);
 
@@ -63,6 +66,14 @@ const reRender = throttle(() => {
             });
     });
 }, 5000);
+const set3D = () => {
+    if (is3d.value) {
+        is3d.value = false;
+    } else {
+        is3d.value = true;
+    }
+
+};
 
 const swap = () => {
     if (isPreview.value) {
@@ -172,8 +183,8 @@ function onImgErrorSmall(id) {
                 <i class="fad fa-clock"></i> This item is pending approval.
             </div>
             <div class="grid-x grid-margin-x grid-padding-y">
-                <div class="cell large-5">
-                    <div class="mb-3 card card-item overflow-hidden" :class="{'card-item-owned': itemOwnership}">
+                <div class="cell large-4">
+                    <div class="mb-3 card card-item overflow-hidden" :class="{ 'card-item-owned': itemOwnership }">
                         <div class="p-4 position-relative">
                             <div style="
                                 position: absolute;
@@ -216,6 +227,12 @@ function onImgErrorSmall(id) {
                                     </button>
                                 </div>
                                 <div class="ms-auto">
+                                    <button class="btn btn-secondary btn-xs"
+                                        @click="set3D()">
+                                        {{ is3d ? 'Item Image' : '3D' }}
+                                    </button>
+                                </div>
+                                <div class="ms-auto">
                                     <button v-if="usePage<any>().props.item.preview" class="btn btn-secondary btn-xs"
                                         @click="swap()">
                                         <i class="fad fa-shirt"></i> {{ isPreview ? 'View Item' : 'View Preview' }}
@@ -228,7 +245,8 @@ function onImgErrorSmall(id) {
                                     </button>
                                 </div>
                             </div>
-                            <img :src="usePage<any>().props.item.thumbnail" @error="onImgErrorSmall('thumbnail')"
+                            <ItemPreviewer v-if="is3d" class="mx-auto d-block" width="512" height="512" :hash="usePage<any>().props.item.hash" />
+                            <img :src="usePage<any>().props.item.thumbnail && !is3d" @error="onImgErrorSmall('thumbnail')"
                                 class="mx-auto d-block" id="thumbnail" ref="thumbnail" width="512" height="512">
                         </div>
                         <div v-if="itemOwnership"
@@ -343,14 +361,17 @@ function onImgErrorSmall(id) {
                     </div>
                 </div>
                 <div class="cell large-7">
-                    <div class="card-body">
+                    <div class="card card-body">
                         <div class="gap-2 mb-2 align-middle flex-container align-justify">
                             <div class="text-3xl fw-semibold">
                                 {{ usePage<any>().props.item.name }}
                             </div>
                             <div class="position-relative" style="margin-right: -10px">
-                                <Link v-if="usePage<any>().props.auth.user && usePage<any>().props.auth.user.id == usePage<any>().props.item.creator.id" as="button" :href="route(`store.edit`, {id: usePage<any>().props.item.id })" class="btn-circle" data-tooltip-title="More" data-tooltip-placement="bottom">
-                                    <i class="fad fa-pen"></i>
+                                <Link
+                                    v-if="usePage<any>().props.auth.user && usePage<any>().props.auth.user.id == usePage<any>().props.item.creator.id"
+                                    as="button" :href="route(`store.edit`, { id: usePage<any>().props.item.id })"
+                                    class="btn-circle" data-tooltip-title="More" data-tooltip-placement="bottom">
+                                <i class="fad fa-pen"></i>
                                 </Link>
                             </div>
                         </div>
@@ -399,45 +420,9 @@ function onImgErrorSmall(id) {
                                 data-toggle-modal="#purchase-with-coins-modal"
                                 @click="showModal('purchase-with-coins-modal')">
                                 <i class="fas fa-coins" style="width: 34px"></i>{{ usePage<any>().props.item.cost_coins
-                                    }}
+                                }}
                                     Coins
                             </button>
-                        </div>
-                    </div>
-                    <div class="p-3 mb-3">
-                        <div class="grid-x grid-margin-x">
-                            <div class="mb-2 cell small-6">
-                                <div class="text-xs fw-bold text-uppercase text-muted text-truncate">
-                                    Date Created
-                                </div>
-                                <div class="fw-semibold text-truncate">
-                                    {{ usePage<any>().props.item.DateHum }}
-                                </div>
-                            </div>
-                            <div class="mb-2 cell small-6">
-                                <div class="text-xs fw-bold text-uppercase text-muted text-truncate">
-                                    Last Updated
-                                </div>
-                                <div class="fw-semibold text-truncate">
-                                    {{ usePage<any>().props.item.UpdateHum }}
-                                </div>
-                            </div>
-                            <div class="mb-2 cell small-6 mb-md-0">
-                                <div class="text-xs fw-bold text-uppercase text-muted text-truncate">
-                                    Type
-                                </div>
-                                <div class="fw-semibold text-capitalize text-truncate">
-                                    {{ capitalizeFirstLetter(usePage<any>().props.item.item_type) }}
-                                </div>
-                            </div>
-                            <div class="cell small-6">
-                                <div class="text-xs fw-bold text-uppercase text-muted text-truncate">
-                                    Owners
-                                </div>
-                                <div class="fw-semibold text-truncate">
-                                    {{ usePage<any>().props.item.owners.count }}
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div v-if="usePage<any>().props.item.rare">
@@ -448,6 +433,29 @@ function onImgErrorSmall(id) {
                             <div class="text-xs fw-bold text-uppercase text-muted">
                                 PRICE CHART GOES HERE
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell large-12 mb-3">
+                <div class="grid-x grid-margin-x grid-align-center grid-padding-y">
+                    <div class="mb-2 cell small-3">
+                        <div class="text-xs fw-bold text-uppercase text-muted text-truncate"> Date Created </div>
+                        <div class="fw-semibold text-truncate">{{ usePage<any>().props.item.DateHum }}</div>
+                    </div>
+                    <div class="mb-2 cell small-3">
+                        <div class="text-xs fw-bold text-uppercase text-muted text-truncate"> Last Updated </div>
+                        <div class="fw-semibold text-truncate">  {{ usePage<any>().props.item.UpdateHum }}
+                        </div>
+                    </div>
+                    <div class="mb-2 cell small-3 mb-md-0">
+                        <div class="text-xs fw-bold text-uppercase text-muted text-truncate"> Type </div>
+                        <div class="fw-semibold text-capitalize text-truncate">                                    {{ capitalizeFirstLetter(usePage<any>().props.item.item_type) }}
+                        </div>
+                    </div>
+                    <div class="cell small-3">
+                        <div class="text-xs fw-bold text-uppercase text-muted text-truncate"> Owners </div>
+                        <div class="fw-semibold text-truncate">                                    {{ usePage<any>().props.item.owners.count }}
                         </div>
                     </div>
                 </div>

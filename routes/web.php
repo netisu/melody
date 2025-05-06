@@ -23,6 +23,8 @@ use App\Http\Controllers\{
     Notification,
     MembershipController,
 };
+use App\Http\Middleware\EnsurePasswordIsConfirmed;
+
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
 use App\Models\Item;
@@ -75,7 +77,7 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
     Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
         Route::get('/discover', [UserController::class, 'UserIndex'])->name('page');
         Route::get('/@{username}', [UserController::class, 'ProfileIndex'])->name('profile');
-        Route::group(['middleware' => 'auth'], function () {
+        Route::middleware(['auth', EnsurePasswordIsConfirmed::class])->group(function () {
             Route::group(['as' => 'settings.', 'prefix' => 'settings'], function () {
                 Route::get('/', [USController::class, 'edit'])->name('page');
                 Route::patch('/update', [USController::class, 'update'])->name('update');
@@ -204,6 +206,9 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
         return redirect()->to(route('store.item', 194));
     });
     
+    Route::get('/confirm-identity', [AuthController::class, 'showConfirmForm'])->name('password.confirm.form');
+    Route::post('/confirm-password', [AuthController::class, 'confirmPassword'])->name('password.confirm');
+
     Route::get('/brokenegg', function () {
         if (config('Values.in_event') == true && !Auth::user()->ownsItem(199)) {
             $eventItem = Item::where('id', 199)->first();

@@ -4,7 +4,7 @@ Unauthorized use of this code (Not Mendcore) is strictly prohibited.
 -->
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ App::isLocale('ar') ? 'rtl' : 'ltr' }}" prefix="og: https://ogp.me/ns#">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ App::isLocale('he') ? 'rtl' : 'ltr' }}" prefix="og: https://ogp.me/ns#">
 
 <head>
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
@@ -207,7 +207,7 @@ Unauthorized use of this code (Not Mendcore) is strictly prohibited.
 
   // Save the selected theme in Storage
   try {
-    if (typeof localStorage!== 'undefined') {
+    if (typeof localStorage !== 'undefined') {
       localStorage.setItem('theme', theme);
     } else if (typeof sessionStorage!== 'undefined') {
       sessionStorage.setItem('theme', theme);

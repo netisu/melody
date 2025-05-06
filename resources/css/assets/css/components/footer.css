@@ -1,6 +1,6 @@
 .footer {
     background: var(--section-bg);
-    border-top: 1px solid var(--section-border-color);
+    border-top: 2px dashed var(--section-border-color);
     margin-top: 40px;
     position: sticky;
     top: 100%;

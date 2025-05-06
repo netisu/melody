@@ -249,15 +249,6 @@ watch(
             </div>
         </ul>
     </nav>
-    <nav v-if="props.site_config.announcement" class="sitewide-alert">
-        <div class="py-2 text-center alert alert-danger alert-wide fw-semibold">
-            <div class="gap-2 text-center align-middle flex-container align-center">
-                <span class="text-wrap text-truncate">
-                    {{ props.site_config.announcement_message }}
-                </span>
-            </div>
-        </div>
-    </nav>
     <div v-if="image" class="profile-banner" :class="{ special: OfficialImageBackground }">
         <img class="masoqi" :style="{
             backgroundImage: `url(${image})`,

@@ -119,16 +119,16 @@ provide("selectedSubCategory", selectedSubCategory);
                                     left: 10px;
                                 ">
                             <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
-                                <i class="fad fa-calendar-star" style="width: 18px"></i>
+                                <i class="fad fa-calendar-star"></i>
                             </div>
                             <div v-else-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                <i class="fad fa-star" style="width: 18px"></i>
+                                <i class="fad fa-star"></i>
                             </div>
                             <div v-else-if="item.time_off_sale != null" class="mb-1 badge badge-warning fw-semibold">
-                                <i class="fad fa-clock" style="width: 18px"></i>
+                                <i class="fad fa-clock"></i>
                             </div>
                             <div v-else-if="!item.onsale" class="mb-1 badge badge-secondary fw-semibold">
-                                <i class="fad fa-wheat-slash"style="width: 18px"></i>
+                                <i class="fad fa-wheat-slash"></i>
                             </div>
                         </div>
                         <img :src="item.thumbnail" :id="item.thumbnail" @error="onImgErrorSmall(item.thumbnail)" />
@@ -139,9 +139,9 @@ provide("selectedSubCategory", selectedSubCategory);
                     </Link>
                     <div class="text-xs fw-semibold text-truncate">
                         <span class="text-muted">By:</span>&nbsp;
-                        <Link :href="creatorRoute(item.creator.username)">
+                        <Link :class="{'text-danger': item.creator.staff}" :href="creatorRoute(item.creator.username)">
                         {{ "@" + item.creator.username
-                        }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
+                        }}<i v-if="item.creator.verified" class="fas fa-shield-check text-success ms-1"></i></Link>
                     </div>
                 </div>
             </div>

@@ -21,12 +21,33 @@ use App\Models\Item;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
 
+    public function showConfirmForm()
+    {
+        return Inertia::render('App/ConfirmYourIdentity', [
+            'intendedUrl' => Session::get('url.intended'),
+        ]);
+    }
+
+    public function confirmPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required',
+        ]);
+
+        if (! Hash::check($request->password, Auth::user()->password)) {
+            return response()->json(['message' => 'Incorrect password.'], 422);
+        }
+
+        $request->session()->put('password.confirmed_at', now()->timestamp);
+
+        return response()->json(['intended' => $request->input('intended')]);
+    }
     public function LoginVal(Request $request): RedirectResponse
     {
 

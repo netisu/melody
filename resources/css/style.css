@@ -401,7 +401,5 @@ body {
     font-weight: 500;
     background: var(--body-bg);
     color: var(--body-color) !important;
-    font-family: "Lexend Deca", sans-serif;
-    letter-spacing: -0.5px;
-    
+    font-family: "Lexend Deca", sans-serif;    
 }

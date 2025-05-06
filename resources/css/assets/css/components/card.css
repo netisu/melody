@@ -1,6 +1,6 @@
 .card {
     background: var(--section-bg);
-    border: 1px solid var(--section-border-color);
+    border: 2px dashed var(--section-border-color);
     box-shadow:
         0 0.5em 1em -0.125em rgb(var(--section-shadow), 0.1),
         0 0px 0 1px,
@@ -18,12 +18,12 @@
 }
 
 .card-item-owned {
-    border-color: var(--success-500) !important;
+    border: 2px dashed var(--success-500) !important;
 }
 
 .card-item {
     border-radius: var(--rounded-lg);
-    border: 5px solid var(--section-border-color);
+    border: 2px dashed var(--section-border-color);
     background: radial-gradient(
         circle,
         rgba(79, 86, 96, 0.3019607843) 0%,
@@ -55,5 +55,6 @@
     border-bottom-width: 4px;
 }
 .card-status.online {
+    border-bottom-style: solid;
     border-bottom-color: var(--success-500);
 }

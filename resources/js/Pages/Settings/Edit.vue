@@ -4,16 +4,16 @@ import Sidebar from '@/Components/LayoutParts/Sidebar.vue';
 import Footer from '@/Components/LayoutParts/Footer.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
+import LanguageModal from '@/Components/Modal/LanguageModal.vue';
 // import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import Upload from '@/Components/Upload.vue';
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import { route } from 'momentum-trail'
 import { computed, ref } from 'vue';
 import type { Ref } from 'vue';
 import axios from "axios";
 import AppHead from '@/Components/AppHead.vue';
 import VLazyImage from 'v-lazy-image';
-import SuperBanner from '@/Components/LayoutParts/SuperBanner.vue';
 
 defineProps<{
     hasVerifiedEmail?: Boolean,
@@ -28,6 +28,9 @@ function showModal(modalId: string): void {
         modal.classList.toggle("active");
     }
 };
+
+const locale_active = usePage().props?.['locale'];
+const locales = usePage().props?.['locales'];
 
 const bannerVisible = ref(usePage<any>().props.auth.user.settings.profile_banner_enabled);
 const ActiveCategory: Ref<string> = ref("Profile");
@@ -288,22 +291,22 @@ const isVerifiedEmail = computed(() => {
         </div>
         <div class="cell medium-12">
 
-                    <div class="pb-4">
-                        <h3 class="text-lg font-medium">
-                            <div class=" text-xl fw-semibold">Settings</div>
-                        </h3>
-                        <p class="text-sm text-muted">
-                            Manage your account settings and set e-mail preferences.
-                        </p>
-                    </div>
-                    <div class="divider mx-1 my-1 mb-2" />
-                </div>
+            <div class="pb-4">
+                <h3 class="text-lg font-medium">
+                    <div class=" text-xl fw-semibold">Settings</div>
+                </h3>
+                <p class="text-sm text-muted">
+                    Manage your account settings and set e-mail preferences.
+                </p>
+            </div>
+            <div class="divider mx-1 my-1 mb-2" />
+        </div>
 
         <div class="cell medium-3">
             <ul class="tabs flex-dir-column">
                 <li class="tab-item" v-for="(categoryData, categoryName) in categories">
-                    <a href="#" @click="setActiveCategory(categoryName)" :class="{ active: categoryName === ActiveCategory }"
-                        class="tab-link squish">
+                    <a href="#" @click="setActiveCategory(categoryName)"
+                        :class="{ active: categoryName === ActiveCategory }" class="tab-link squish">
                         <i :class="categoryData.icon"></i>
                         {{ capitalized(categoryName) }}
                     </a>
@@ -344,38 +347,38 @@ const isVerifiedEmail = computed(() => {
                         " :src="usePage<any>().props.auth.user.headshot" width="100" class="space-image" alt="Headshot"
                         src-placeholder="assets/img/space-error.png" />
 
-                        <div class="text-start">
-                            <div class="text-xl" style="line-height: 16px">
-                        <div class="mb-1 flex-container align-middle gap-1 fw-semibold">
-                            {{ usePage<any>().props.auth.user.display_name }}
-                                <i v-if="usePage<any>().props.auth.user.staff"
-                                    :content="usePage<any>().props.auth.user.staff.Position"
-                                    v-tippy="{ placement: 'bottom' }" class="fad fa-gavel text-danger"></i>
-                                <i v-else-if="usePage<any>().props.auth.user.settings.beta_tester"
-                                    class="fad fa-hard-hat text-success"></i>
-                                <v-lazy-image
-                                    :src="'/assets/img/flags/' + usePage<any>().props.auth.user.settings.country_code + '.svg'"
-                                    alt="Country Flag" style="width: auto;height: 20px;"
-                                    src-placeholder="/assets/img/flags/other/pirate.svg" />
+                    <div class="text-start">
+                        <div class="text-xl" style="line-height: 16px">
+                            <div class="mb-1 flex-container align-middle gap-1 fw-semibold">
+                                {{ usePage<any>().props.auth.user.display_name }}
+                                    <i v-if="usePage<any>().props.auth.user.staff"
+                                        :content="usePage<any>().props.auth.user.staff.Position"
+                                        v-tippy="{ placement: 'bottom' }" class="fad fa-gavel text-danger"></i>
+                                    <i v-else-if="usePage<any>().props.auth.user.settings.beta_tester"
+                                        class="fad fa-hard-hat text-success"></i>
+                                    <v-lazy-image
+                                        :src="'/assets/img/flags/' + usePage<any>().props.auth.user.settings.country_code + '.svg'"
+                                        alt="Country Flag" style="width: auto;height: 20px;"
+                                        src-placeholder="/assets/img/flags/other/pirate.svg" />
+                            </div>
+                            <div class="text-sm text-muted fw-semibold">
+                                Profile Preview
+                            </div>
                         </div>
-                        <div class="text-sm text-muted fw-semibold">
-                            Profile Preview
-                        </div>
+                        <button @click="showModal('picture-modal')" class="text-lg text-success squish"
+                            content="Change Profile Picture" v-tippy="{ placement: 'bottom' }">
+                            <i class="fad fa-user"></i>
+                        </button>
+                        <button class="text-lg text-warning squish" content="Change Calling Card"
+                            v-tippy="{ placement: 'bottom' }">
+                            <i class="fad fa-cards"></i>
+                        </button>
+                        <button @click="showModal('banner-modal')" class="text-lg text-info squish"
+                            content="Change Banner" v-tippy="{ placement: 'bottom' }">
+                            <i class="fad fa-pen"></i>
+                        </button>
                     </div>
-                    <button @click="showModal('picture-modal')" class="text-lg text-success squish"
-                        content="Change Profile Picture" v-tippy="{ placement: 'bottom' }">
-                        <i class="fad fa-user"></i>
-                    </button>
-                    <button class="text-lg text-warning squish" content="Change Calling Card"
-                        v-tippy="{ placement: 'bottom' }">
-                        <i class="fad fa-cards"></i>
-                    </button>
-                    <button @click="showModal('banner-modal')" class="text-lg text-info squish" content="Change Banner"
-                        v-tippy="{ placement: 'bottom' }">
-                        <i class="fad fa-pen"></i>
-                    </button>
                 </div>
-            </div>
                 <div class="mb-2 gap-4 align-middle flex-container align-justify">
                     <div class="mb-2 text-xl fw-semibold">Profile</div>
                     <div class="gap-2 align-middle flex-container-lg">
@@ -390,7 +393,7 @@ const isVerifiedEmail = computed(() => {
                 </div>
 
                 <div class="section-borderless">
-                    
+
                     <div class="card card-body">
                         <div class="mb-2 text-xl fw-semibold">
                             Account Information
@@ -511,42 +514,8 @@ const isVerifiedEmail = computed(() => {
                         </div>
                     </div>
                 </div>
-                <div class="section-borderless">
-                    <div class="card card-body">
-                        <div class="mb-2 text-xl fw-semibold">
-                            Website Theme
-                        </div>
-
-                        <div id="theme-switcher-container" class="grid-x grid-margin-x grid-padding-y">
-                            <div v-for="(theme, index) in themes" class="cell large-6" :key="index">
-                                <!-- Move v-if inside the loop -->
-                                <div :class="{ active: currentTheme === theme.lowercase }"
-                                    class="mb-2 theme-selection squish card card-body card-inner mb-lg-0"
-                                    :id="theme.lowercase + '-theme-btn'" @click="setTheme(theme.lowercase)">
-                                    <div class="gap-4 align-middle flex-container">
-                                        <div class="selection-circle flex-child-grow show-for-large"></div>
-                                        <div class="gap-1 align-middle flex-container flex-dir-column"
-                                            style="min-width: 0">
-                                            <div :class="'theme-circle ' + theme.lowercase"></div>
-                                            <div class="text-lg fw-semibold text-truncate">
-                                                {{ theme.name }} Theme
-                                            </div>
-                                            <div class="selection-circle flex-child-grow show-for-small hide-for-large">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
             </div>
-            <div v-show="ActiveCategory === 'Security & Privacy'">
-                <div class="mb-1 text-xl fw-semibold">
-                    Security & Privacy
-                </div>
+            <div v-show="ActiveCategory === 'Account'">
                 <div class="section-borderless">
                     <div class="card card-body">
                         <div class="mb-2 text-xl fw-semibold">Security</div>
@@ -698,9 +667,61 @@ const isVerifiedEmail = computed(() => {
                     </div>
                 </div>
             </div>
+            <div v-show="ActiveCategory === 'Appearance'">
+                <div class="section-borderless">
+                    <div class="card card-body mb-3">
+                        <div class="mb-2 text-xl fw-semibold">
+                            Website Theme
+                        </div>
+
+                        <div id="theme-switcher-container" class="grid-x grid-margin-x grid-padding-y">
+                            <div v-for="(theme, index) in themes" class="cell large-6" :key="index">
+                                <!-- Move v-if inside the loop -->
+                                <div :class="{ active: currentTheme === theme.lowercase }"
+                                    class="mb-2 theme-selection squish card card-body card-inner mb-lg-0"
+                                    :id="theme.lowercase + '-theme-btn'" @click="setTheme(theme.lowercase)">
+                                    <div class="gap-4 align-middle flex-container">
+                                        <div class="selection-circle flex-child-grow show-for-large"></div>
+                                        <div class="gap-1 align-middle flex-container flex-dir-column"
+                                            style="min-width: 0">
+                                            <div :class="'theme-circle ' + theme.lowercase"></div>
+                                            <div class="text-lg fw-semibold text-truncate">
+                                                {{ theme.name }} Theme
+                                            </div>
+                                            <div class="selection-circle flex-child-grow show-for-small hide-for-large">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-body">
+                        <div class="mb-2 text-xl fw-semibold">
+                           Language
+                        </div>
+
+                        <div id="theme-switcher-container" class="grid-x grid-margin-x grid-padding-y">
+                            <div v-for="(name, locale) in locales" :key="locale" class="cell large-6">
+                            <div @click="setLocale(locale)" :class="{ 'language-active': locale_active === locale }"
+                                class="squish card card-body card-inner mb-lg-0" style="cursor: pointer;">
+                                <div class="align-middle">
+                                    <div class="gap-2 align-start flex-container" style="min-width: 0">
+                                        <div class="selection-circle language"><i
+                                                :class="{ 'fa-duotone fa-check': locale_active === locale }"></i></div>
+                                        <div class="fw-semibold text-language text-truncate">
+                                            {{ name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div v-show="ActiveCategory === 'Billing'">
                 <div class="mb-2 align-middle flex-container align-justify">
-                    <div class="text-xl fw-semibold">Billing</div>
                     <a href="#" class="btn btn-upgrade btn-sm"><i class="fad fa-rocket-launch me-2"></i>Upgrade</a>
                 </div>
                 <div class="mb-3 card card-body">
@@ -936,6 +957,9 @@ export default {
                     themeBtn.classList.add('active');
                 }
             }
+        },
+        setLocale(locale) {
+            router.get(route(`auth.language`, { language: locale }))
         },
         setTheme(theme) {
 

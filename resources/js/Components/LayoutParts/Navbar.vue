@@ -67,6 +67,7 @@ const topbar = [
         es: { title: "Juegos" },
         ru: { title: "Игры" },
         ja: { title: "ゲーム" },
+        he: {title: "משחקים"},
     },
     {
         url: route(`store.page`),
@@ -76,6 +77,7 @@ const topbar = [
         es: { title: "Mercado" },
         ru: { title: "Маркет" },
         ja: { title: "市場" },
+        he: {title: "שוק"},
     },
     {
         url: route(`forum.page`, { id: 1 }),
@@ -85,6 +87,7 @@ const topbar = [
         es: { title: "Conversar" },
         ru: { title: "Обсуждение" },
         ja: { title: "議論" },
+        he: {title: "פורום"},
     },
     {
         url: route(`spaces.page`),
@@ -94,6 +97,7 @@ const topbar = [
         es: { title: "Espacios" },
         ru: { title: "Развивать" },
         ja: { title: "スペース" },
+        he: {title: "קבוצות"},
     },
 ];
 const left = [
@@ -105,19 +109,43 @@ const left = [
         es: { title: "Desarrollar" },
         ru: { title: "Мои создания" },
         ja: { title: "発展" },
+        he: {title: "פיתוח"},
+
     },
     {
         url: route(`user.page`),
         ActiveLink: "user.*",
-        section: "SOCIAL",
         icon: "fad fa-users",
         en: { title: "Players" },
         es: { title: "Jugadoras" },
         ru: { title: "Игроки" },
         ja: { title: "発展" },
+        he: {title: "משתמשים"},
+
+    },
+    {
+        url: route(`user.page`),
+        ActiveLink: "user.*",
+        icon: "fad fa-user-crown",
+        en: { title: "Profile" },
+        es: { title: "Jugadoras" },
+        ru: { title: "Игроки" },
+        ja: { title: "発展" },
+        he: {title: "משתמשים"},
+
     },
 ];
 const right = [
+    {
+        url: route(`promocodes.page`),
+        ActiveLink: "promocodes.page",
+        icon: "fad fa-ticket",
+        en: { title: "Promocodes" },
+        es: { title: "Códigos promocionales" },
+        ru: { title: "Промокоды" },
+        ja: { title: "プロモコード" },
+        he: {title: "דירוג"},
+    },
     {
         url: route(`leaderboard.page`),
         ActiveLink: "leaderboard.page",
@@ -126,6 +154,7 @@ const right = [
         es: { title: "Tabla de clasificación" },
         ru: { title: "Таблица лидеров" },
         ja: { title: "リーダーボード" },
+        he: {title: "דירוג"},
     },
     {
         url: "#",
@@ -135,6 +164,7 @@ const right = [
         es: { title: "Mejora" },
         ru: { title: "Подписки" },
         ja: { title: "アップグレード" },
+        he: {title: "דירוג"},
     },
 ];
 const lang = computed<any>(() => props.locale);
@@ -286,7 +316,15 @@ const props = usePage<any>().props;
             </div>
         </div>
     </div>
-
+    <nav v-if="props.site_config.announcement" class="sitewide-alert">
+        <div class="py-2 text-center alert alert-danger alert-wide fw-semibold">
+            <div class="gap-2 text-center align-middle flex-container align-center">
+                <span class="text-wrap text-truncate">
+                    {{ props.site_config.announcement_message }}
+                </span>
+            </div>
+        </div>
+    </nav>
     <nav class="navbar" :class="{ 'navbar-landing': landing }">
         <ul class="navbar-nav grid-x">
             <Link as="li"

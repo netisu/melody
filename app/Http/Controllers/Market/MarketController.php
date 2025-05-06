@@ -83,6 +83,7 @@ class MarketController extends Controller
                 'item_type' => $item->item_type,
                 'thumbnail' => $item->thumbnail(),
                 'preview' => $item->preview(),
+                'hash' => $item->hash,
                 'description' => $item->description,
                 'public_view' => $item->public_view,
                 'status' => $item->status,
