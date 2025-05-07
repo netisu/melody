@@ -43,10 +43,10 @@ class HandleInertiaRequests extends Middleware
         $pendingSpaces = Space::where(column: 'thumbnail_pending', operator: true)->with(relations: 'creator')->get();
 
         $pendingItemsAndSpaces = $pendingItems->merge(items: $pendingSpaces);
-        $notifications = $request->user()->unreadNotifications()->limit(value: 5)->get()
+        $notifications =  $request->user() ? $request->user()->unreadNotifications()->limit(value: 5)->get()
         ->each(callback: function ($notification): void {
             $notification->DateHum = $notification->created_at->diffForHumans();
-        });
+        }) : null;
 
         return array_merge( parent::share(request: $request), [
             'site' => config(key: 'Values'),

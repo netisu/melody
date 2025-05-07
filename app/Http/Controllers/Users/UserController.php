@@ -10,15 +10,8 @@ use App\Models\Followers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
 
     public function UserIndex()
     {
@@ -80,14 +73,13 @@ class UserController extends Controller
 
         switch ($request->category) {
             case '':
-            case 'Profile':
             case 'Inventory':
             case 'Followers':
             case 'Following':
             case 'Spaces':
             case 'Posts':
                 $categories = [
-                    'Main' => ['Profile', 'Inventory', 'Posts', 'Spaces'],
+                    'Main' => ['Inventory', 'Posts', 'Spaces'],
                     'Social' => ['Followers', 'Following'],
                 ];
                 break;

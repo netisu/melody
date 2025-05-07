@@ -10,16 +10,6 @@ use Illuminate\Support\Facades\Notification;
 
 class NotificationController extends Controller
 {
-    public function NotificationIndex()
-    {
-        // page soon
-
-        return inertia('Welcome', [
-            'LandingItems' => $landingItems,
-            'LandingPosts' => $landingPosts,
-        ]);
-    }
-
     public function ReadAll()
     {
         $user = Auth::user();

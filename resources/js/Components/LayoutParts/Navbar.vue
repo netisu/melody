@@ -29,7 +29,9 @@ withDefaults(defineProps<Props>(), {
     landing: false,
 });
 const props = usePage<any>().props;
-
+    const profileUrl = props.auth?.user?.username
+        ? route('user.profile', { username: props.auth.user.username })
+        : route(`auth.login.page`);
 const SearchLoading = ref(false);
 
 const search = ref("");
@@ -126,14 +128,21 @@ const left = [
 
     },
     {
-        url: route(`user.profile`, {
-            username: props.auth?.user?.username,
-        }),
-        ActiveLink: route(`user.profile`, {
-            username: props.auth?.user?.username,
-        }),
+        url: profileUrl,
+        ActiveLink: profileUrl,
         icon: "fad fa-user-crown",
         en: { title: "Profile" },
+        es: { title: "Jugadoras" },
+        ru: { title: "Игроки" },
+        ja: { title: "発展" },
+        he: { title: "משתמשים" },
+
+    },
+    {
+        url: route(`admin.page`),
+        ActiveLink: 'admin.*',
+        icon: "fad fa-gavel",
+        en: { title: "Admin" },
         es: { title: "Jugadoras" },
         ru: { title: "Игроки" },
         ja: { title: "発展" },
@@ -300,14 +309,6 @@ const lang = computed<any>(() => props.locale);
                     <span>{{ topbarlinks[lang].title }}</span>
                 </NavLink>
             </template>
-            <li class="nav-item text-danger cell shrink show-for-large">
-                <div class="side-item">
-                    <a v-if="props.auth?.user && props.auth?.user?.staff" :href="route('admin.page')" class="nav-link">
-                        <i class="fad fa-gavel"></i> &nbsp;
-                        <span>Admin</span>
-                    </a>
-                </div>
-            </li>
             <li class="mx-1 align-middle nav-item cell auto nav-search mx-md-3">
                 <input v-if="props.site.frontend.search_bar" v-model="search" type="text" class="form"
                     id="global-search-bar" name="hidden" autocomplete="off" placeholder="Search..."

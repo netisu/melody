@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Space;
 use Illuminate\Support\Carbon;
+use App\Http\Middleware\EnsurePasswordIsConfirmed;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptionxceptions) {
@@ -54,6 +55,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
             $pendingItemsAndSpaces = $pendingItems->merge($pendingSpaces);
 
+            $notifications =  $request->user() ? $request->user()->unreadNotifications()->limit(value: 5)->get()
+            ->each(callback: function ($notification): void {
+                $notification->DateHum = $notification->created_at->diffForHumans();
+            }) : null;
+
             if (app()->environment(['local', 'testing'])) {
                 return $response;
             }
@@ -84,7 +90,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return inertia('App/Error', [
                 'site' => config('Values'),
-                'auth' => function () use ($request,  $pendingItemsAndSpaces) {
+                'auth' => function () use ($request,  $pendingItemsAndSpaces, $notifications): array {
                     $response = [
                         'user' => $request->user() ? [
                             'id' => $request->user()->id,
@@ -94,8 +100,6 @@ return Application::configure(basePath: dirname(__DIR__))
                             'coins' => shortNum($request->user()->coins),
                             'bucks' => shortNum($request->user()->bucks),
                             'staff' => $request->user()->isStaff() ?? false,
-                            'position' => $request->user()->CurrentPosition() ?? null,
-                            'positionID' => $request->user()->CurrentPositionID() ?? null,
                             'headshot' => $request->user()->headshot(),
                             'thumbnail' => $request->user()->thumbnail(),
                             'settings' => $request->user()->settings,
@@ -104,23 +108,22 @@ return Application::configure(basePath: dirname(__DIR__))
                             'nextlevelxp' =>  $request->user()->nextLevelAt(),
                             'mainSpaces' => $request->user()->mainSpaces(),
                             'navSpaces' => $request->user()->navSpaces(),
-                            'notifications' => $request->user()->unreadNotifications()->limit(5)->get()
-                                ->each(function ($notification) {
-                                    $notification->DateHum = $notification->created_at->diffForHumans();
-                                }),
+                            'notifications' => $notifications,
                         ] : null,
                     ];
 
                     if ($request->user() && $request->user()->isStaff()) {
+                        $response['user']['position'] = $request->user()->CurrentPosition();
+                        $response['user']['positionID'] = $request->user()->CurrentPositionID();
                         $response['user']['pendingAssets'] = $pendingItemsAndSpaces->count();
                     };
 
-                    if ($request->user() && config('Values.in_event')) {
-                        $response['user']['event_currency'] = shortNum($request->user()->event_currency);
+                    if ($request->user() && config(key: 'Values.in_event')) {
+                        $response['user']['event_currency'] = shortNum(num: $request->user()->event_currency);
                     };
 
-                    if ($request->user() && $request->route()->named('user.settings.page')) {
-                        $response['user']['email'] = preg_replace('/[^@]+@([^\s]+)/', '' . substr($request->user()->email, 0, 3) . '********@$1', $request->user()->email);
+                    if ($request->user() && $request->route()->named(patterns: 'user.settings.page')) {
+                        $response['user']['email'] = preg_replace(pattern: '/[^@]+@([^\s]+)/', replacement: '' . substr(string: $request->user()->email, offset: 0, length: 3) . '********@$1', subject: $request->user()->email);
                         $response['user']['birthdate'] = $request->user()->birthdate;
                         $response['user']['email_verified_at'] = $request->user()->email_verified_at;
                     };
@@ -153,12 +156,6 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__ . '/../routes/web.php',
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
-        then: function () {
-            Route::middleware(['web', 'admin'])->namespace('App\Http\Controllers\Admin')
-                ->prefix('admin')
-                ->name('admin.')
-                ->group(base_path('routes/admin.php'));
-        },
     )->withBroadcasting(
         __DIR__ . '/../routes/channels.php',
         ['prefix' => 'api', 'middleware' => ['api', 'auth:sanctum']],
@@ -167,8 +164,8 @@ return Application::configure(basePath: dirname(__DIR__))
             $middleware->throttleWithRedis();
         }
         $middleware->replace(
-            \Illuminate\Http\Middleware\TrustProxies::class,
-            \Monicahq\Cloudflare\Http\Middleware\TrustProxies::class
+            search: \Illuminate\Http\Middleware\TrustProxies::class,
+            replace: \Monicahq\Cloudflare\Http\Middleware\TrustProxies::class
         );
 
         $environment = env('APP_ENV');
@@ -187,9 +184,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 $middleware->trustProxies(
                     at: '*',
                     headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
-                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST |
-                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT |
-                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO
                 );
                 break;
 
@@ -198,7 +195,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 $middleware->trustProxies(
                     at: ['127.0.0.1', '::1'],
                     headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
-                    \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO
                 );
         }
         $middleware->validateCsrfTokens(except: [

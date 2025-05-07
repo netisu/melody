@@ -16,6 +16,7 @@
     box-shadow: none;
     border-bottom: none;
     position: sticky;
+    border-bottom: 1px dashed var(--gray-100);
 }
 
 .navbar.bottom_nav {

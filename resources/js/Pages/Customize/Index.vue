@@ -290,18 +290,16 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-.color-picker {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border: dashed 4px gray;
-}
-
-.color-picker input[type="color"] {
-    position: absolute;
+#colorPicker {
+  display: none;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
     width: 100%;
-    height: 100%;
-    cursor: pointer;
+    border: none;
+    opacity: 0;
+    position: absolute;
 }
 
 .fade-in-avatar {
@@ -395,9 +393,15 @@ onMounted(() => {
                             height: '32px',
                         }"></div>
                     </div>
-                    <input class="ColorPickerItem" type="color" style="background: linear-gradient(in hsl longer hue 45deg, red 0 100%);display: inline-block;
+                    <div class="color-picker">
+                        <label for="colorPicker">
+                            <div class="ColorPickerItem" type="color" style="background: linear-gradient(in hsl longer hue 45deg, red 0 100%);border-radius: 5px;background: url('/assets/img/rainbow-square.png');background-size: 100% 100%;display: inline-block;
                             width: 32px;
-                            height: 32px;" @change="setColor(($event.target as HTMLInputElement).value.replace('#', ''))">
+                            height: 32px;"
+                        ></div>
+                        </label>
+                        <input type="color" @change="setColor(($event.target as HTMLInputElement).value.replace('#', ''))" id="colorPicker">
+                    </div>
                     <div class="text-xs text-muted fw-semibold">
                         After changing your avatar part your avatar will rerender with the changes
                         applied.
@@ -459,101 +463,100 @@ onMounted(() => {
             <div class="mb-3">
                 <div class="grid-x">
                     <template v-if="selectHatSlot === true" class="text-center cell medium-12">
-                            <div class="grid-x grid-margin-x grid-padding-y">
-                                <template v-for="n in 6" :key="n" :value="n">
-                                    <div class="cell large-3 medium-3 small-6" v-if="wearingHats[n - 1]">
-                                        <div class="d-block">
-                                            <div @click="SortItemByType(wearingHats[n - 1].id, wearingHats[n - 1].item_type, 'wear')" class="p-2 mb-1 card card-item position-relative">
-                                                <img :src="wearingHats[n - 1].thumbnail"
-                                                    :id="wearingHats[n - 1].thumbnail"
-                                                    @error="onImgErrorSmall(wearingHats[n - 1].thumbnail)" />
-                                            </div>
-                                            <Link as="p" style="cursor:pointer;"
-                                                :href="route(`store.item`, { id: wearingHats[n - 1].id })"
-                                                class="text-body text-center fw-semibold text-truncate">
-                                            {{ wearingHats[n - 1].name }}
-                                            </Link>
+                        <div class="grid-x grid-margin-x grid-padding-y">
+                            <template v-for="n in 6" :key="n" :value="n">
+                                <div class="cell large-3 medium-3 small-6" v-if="wearingHats[n - 1]">
+                                    <div class="d-block">
+                                        <div @click="SortItemByType(wearingHats[n - 1].id, wearingHats[n - 1].item_type, 'wear')"
+                                            class="p-2 mb-1 card card-item position-relative">
+                                            <img :src="wearingHats[n - 1].thumbnail" :id="wearingHats[n - 1].thumbnail"
+                                                @error="onImgErrorSmall(wearingHats[n - 1].thumbnail)" />
                                         </div>
+                                        <Link as="p" style="cursor:pointer;"
+                                            :href="route(`store.item`, { id: wearingHats[n - 1].id })"
+                                            class="text-body text-center fw-semibold text-truncate">
+                                        {{ wearingHats[n - 1].name }}
+                                        </Link>
                                     </div>
-                                    <div class="cell large-3 medium-3 small-6" v-else>
-                                        <div class="d-block">
-                                            <div class="p-2 mb-1 card card-item position-relative d-flex align-items-center justify-content-center"
-                                                style="min-height: 100px; cursor: pointer;"
-                                                @click="fillSlot(n)">
-                                                <i class="fa-solid fa-hat-beach text-2xl"></i>
-                                                <div class="position-absolute bottom-0 start-0 w-100 text-center p-1"
-                                                    style="background-color: rgba(0, 0, 0, 0.05);">
-                                                    <p style="margin-bottom: 0; font-size: 0.8rem; color: #555;">Hat
-                                                        Slot {{ n }}</p>
-                                                </div>
+                                </div>
+                                <div class="cell large-3 medium-3 small-6" v-else>
+                                    <div class="d-block">
+                                        <div class="p-2 mb-1 card card-item position-relative d-flex align-items-center justify-content-center"
+                                            style="min-height: 100px; cursor: pointer;" @click="fillSlot(n)">
+                                            <i class="fa-solid fa-hat-beach text-2xl"></i>
+                                            <div class="position-absolute bottom-0 start-0 w-100 text-center p-1"
+                                                style="background-color: rgba(0, 0, 0, 0.05);">
+                                                <p style="margin-bottom: 0; font-size: 0.8rem; color: #555;">Hat
+                                                    Slot {{ n }}</p>
                                             </div>
                                         </div>
                                     </div>
-                                </template>
-                            </div>
+                                </div>
+                            </template>
+                        </div>
                     </template>
                     <template v-else>
-                    <div class="text-center cell medium-3 align-left">
-                        <div class="text-center flex-container align-center">
-                            <div class="text-center" style="transform:scale(0.7);margin-top:-25px;">
-                                <div style="margin-bottom: 5px">
-                                    <button class="avatar-body-part" @click="handlePartSelection('head')" id="head"
-                                        :style="{
-                                            backgroundColor: '#' + userAvatar.color_head,
-                                            padding: '5px',
-                                            borderRadius: '15px',
-                                            marginTop: '-1px',
-                                            width: '60', height: '50',
-                                        }">
-                                        <VLazyImage :src="userAvatar.current_face"
-                                            :src-placeholder="usePage<any>().props.site.production.domains.storage + '/assets/default.png'"
-                                            width="50" height="50" />
-                                    </button>
-                                </div>
-                                <div style="display: flex; margin-bottom: 5px">
-                                    <button class="avatar-body-part" @click="handlePartSelection('left_arm')"
-                                        id="left_arm" :style="{
-                                            backgroundColor: '#' + userAvatar.color_left_arm,
-                                            padding: '50px',
-                                            paddingRight: '0px',
-                                        }"></button>
+                        <div class="text-center cell medium-3 align-left">
+                            <div class="text-center flex-container align-center">
+                                <div class="text-center" style="transform:scale(0.7);margin-top:-25px;">
+                                    <div style="margin-bottom: 5px">
+                                        <button class="avatar-body-part" @click="handlePartSelection('head')" id="head"
+                                            :style="{
+                                                backgroundColor: '#' + userAvatar.color_head,
+                                                padding: '5px',
+                                                borderRadius: '15px',
+                                                marginTop: '-1px',
+                                                width: '60', height: '50',
+                                            }">
+                                            <VLazyImage :src="userAvatar.current_face"
+                                                :src-placeholder="usePage<any>().props.site.production.domains.storage + '/assets/default.png'"
+                                                width="50" height="50" />
+                                        </button>
+                                    </div>
+                                    <div style="display: flex; margin-bottom: 5px">
+                                        <button class="avatar-body-part" @click="handlePartSelection('left_arm')"
+                                            id="left_arm" :style="{
+                                                backgroundColor: '#' + userAvatar.color_left_arm,
+                                                padding: '50px',
+                                                paddingRight: '0px',
+                                            }"></button>
 
-                                    <button class="avatar-body-part" @click="handlePartSelection('torso')" id="torso"
-                                        :style="{
-                                            backgroundColor: '#' + userAvatar.color_torso,
-                                            padding: '50px',
-                                        }"></button>
+                                        <button class="avatar-body-part" @click="handlePartSelection('torso')"
+                                            id="torso" :style="{
+                                                backgroundColor: '#' + userAvatar.color_torso,
+                                                padding: '50px',
+                                            }"></button>
 
-                                    <button class="avatar-body-part" @click="handlePartSelection('right_arm')"
-                                        id="right_arm" :style="{
-                                            backgroundColor: '#' + userAvatar.color_right_arm,
-                                            padding: '50px',
-                                            paddingRight: '0px',
-                                        }"></button>
-                                </div>
-                                <div class="display: flex; margin-bottom: 5px">
-                                    <button class="avatar-body-part" @click="handlePartSelection('left_leg')"
-                                        name="left_leg" :style="{
-                                            backgroundColor: '#' + userAvatar.color_left_leg,
-                                            padding: '50px',
-                                            paddingRight: '0px',
-                                            paddingLeft: '47px',
-                                        }"></button>
+                                        <button class="avatar-body-part" @click="handlePartSelection('right_arm')"
+                                            id="right_arm" :style="{
+                                                backgroundColor: '#' + userAvatar.color_right_arm,
+                                                padding: '50px',
+                                                paddingRight: '0px',
+                                            }"></button>
+                                    </div>
+                                    <div class="display: flex; margin-bottom: 5px">
+                                        <button class="avatar-body-part" @click="handlePartSelection('left_leg')"
+                                            name="left_leg" :style="{
+                                                backgroundColor: '#' + userAvatar.color_left_leg,
+                                                padding: '50px',
+                                                paddingRight: '0px',
+                                                paddingLeft: '47px',
+                                            }"></button>
 
-                                    <button class="avatar-body-part" @click="handlePartSelection('right_leg')"
-                                        name="right_leg" :style="{
-                                            backgroundColor: '#' + userAvatar.color_right_leg,
-                                            padding: '50px',
-                                            paddingRight: '0px',
-                                            borderBottom: '15px',
-                                            paddingLeft: '47px',
-                                        }"></button>
+                                        <button class="avatar-body-part" @click="handlePartSelection('right_leg')"
+                                            name="right_leg" :style="{
+                                                backgroundColor: '#' + userAvatar.color_right_leg,
+                                                padding: '50px',
+                                                paddingRight: '0px',
+                                                borderBottom: '15px',
+                                                paddingLeft: '47px',
+                                            }"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="text-center cell medium-9">
-                        
+                        <div class="text-center cell medium-9">
+
                             <div class="grid-x grid-margin-x grid-padding-y">
                                 <div class="cell large-3 medium-3 small-6" v-for="(item, index) in wearingItems"
                                     :key="index">
@@ -571,13 +574,13 @@ onMounted(() => {
                                 </div>
                             </div>
 
-                        <div v-if="!wearingItems.length" class="gap-3 text-start flex-container flex-dir-column">
-                            <div class="text-md text-muted fw-semibold">
-                                You are not wearing any items.
+                            <div v-if="!wearingItems.length" class="gap-3 text-start flex-container flex-dir-column">
+                                <div class="text-md text-muted fw-semibold">
+                                    You are not wearing any items.
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </template>
+                    </template>
                 </div>
             </div>
         </div>
@@ -605,7 +608,8 @@ onMounted(() => {
                         <template v-if="CategoryItems && CategoryItems.data">
                             <div v-for="item in CategoryItems.data" class="cell large-2 medium-3 small-6">
                                 <div class="d-block">
-                                    <div @click="SortItemByType(item.id, item.item_type, 'wear')" class="p-2 mb-1 card card-inner position-relative">
+                                    <div @click="SortItemByType(item.id, item.item_type, 'wear')"
+                                        class="p-2 mb-1 card card-inner position-relative">
                                         <img :src="item.thumbnail" />
                                     </div>
                                     <Link as="p" style="cursor:pointer;" :href="route(`store.item`, { id: item.id })"

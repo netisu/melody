@@ -15,7 +15,7 @@ class Admin
         $user = Auth::user();
 
         if (!Auth::check() || !$user->isStaff()) {
-            abort(404);
+            abort( 404);
         }
 
         return $next($request);

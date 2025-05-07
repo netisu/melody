@@ -28,7 +28,9 @@ class AdminController extends Controller
 
     public function __construct()
     {
-        $this->admin = Admin::where('user_id', Auth::id())->first();
+        $userId = Auth::check() ? Auth::user()->id() : null;
+
+        $this->admin = Admin::where( 'user_id', $userId)->first();
 
         if (!$this->admin) {
             abort(403);
