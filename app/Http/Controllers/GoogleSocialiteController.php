@@ -6,17 +6,18 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
+use App\Models\UserSettings;
+use Illuminate\Http\Response;
 
 class GoogleSocialiteController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function redirectToGoogle()
+    public function redirectToGoogle(): Response
     {
-        return Socialite::driver('google')->redirect();
+        $redirectUrl = Socialite::driver(driver: 'google')->stateless()->redirect();
+        return response(content: '', status: 409)->header(key: 'X-Inertia-Location', values: $redirectUrl);
     }
 
     /**
@@ -24,36 +25,35 @@ class GoogleSocialiteController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
      */
-    public function handleCallback()
+    public function handleCallback(): RedirectResponse
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
-            $user = User::where('email', $googleUser->email)->first();
+            $googleUser = Socialite::driver(driver: 'google')->user();
+            $user = User::where(column: 'email', operator: $googleUser->email)->first();
+
             if (!$user) {
+                Abort(code: 404);
+            };
+            $newUser = User::create(attributes: [
+                'display_name' => $user->username,
+                'username' => $user->username,
+                'email' => $user->email,
+                'social_id' => $user->id,
+                'social_type' => 'google',
+                'password' => Hash::make(value: Str::random(length: 10)),
+            ]);
 
-                Auth::login($user);
+            $newUser->createDefaultAvatar();
 
-                return redirect('/dashboard');
-            } else {
-                $newUser = User::create([
-                    'display_name' => $user->username,
-                    'username' => $user->username,
-                    'email' => $user->email,
-                    'social_id' => $user->id,
-                    'social_type' => 'google',
-                    'password' => encrypt('my-google')
-                ]);
+            UserSettings::create([
+                'user_id' => $user->id,
+            ]);
 
-                Auth::login($newUser);
+            Auth::login(user: $newUser);
 
-                return redirect('/dashboard');
-            }
-
-            Auth::login($user);
-
-            return redirect('/dashboard');
+            return redirect(to: '/my/dashboard');
         } catch (Exception $e) {
-            dd($e->getMessage());
+            dd(vars: $e->getMessage());
         }
     }
 }

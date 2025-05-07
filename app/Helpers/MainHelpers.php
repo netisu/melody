@@ -2,10 +2,8 @@
 
 use App\Models\Item;
 use App\Models\CrateItem;
-use App\Models\Inventory;
 use App\Models\SiteSettings;
 use Illuminate\Support\Facades\Cache;
-
 function translations($json)
 {
     if (!file_exists($json)) {
@@ -15,7 +13,7 @@ function translations($json)
     return json_decode(file_get_contents($json), true);
 }
 
-function getIp() {
+function getIp(): string|null {
     foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
         if (array_key_exists($key, $_SERVER) === true){
             foreach (explode(',', $_SERVER[$key]) as $ip){
@@ -29,16 +27,16 @@ function getIp() {
     return request()->ip(); // it will return the server IP if the client IP is not found using this method.
 }
 
-function truncate($text, $length)
+function truncate($text, $length): mixed
 {
-    if ($length >= \strlen($text)) {
+    if ($length >= \strlen(string: $text)) {
       return $text;
     }
 
   return preg_replace(
-        "/^(.{1,$length})(\s.*|$)/s",
-        '\\1...',
-        $text
+        pattern: "/^(.{1,$length})(\s.*|$)/s",
+        replacement: '\\1...',
+        subject: $text
     );
 }
 
@@ -52,17 +50,17 @@ function crateRarity($data, $rarity)
     }
 }
 
-function pluralization($type, $plural = false)
+function pluralization($type, $plural = false): mixed
 {
     // Get item types configuration (consider error handling if not defined)
-    $types = config('PermittedItemTypes');
+    $types = config(key: 'PermittedItemTypes');
 
     // Validate type and plural flag (optional)
-    if (!is_string($type) || !is_bool($plural)) {
-        throw new InvalidArgumentException('Invalid arguments for itemType');
+    if (!is_string(value: $type) || !is_bool(value: $plural)) {
+        throw new InvalidArgumentException(message: 'Invalid arguments for itemType');
     }
 
-    $type = array_key_exists($type, $types) ? $types[$type][$plural ? 1 : 0] : ucfirst($type);
+    $type = array_key_exists(key: $type, array: $types) ? $types[$type][$plural ? 1 : 0] : ucfirst(string: $type);
 
     // Handle missing plural form (optional)
     if (!$plural && !isset($types[$type][1])) {
@@ -85,19 +83,19 @@ function customRaritySort($a, $b)
     return 0;
 }
 
-function siteSetting($key)
+function siteSetting($key): mixed
 {
     // Check if the app is in production environment
     $isProduction = app()->environment('production');
 
     if ($isProduction) {
         // Check if the settings are cached
-        $settings = Cache::remember('siteSettings', now()->addMinutes(30), function () {
-            return SiteSettings::find(1); // Change to use the find() method instead of where() + first()
+        $settings = Cache::remember('siteSettings', now()->addMinutes(value: 30), callback: function () {
+            return SiteSettings::find(id: 1); // Change to use the find() method instead of where() + first()
         });
     } else {
         // If not in production, retrieve settings without caching
-        $settings = SiteSettings::find(1);
+        $settings = SiteSettings::find(id: 1);
     }
 
     // If settings are not found, return a default value or handle the error
@@ -106,12 +104,12 @@ function siteSetting($key)
     }
 
     // Use optional chaining to access the property safely
-    return optional($settings)->$key;
+    return optional(value: $settings)->$key;
 }
 
 function getItemHash($itemID): ?string
 {
-    $item = Item::where('id', '=', $itemID)->firstOrFail();
+    $item = Item::where(column: 'id', operator: '=', value: $itemID)->firstOrFail();
 
     return $item->hash;
 }

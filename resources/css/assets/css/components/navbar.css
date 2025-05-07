@@ -29,11 +29,16 @@
     padding: 0px 10px;
     box-shadow: 1px 1px 5px rgb(var(--section-shadow), 0.1);
 }
-
 .navbar.bottom_nav .nav-link.active {
     color: var(--gray-100);
     border-bottom-style: dotted;
     border-bottom: 2px dashed var(--gray-100);
+}
+
+.navbar.bottom_nav .nav-link.active::before {
+    border-radius: 0px;
+    height: 50%;
+
 }
 
 .navbar.bottom_nav .nav-link {
@@ -86,12 +91,12 @@
     /* Needed for absolute positioning of ::before */
 }
 
-.navbar.nav-link.active {
+.navbar .nav-link.active {
     color: #fff;
     background: var(--info-500);
 }
 
-.navbar.nav-link.active::before {
+.navbar .nav-link.active::before {
     content: "";
     position: absolute;
     top: 0%;
@@ -118,7 +123,7 @@
     background: rgb(var(--black-rgb), 0.06);
 }
 
-.navbar.nav-link.active:hover::before {
+.navbar.nav-link.active::before:hover {
     opacity: 0;
 }
 

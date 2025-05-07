@@ -66,7 +66,7 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
     Route::group(['as' => 'my.', 'prefix' => 'my', 'middleware' => 'auth'], function () {
         Route::group(['as' => 'money.', 'prefix' => 'money'], function () {
             Route::get('/', [MoneyController::class, 'MoneyIndex'])->name('page');
-            Route::post('/', [MoneyController::class, 'MoneyVal'])->name('validate');
+            Route::post(uri: '/convert-currency', action: [MoneyController::class, 'convert'])->name(name: 'convert-currency');
         });
         Route::group(['as' => 'dashboard.', 'prefix' => 'dashboard'], function () {
             Route::get('/', [HomeController::class, 'DashboardIndex'])->name('page');

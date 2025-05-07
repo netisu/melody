@@ -7,7 +7,7 @@
             </div>
             <div class="card card-body">
                 <div class="flex-container align-middle gap-4">
-                    <i class="fas fa-lock text-6xl mx-1 text-muted"></i>
+                    <i class="fad fa-lock text-6xl mx-1 text-muted"></i>
                     <div>
                         <div class="fw-semibold text-sm text-muted mb-2">
                             Before you can access this page, you must
@@ -77,7 +77,7 @@ const submitPassword = async () => {
         } else {
             // Handle unexpected success response
             console.error('Password confirmed, but no intended URL received.');
-            router.visit(route('my.dashboard'));
+            router.visit(route('my.dashboard.page'));
         }
     } catch (error) {
         isSubmitting.value = false;

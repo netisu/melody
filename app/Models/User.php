@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\{
     Database\Eloquent\Factories\HasFactory,
     Foundation\Auth\User as AeoAuthenticatable,
-    Notifications\Notifiable,
+    Notifications\Notifiable,     
+    Support\Collection,
     Database\Eloquent\Relations\HasMany,
+    Database\Eloquent\Relations\HasManyThrough,
+    Database\Eloquent\Relations\BelongsToMany,
     Database\Eloquent\Relations\HasOne,
     Contracts\Auth\MustVerifyEmail,
     Contracts\Auth\CanResetPassword,
@@ -109,7 +112,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
     protected $appends = ['DateHum'];
     protected $guard = ['web', 'admin'];
 
-    public function setHiddenAttributes()
+    public function setHiddenAttributes(): void
     {
         if ($this->isStaff()) {
             $this->hidden = ['password'];
@@ -144,14 +147,14 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
     }
 
     // Classes
-    public function avatar()
+    public function avatar(): Avatar
     {
-        return $this->hasOne(Avatar::class)->first() ?? $this->createDefaultAvatar();
+        return $this->hasOne(related: Avatar::class)->first() ?? $this->createDefaultAvatar();
     }
 
-    public function createDefaultAvatar()
+    public function createDefaultAvatar(): Avatar
     {
-        $avatar = Avatar::create([
+        $avatar = Avatar::create(attributes: [
             'user_id' => $this->id,
         ]);
 
@@ -178,19 +181,21 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
             'color_right_leg' => 'd3d3d3',
         ];
         $avatar->timestamps = false;
-        $avatar->fill($defaultAttributes);
+        $avatar->fill(attributes: $defaultAttributes);
         $avatar->save();
+
+        return $avatar;
     }
 
     public function promocodes(): HasOne
     {
-        return $this->hasOne(UserPromocodes::class, 'user_id');
+        return $this->hasOne(related: UserPromocodes::class, foreignKey: 'user_id');
     }
 
     public function getNextLevelExp()
     {
-        $currentLevel = min($this->getLevel() + 1, 100);
-        $nextLevel = Level::where('level', $currentLevel)->first();
+        $currentLevel = min( $this->getLevel() + 1,  100);
+        $nextLevel = Level::where(column: 'level', operator: $currentLevel)->first();
         return $nextLevel->next_level_experience;
     }
 
@@ -200,19 +205,19 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
     }
 
     // Define the followers relationship
-    public function followers()
+    public function followers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id');
+        return $this->belongsToMany(related: User::class, table: 'followers', foreignPivotKey: 'following_id', relatedPivotKey: 'follower_id');
     }
 
-    public function following()
+    public function following(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id');
+        return $this->belongsToMany(related: User::class, table: 'followers', foreignPivotKey: 'follower_id', relatedPivotKey: 'following_id');
     }
 
-    public function isFollowing(User $user)
+    public function isFollowing(User $user): bool
     {
-        return $this->following()->where('following_id', $user->id)->exists();
+        return $this->following()->where(column: 'following_id', operator: $user->id)->exists();
     }
 
     /**
@@ -223,51 +228,51 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
     public function hasActiveBan(): bool
     {
         // Leverage the relationship to efficiently check for active bans
-        return $this->bans()->where('active', 1)->exists();
+        return $this->bans()->where(column: 'active', operator: 1)->exists();
     }
 
     public function bans(): HasMany
     {
-        return $this->hasMany(UserBan::class, 'user_id', 'id');
+        return $this->hasMany(related: UserBan::class, foreignKey: 'user_id', localKey: 'id');
     }
 
-    public function isFollowedBy(User $userToCheck)
+    public function isFollowedBy(User $userToCheck): bool
     {
-        return $this->followers()->where('follower_id', $userToCheck->id)->exists();
+        return $this->followers()->where(column: 'follower_id', operator: $userToCheck->id)->exists();
     }
 
-    public function isFriend(User $user)
+    public function isFriend(User $user): bool
     {
-        return $this->isFollowing($user) && $user->isFollowing($user); // Check mutual following
+        return $this->isFollowing(user: $user) && $user->isFollowing(user: $user); // Check mutual following
     }
 
     public function posts(): HasMany
     {
-        return $this->hasMany(ForumThread::class, 'creator_id');
+        return $this->hasMany(related: ForumThread::class, foreignKey: 'creator_id');
     }
 
     public function messages(): HasMany
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(related: Message::class);
     }
 
     public function sentMessages(): HasMany
     {
-        return $this->hasMany(Message::class, 'sending_id');
+        return $this->hasMany(related: Message::class, foreignKey: 'sending_id');
     }
 
     public function receivedMessages(): HasMany
     {
-        return $this->hasMany(Message::class, 'receiving_id');
+        return $this->hasMany(related: Message::class, foreignKey: 'receiving_id');
     }
-    public function TotalSales()
+    public function TotalSales(): int
     {
-        return ItemPurchase::where('seller_id', '=', $this->id)->count();
+        return ItemPurchase::where(column: 'seller_id', operator: '=', value: $this->id)->count();
     }
 
     public function ownsItem(int $id): bool
     {
-        return Inventory::where([
+        return Inventory::where(column: [
             ['user_id', '=', $this->id],
             ['item_id', '=', $id]
         ])->exists();
@@ -275,7 +280,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function ipLogs(): HasMany
     {
-        return $this->hasMany(IpLog::class, 'user_id');
+        return $this->hasMany(related: IpLog::class, foreignKey: 'user_id');
     }
 
     public function lastIP(): string|null
@@ -307,24 +312,24 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         return $resellableCopies;
     }
 
-    public function spaces()
+    public function spaces(): HasManyThrough
     {
         return $this->hasManyThrough(
-            Space::class,
-            SpaceMembers::class,
-            'user_id', // Foreign key on the SpaceMember table
-            'id', // Foreign key on the Space table
-            'id', // Local key on the User table
-            'space_id' // Local key on the SpaceMember table
+            related: Space::class,
+            through: SpaceMembers::class,
+            firstKey: 'user_id', // Foreign key on the SpaceMember table
+            secondKey: 'id', // Foreign key on the Space table
+            localKey: 'id', // Local key on the User table
+            secondLocalKey: 'space_id' // Local key on the SpaceMember table
         );
     }
 
-    public function isInSpace(Space $space)
+    public function isInSpace(Space $space): mixed
     {
         return $this->spaces->contains($space);
     }
 
-    public function mainSpaces()
+    public function mainSpaces(): Collection|null
     {
         $primarySpace = $this->settings->primarySpace()->first();
         $secondarySpace = $this->settings->secondarySpace()->first();
@@ -332,7 +337,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         $spaces = collect();
 
         if ($primarySpace) {
-            $spaces->push([
+            $spaces->push(values: [
                 'id' => $primarySpace->id,
                 'name' => $primarySpace->name,
                 'slug' => $primarySpace->slug(),
@@ -341,7 +346,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         }
 
         if ($secondarySpace && $secondarySpace->id !== ($primarySpace ? $primarySpace->id : null)) {
-            $spaces->push([
+            $spaces->push(values: [
                 'id' => $secondarySpace->id,
                 'name' => $secondarySpace->name,
                 'slug' => $secondarySpace->slug(),
@@ -356,18 +361,18 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         return $spaces;
     }
 
-    public function navSpaces()
+    public function navSpaces(): Collection
     {
         $primarySpace = $this->settings->primarySpace()->first();
         $secondarySpace = $this->settings->secondarySpace()->first();
 
         $spaceAmount = $secondarySpace ? 4 : 3;
         $spaces = $this->spaces()
-            ->orderBy('created_at', 'asc') // Order by created_at in descending order (newest first)
-            ->take($spaceAmount)
+            ->orderBy(column: 'created_at', direction: 'asc') // Order by created_at in descending order (newest first)
+            ->take(value: $spaceAmount)
             ->get();
 
-        return $spaces->map(function ($space) {
+        return $spaces->map(callback: function ( $space) {
             return [
                 'id' => $space->id,
                 'name' => $space->name,
@@ -379,7 +384,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function canEditItem(int $id): bool
     {
-        $item = Item::findOrFail($id);
+        $item = Item::findOrFail(id: $id);
 
         return ($item->creator_type === 'user' && $this->id === $item->creator->id) || ($item->creator_type === 'group' && $this->id === $item->creator->owner_id);
     }
@@ -390,26 +395,26 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         return $this->updated_at->diffInSeconds() < 300;
     }
 
-    public function settings()
+    public function settings(): HasOne
     {
-        return $this->hasOne(UserSettings::class);
+        return $this->hasOne(related: UserSettings::class);
     }
 
-    public function isStaff()
+    public function isStaff(): bool
     {
-        return Admin::where([
+        return Admin::where(column: [
             ['user_id', '=', $this->id],
         ])->exists();
     }
 
-    public function CurrentPosition()
+    public function CurrentPosition(): mixed
     {
         if ($this->isStaff()) {
-            $admin = Admin::where([
+            $admin = Admin::where(column: [
                 ['user_id', '=', $this->id],
             ])->first();
 
-            $adminRole = AdminRoles::where([
+            $adminRole = AdminRoles::where(column: [
                 ['id', '=', $admin->role_id],
             ])->first();
 
@@ -419,10 +424,10 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         }
     }
 
-    public function CurrentPositionID()
+    public function CurrentPositionID(): mixed
     {
         if ($this->isStaff()) {
-            $admin = Admin::where([
+            $admin = Admin::where(column: [
                 ['user_id', '=', $this->id],
             ])->first();
             return $admin->role_id;
@@ -431,11 +436,11 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         }
     }
 
-    public function thumbnail()
+    public function thumbnail(): string
     {
         if (env('APP_ENV') != 'local') {
 
-            $url = env('STORAGE_URL');
+            $url = env(key: 'STORAGE_URL');
             $image = ($this->avatar()?->image === 'default') ? env('DEFAULT_AVATAR_FILE') : $this->avatar()?->image;
             if ($this->avatar()?->image === 'default') {
                 return "{$image}.png";
@@ -443,30 +448,30 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
                 return "{$url}/thumbnails/{$image}.png";
             }
         } else {
-            return config('Values.icon');
+            return config(key: 'Values.icon');
         }
     }
-    public function usernameHistory()
+    public function usernameHistory(): Collection
     {
-        return UsernameHistory::where('user_id', $this->id)->orderBy('created_at')->get();
+        return UsernameHistory::where(column: 'user_id', operator: $this->id)->orderBy(column: 'created_at')->get();
     }
 
-    public function headshot()
+    public function headshot(): mixed
     {
-        if (env('APP_ENV') != 'local') {
-            $url = env('STORAGE_URL');
+        if (env(key: 'APP_ENV') != 'local') {
+            $url = env(key: 'STORAGE_URL');
             if ($this->settings && $this->settings->profile_picture_enabled != false) {
                 $imageUrl = $this->settings->profile_picture_url;
 
                 // Check if profile_picture_url doesn't contain an external domain
-                if (!preg_match('/https?:\/\/[^\/]+/', $imageUrl)) {
+                if (!preg_match(pattern: '/https?:\/\/[^\/]+/', subject: $imageUrl)) {
                     return "{$url}/thumbnails/profile-pictures/{$imageUrl}.png";
                 } else {
                     // Return the external URL from settings if present
                     return $imageUrl;
                 }
             } else {
-                $image = ($this->avatar()?->image === 'default') ? env('DEFAULT_AVATAR_FILE') : $this->avatar()?->image;
+                $image = ($this->avatar()?->image === 'default') ? env(key: 'DEFAULT_AVATAR_FILE') : $this->avatar()?->image;
                 if ($this->avatar()?->image === 'default') {
                     return "{$image}_headshot.png";
                 } else {
@@ -474,25 +479,26 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
                 }
             }
         } else {
-            return config('Values.icon');
+            return config(key: 'Values.icon');
         }
     }
 
     public function pastUsernames(): HasMany
     {
-        return $this->hasMany(UsernameHistory::class, 'user_id', 'id');
+        return $this->hasMany(related: UsernameHistory::class, foreignKey: 'user_id', localKey: 'id');
     }
 
     public function latestStatus(): HasOne
     {
-        return $this->hasOne(Status::class, 'creator_id')->latest();
+        return $this->hasOne(related: Status::class, foreignKey: 'creator_id')->latest();
     }
 
-    public function getStatusAttribute()
+    public function getStatusAttribute(): mixed
     {
         return $this->latestStatus?->message;
     }
-    public function definition()
+
+    public function definition(): array
     {
         return [
             'username' => $this->faker->name(),

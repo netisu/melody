@@ -28,6 +28,8 @@ interface Props {
 withDefaults(defineProps<Props>(), {
     landing: false,
 });
+const props = usePage<any>().props;
+
 const SearchLoading = ref(false);
 
 const search = ref("");
@@ -67,7 +69,7 @@ const topbar = [
         es: { title: "Juegos" },
         ru: { title: "Игры" },
         ja: { title: "ゲーム" },
-        he: {title: "משחקים"},
+        he: { title: "משחקים" },
     },
     {
         url: route(`store.page`),
@@ -77,7 +79,7 @@ const topbar = [
         es: { title: "Mercado" },
         ru: { title: "Маркет" },
         ja: { title: "市場" },
-        he: {title: "שוק"},
+        he: { title: "שוק" },
     },
     {
         url: route(`forum.page`, { id: 1 }),
@@ -87,7 +89,7 @@ const topbar = [
         es: { title: "Conversar" },
         ru: { title: "Обсуждение" },
         ja: { title: "議論" },
-        he: {title: "פורום"},
+        he: { title: "פורום" },
     },
     {
         url: route(`spaces.page`),
@@ -97,7 +99,7 @@ const topbar = [
         es: { title: "Espacios" },
         ru: { title: "Развивать" },
         ja: { title: "スペース" },
-        he: {title: "קבוצות"},
+        he: { title: "קבוצות" },
     },
 ];
 const left = [
@@ -109,29 +111,33 @@ const left = [
         es: { title: "Desarrollar" },
         ru: { title: "Мои создания" },
         ja: { title: "発展" },
-        he: {title: "פיתוח"},
+        he: { title: "פיתוח" },
 
     },
     {
         url: route(`user.page`),
-        ActiveLink: "user.*",
+        ActiveLink: "user.page",
         icon: "fad fa-users",
         en: { title: "Players" },
         es: { title: "Jugadoras" },
         ru: { title: "Игроки" },
         ja: { title: "発展" },
-        he: {title: "משתמשים"},
+        he: { title: "משתמשים" },
 
     },
     {
-        url: route(`user.page`),
-        ActiveLink: "user.*",
+        url: route(`user.profile`, {
+            username: props.auth?.user?.username,
+        }),
+        ActiveLink: route(`user.profile`, {
+            username: props.auth?.user?.username,
+        }),
         icon: "fad fa-user-crown",
         en: { title: "Profile" },
         es: { title: "Jugadoras" },
         ru: { title: "Игроки" },
         ja: { title: "発展" },
-        he: {title: "משתמשים"},
+        he: { title: "משתמשים" },
 
     },
 ];
@@ -144,7 +150,7 @@ const right = [
         es: { title: "Códigos promocionales" },
         ru: { title: "Промокоды" },
         ja: { title: "プロモコード" },
-        he: {title: "דירוג"},
+        he: { title: "דירוג" },
     },
     {
         url: route(`leaderboard.page`),
@@ -154,7 +160,7 @@ const right = [
         es: { title: "Tabla de clasificación" },
         ru: { title: "Таблица лидеров" },
         ja: { title: "リーダーボード" },
-        he: {title: "דירוג"},
+        he: { title: "דירוג" },
     },
     {
         url: "#",
@@ -164,75 +170,58 @@ const right = [
         es: { title: "Mejora" },
         ru: { title: "Подписки" },
         ja: { title: "アップグレード" },
-        he: {title: "דירוג"},
+        he: { title: "דירוג" },
     },
 ];
 const lang = computed<any>(() => props.locale);
-
-const props = usePage<any>().props;
 </script>
 <template>
     <PageLoader v-if="props.site.page_loader" />
     <LanguageModal />
     <div v-if="props.auth?.user" class="modal" id="profile-modal">
-        <div
-            class="modal-card modal-card-body"
-            :style="
-                props.auth?.user?.settings.profile_banner_enabled
-                    ? {
-                          background:
-                              'url(' +
-                              props.auth?.user?.settings.profile_banner_url +
-                              ')',
-                          'background-repeat': 'no-repeat',
-                          'background-size': 'cover',
-                          'box-shadow':
-                              'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
-                      }
-                    : null
-            "
-        >
+        <div class="modal-card modal-card-body" :style="props.auth?.user?.settings.profile_banner_enabled
+                ? {
+                    background:
+                        'url(' +
+                        props.auth?.user?.settings.profile_banner_url +
+                        ')',
+                    'background-repeat': 'no-repeat',
+                    'background-size': 'cover',
+                    'box-shadow':
+                        'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
+                }
+                : null
+            ">
             <div class="section-borderless">
                 <div class="gap-2 align-middle flex-container align-justify">
                     <button class="gap-2 align-middle flex-container squish">
-                        <v-lazy-image
-                            :src="usePage<any>().props.auth?.user?.headshot"
-                            width="40"
-                            class="headshot"
-                            alt="Avatar"
-                            src-placeholder="/assets/img/dummy_headshot.png"
-                            :style="
-                                props.auth?.user?.settings.calling_card_enabled
+                        <v-lazy-image :src="usePage<any>().props.auth?.user?.headshot" width="40" class="headshot"
+                            alt="Avatar" src-placeholder="/assets/img/dummy_headshot.png" :style="props.auth?.user?.settings.calling_card_enabled
                                     ? {
-                                          margin: '0',
-                                          border: '0',
-                                          'background-image':
-                                              'url(' +
-                                              props.auth?.user?.settings
-                                                  .calling_card_url +
-                                              ')',
-                                          'background-repeat': 'no-repeat',
-                                          'background-size': 'cover',
-                                      }
+                                        margin: '0',
+                                        border: '0',
+                                        'background-image':
+                                            'url(' +
+                                            props.auth?.user?.settings
+                                                .calling_card_url +
+                                            ')',
+                                        'background-repeat': 'no-repeat',
+                                        'background-size': 'cover',
+                                    }
                                     : null
-                            "
-                        />
+                                " />
                         <div class="text-start">
-                            <div
-                                class="text-sm fw-semibold text-body"
-                                :style="
-                                    props.auth?.user?.settings
-                                        .calling_card_enabled
-                                        ? {
-                                              background: 'inherit',
-                                              '-webkit-background-clip': 'text',
-                                              'background-clip': 'text',
-                                              color: 'transparent',
-                                              filter: 'invert(1) grayscale(1) contrast(2)',
-                                          }
-                                        : null
-                                "
-                            >
+                            <div class="text-sm fw-semibold text-body" :style="props.auth?.user?.settings
+                                    .calling_card_enabled
+                                    ? {
+                                        background: 'inherit',
+                                        '-webkit-background-clip': 'text',
+                                        'background-clip': 'text',
+                                        color: 'transparent',
+                                        filter: 'invert(1) grayscale(1) contrast(2)',
+                                    }
+                                    : null
+                                ">
                                 {{ props.auth?.user?.display_name
                                 }}<span class="text-xs text-muted">
                                     ({{
@@ -241,76 +230,47 @@ const props = usePage<any>().props;
                                     &bullet;
                                     {{
                                         "Lvl. " + props.auth?.user?.level
-                                    }})</span
-                                >
+                                    }})</span>
                             </div>
-                            <div
-                                v-if="props.auth?.user?.staff"
-                                class="mt-1 mb-1 badge badge-danger fw-semibold"
-                            >
+                            <div v-if="props.auth?.user?.staff" class="mt-1 mb-1 badge badge-danger fw-semibold">
                                 {{ props.auth?.user?.position }}
                             </div>
 
-                            <div
-                                v-else-if="
-                                    props.auth?.user?.settings.beta_tester
-                                "
-                                class="mt-1 mb-1 badge badge-success fw-semibold"
-                            >
+                            <div v-else-if="
+                                props.auth?.user?.settings.beta_tester
+                            " class="mt-1 mb-1 badge badge-success fw-semibold">
                                 Beta Tester
                             </div>
                         </div>
                     </button>
-                    <button
-                        @click="showModal('profile-modal')"
-                        class="btn-circle text-body"
-                        data-toggle-modal="#following-modal"
-                        style="margin-right: -10px"
-                    >
+                    <button @click="showModal('profile-modal')" class="btn-circle text-body"
+                        data-toggle-modal="#following-modal" style="margin-right: -10px">
                         <i class="fad fa-times"></i>
                     </button>
                 </div>
             </div>
             <div class="section-borderless">
                 <div class="gap-2 section flex-container">
-                    <Link
-                        :href="
-                            route(`user.profile`, {
-                                username: props.auth?.user?.username,
-                            })
-                        "
-                        class="min-w-0 btn btn-info btn-sm"
-                    >
-                        <i class="fad fa-user-crown"></i>
+                    <Link :href="route(`user.profile`, {
+                        username: props.auth?.user?.username,
+                    })
+                        " class="min-w-0 btn btn-info btn-sm">
+                    <i class="fad fa-user-crown"></i>
                     </Link>
 
-                    <Link
-                        :href="route(`avatar.page`)"
-                        class="min-w-0 btn btn-success btn-sm"
-                    >
-                        <i class="fad fa-palette"></i>
+                    <Link :href="route(`avatar.page`)" class="min-w-0 btn btn-success btn-sm">
+                    <i class="fad fa-palette"></i>
                     </Link>
 
-                    <Link
-                        :href="route(`user.settings.page`)"
-                        class="min-w-0 btn btn-warning btn-sm"
-                    >
-                        <i class="fad fa-wrench"></i>
+                    <Link :href="route(`user.settings.page`)" class="min-w-0 btn btn-warning btn-sm">
+                    <i class="fad fa-wrench"></i>
                     </Link>
-                    <a
-                        v-if="props.auth?.user && props.auth?.user?.staff"
-                        :href="route('admin.page')"
-                        class="min-w-0 btn btn-danger btn-sm show-for-small-only"
-                    >
+                    <a v-if="props.auth?.user && props.auth?.user?.staff" :href="route('admin.page')"
+                        class="min-w-0 btn btn-danger btn-sm show-for-small-only">
                         <i class="fad fa-gavel"></i>
                     </a>
-                    <Link
-                        :href="route('auth.logout')"
-                        method="post"
-                        class="min-w-0 btn btn-danger btn-sm"
-                        as="button"
-                    >
-                        <i class="fad fa-right-from-bracket"></i>
+                    <Link :href="route('auth.logout')" method="post" class="min-w-0 btn btn-danger btn-sm" as="button">
+                    <i class="fad fa-right-from-bracket"></i>
                     </Link>
                 </div>
             </div>
@@ -327,82 +287,41 @@ const props = usePage<any>().props;
     </nav>
     <nav class="navbar" :class="{ 'navbar-landing': landing }">
         <ul class="navbar-nav grid-x">
-            <Link as="li"
-                class="nav-item cell shrink show-for-small-only me-1"
-                style="cursor:pointer;" :href="route(`Welcome`)"
-            >
-            <v-lazy-image
-                    :src="props.site.icon"
-                    width="30"
-                />
+            <Link as="li" class="nav-item cell shrink show-for-small-only me-1" style="cursor:pointer;"
+                :href="route(`Welcome`)">
+            <v-lazy-image :src="props.site.icon" width="30" />
             </Link>
             <Link as="li" class="nav-item cell shrink" style="cursor:pointer;" :href="route(`Welcome`)">
-                <v-lazy-image
-                    :src="props.site.logo"
-                    class="show-for-medium"
-                    width="180"
-                />
+            <v-lazy-image :src="props.site.logo" class="show-for-medium" width="180" />
             </Link>
             <template v-for="topbarlinks in topbar">
-                <NavLink
-                    :link="topbarlinks.url"
-                    :ActiveLink="topbarlinks.ActiveLink"
-                    :showForLarge=true
-                >
+                <NavLink :link="topbarlinks.url" :ActiveLink="topbarlinks.ActiveLink" :showForLarge=true>
                     <i :class="topbarlinks.icon"></i> &nbsp;
                     <span>{{ topbarlinks[lang].title }}</span>
                 </NavLink>
             </template>
             <li class="nav-item text-danger cell shrink show-for-large">
                 <div class="side-item">
-                    <a
-                        v-if="props.auth?.user && props.auth?.user?.staff"
-                        :href="route('admin.page')"
-                        class="nav-link"
-                    >
+                    <a v-if="props.auth?.user && props.auth?.user?.staff" :href="route('admin.page')" class="nav-link">
                         <i class="fad fa-gavel"></i> &nbsp;
                         <span>Admin</span>
                     </a>
                 </div>
             </li>
             <li class="mx-1 align-middle nav-item cell auto nav-search mx-md-3">
-                <input
-                    v-if="props.site.frontend.search_bar"
-                    v-model="search"
-                    type="text"
-                    class="form"
-                    id="global-search-bar"
-                    name="hidden"
-                    autocomplete="off"
-                    placeholder="Search..."
-                    @input="performSearch"
-                />
-                <ul
-                    :class="['dropdown-menu', { hide: search === '' }]"
-                    id="global-search-results"
-                >
+                <input v-if="props.site.frontend.search_bar" v-model="search" type="text" class="form"
+                    id="global-search-bar" name="hidden" autocomplete="off" placeholder="Search..."
+                    @input="performSearch" />
+                <ul :class="['dropdown-menu', { hide: search === '' }]" id="global-search-results">
                     <li class="dropdown-title">Quick Results</li>
-                    <SearchResult
-                        href="#"
-                        v-if="!SearchLoading"
-                        v-for="result in results"
-                        :link="result.url"
-                        :name="result.name"
-                        :image="result.image"
-                    />
+                    <SearchResult href="#" v-if="!SearchLoading" v-for="result in results" :link="result.url"
+                        :name="result.name" :image="result.image" />
                     <SearchResultSkeleton v-else />
-                    <li
-                        class="px-2 py-2 text-center dropdown-item"
-                        v-if="!SearchLoading && !results"
-                    >
+                    <li class="px-2 py-2 text-center dropdown-item" v-if="!SearchLoading && !results">
                         <div class="gap-3 flex-container flex-dir-column">
-                            <i
-                                class="text-5xl fa-solid fa-folder-magnifying-glass text-muted"
-                            ></i>
+                            <i class="text-5xl fa-solid fa-folder-magnifying-glass text-muted"></i>
                             <div style="line-height: 16px">
-                                <div
-                                    class="text-xs fw-bold text-muted text-uppercase"
-                                >
+                                <div class="text-xs fw-bold text-muted text-uppercase">
                                     No Results
                                 </div>
                                 <div class="text-xs text-muted fw-semibold">
@@ -415,112 +334,58 @@ const props = usePage<any>().props;
                     <li class="divider"></li>
                     <li class="dropdown-item">
                         <Link href="#" class="dropdown-link">
-                            <div
-                                class="align-middle flex-container align-justify"
-                            >
-                                <div class="gap-2 align-middle flex-container">
-                                    <i
-                                        class="text-xl align-middle fad fa-telescope headshot text-muted flex-container align-center flex-child-grow"
-                                        style="height: 40px; width: 40px"
-                                    ></i>
-                                    <div>
-                                        Show all results for "<span
-                                            class="search-keyword"
-                                            >{{ search }}</span
-                                        >"
-                                    </div>
+                        <div class="align-middle flex-container align-justify">
+                            <div class="gap-2 align-middle flex-container">
+                                <i class="text-xl align-middle fad fa-telescope headshot text-muted flex-container align-center flex-child-grow"
+                                    style="height: 40px; width: 40px"></i>
+                                <div>
+                                    Show all results for "<span class="search-keyword">{{ search }}</span>"
                                 </div>
-                                <i
-                                    class="px-1 fad fa-chevron-right text-muted"
-                                ></i>
                             </div>
+                            <i class="px-1 fad fa-chevron-right text-muted"></i>
+                        </div>
                         </Link>
                     </li>
                 </ul>
-                <button
-                    v-if="props.site.frontend.search_bar"
-                    content="Search"
-                    data-tooltip-placement="bottom"
-                >
+                <button v-if="props.site.frontend.search_bar" content="Search" data-tooltip-placement="bottom">
                     <i class="fad fa-search"></i>
                 </button>
             </li>
-            <Button
-                v-if="!props.auth?.user"
-                :link="route('auth.register.page')"
-                ColorClass="btn-success"
-                class="nav-item cell shrink me-1"
-            >
-                <i class="fad fa-person-to-portal"></i><span class="show-for-large">&nbsp; Get Started</span> 
+            <Button v-if="!props.auth?.user" :link="route('auth.register.page')" ColorClass="btn-success"
+                class="nav-item cell shrink me-1">
+                <i class="fad fa-person-to-portal"></i><span class="show-for-large">&nbsp; Get Started</span>
             </Button>
-            <Button
-                v-if="!props.auth?.user"
-                :link="route('auth.login.page')"
-                ColorClass="btn-info"
-                class="nav-item cell  shrink me-1"
-            >
+            <Button v-if="!props.auth?.user" :link="route('auth.login.page')" ColorClass="btn-info"
+                class="nav-item cell  shrink me-1">
                 <i class="fad fa-door-open"></i><span class="show-for-large">&nbsp; Login</span>
             </Button>
-            <li
-                v-if="
-                    props.auth?.user &&
-                    props.auth?.user?.settings.notifications_enabled
-                "
-                class="position-relative nav-item cell shrink"
-            >
+            <li v-if="
+                props.auth?.user &&
+                props.auth?.user?.settings.notifications_enabled
+            " class="position-relative nav-item cell shrink">
                 <div class="show-for-small-only position-relative">
-                    <Link
-                        :href="route('notification.page')"
-                        class="px-2 btn-circle squish text-body"
-                    >
-                        <span
-                            v-if="props.auth?.user?.notifications.length"
-                            class="notification-circle"
-                        ></span>
-                        <i class="text-xl fad fa-bell"></i>
+                    <Link :href="route('notification.page')" class="px-2 btn-circle squish text-body">
+                    <span v-if="props.auth?.user?.notifications.length" class="notification-circle"></span>
+                    <i class="text-xl fad fa-bell"></i>
                     </Link>
                 </div>
-                <div
-                    class="dropdown show-for-medium position-relative"
-                    id="notification_dropdown"
-                >
-                    <div
-                        @click="addActiveClass(`notification_dropdown`)"
-                        class="btn-circle squish"
-                    >
-                        <button
-                            class="px-2 text-body"
-                            v-tippy
-                            content="Notifications"
-                            data-tooltip-placement="bottom"
-                        >
-                            <span
-                                class="notification-circle"
-                                v-if="props.auth?.user?.notifications.length"
-                            ></span
-                            ><i class="text-xl fad fa-bell"></i>
+                <div class="dropdown show-for-medium position-relative" id="notification_dropdown">
+                    <div @click="addActiveClass(`notification_dropdown`)" class="btn-circle squish">
+                        <button class="px-2 text-body" v-tippy content="Notifications" data-tooltip-placement="bottom">
+                            <span class="notification-circle" v-if="props.auth?.user?.notifications.length"></span><i
+                                class="text-xl fad fa-bell"></i>
                         </button>
                     </div>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        style="width: 340px"
-                    >
+                    <ul class="dropdown-menu dropdown-menu-end" style="width: 340px">
                         <div class="align-middle flex-container">
                             <div class="dropdown-title">Notifications</div>
                             <li class="divider flex-child-grow"></li>
                         </div>
-                        <li
-                            v-if="!props.auth?.user?.notifications.length"
-                            class="px-2 py-2 text-center dropdown-item"
-                        >
+                        <li v-if="!props.auth?.user?.notifications.length" class="px-2 py-2 text-center dropdown-item">
                             <div class="gap-3 flex-container flex-dir-column">
-                                <i
-                                    class="text-5xl fad fa-face-sleeping text-muted"
-                                ></i>
+                                <i class="text-5xl fad fa-face-sleeping text-muted"></i>
                                 <div style="line-height: 16px">
-                                    <div
-                                        class="text-xs fw-bold text-muted text-uppercase"
-                                    >
+                                    <div class="text-xs fw-bold text-muted text-uppercase">
                                         No Notifications
                                     </div>
                                     <div class="text-xs text-muted fw-semibold">
@@ -531,82 +396,50 @@ const props = usePage<any>().props;
                             </div>
                         </li>
 
-                        <li
-                            v-else
-                            v-for="notification in props.auth?.user
-                                ?.notifications"
-                            class="dropdown-item"
-                        >
-                            <Link
-                                :href="notification.data.route"
-                                class="dropdown-link"
-                            >
-                                <div class="gap-1 align-middle flex-container">
-                                    <i
-                                        class="text-lg text-center flex-child-grow"
-                                        :class="{
-                                            'fad fa-gift text-warning':
-                                                notification.data.type ===
-                                                'gift',
-                                            'fad fa-comments-alt text-info':
-                                                notification.data.type !==
-                                                'gift',
-                                        }"
-                                        style="width: 38px"
-                                    ></i>
-                                    <div
-                                        class="gap-2 align-middle flex-container w-100"
-                                    >
-                                        <div
-                                            class="min-w-0"
-                                            style="line-height: 16px"
-                                        >
-                                            <div class="text-sm text-truncate">
-                                                <span
-                                                    class="search-keyword"
-                                                    v-if="
-                                                        notification.data.object
-                                                    "
-                                                    >{{
+                        <li v-else v-for="notification in props.auth?.user
+                            ?.notifications" class="dropdown-item">
+                            <Link :href="notification.data.route" class="dropdown-link">
+                            <div class="gap-1 align-middle flex-container">
+                                <i class="text-lg text-center flex-child-grow" :class="{
+                                    'fad fa-gift text-warning':
+                                        notification.data.type ===
+                                        'gift',
+                                    'fad fa-comments-alt text-info':
+                                        notification.data.type !==
+                                        'gift',
+                                }" style="width: 38px"></i>
+                                <div class="gap-2 align-middle flex-container w-100">
+                                    <div class="min-w-0" style="line-height: 16px">
+                                        <div class="text-sm text-truncate">
+                                            <span class="search-keyword" v-if="
+                                                notification.data.object
+                                            ">{{
                                                         notification.data.object
                                                     }}
-                                                    &nbsp;</span
-                                                >
-                                                <span
-                                                    class="text-sm text-muted"
-                                                    >{{
-                                                        notification.data
-                                                            .message
-                                                    }}</span
-                                                >
-                                            </div>
-                                            <div class="text-xs text-muted">
-                                                {{ notification.DateHum }}
-                                            </div>
+                                                &nbsp;</span>
+                                            <span class="text-sm text-muted">{{
+                                                notification.data
+                                                    .message
+                                            }}</span>
+                                        </div>
+                                        <div class="text-xs text-muted">
+                                            {{ notification.DateHum }}
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             </Link>
                         </li>
                         <li class="divider"></li>
-                        <li
-                            v-if="props.auth?.user?.notifications.length"
-                            class="dropdown-item"
-                        >
+                        <li v-if="props.auth?.user?.notifications.length" class="dropdown-item">
                             <a @click="readAll()" class="dropdown-link">
-                                <div
-                                    class="align-middle flex-container align-justify"
-                                >
-                                    <div
-                                        class="gap-2 align-middle flex-container"
-                                    >
-                                        <i
-                                            v-if="
-                                                props.site.frontend.sidebar_menu
-                                            "
+                                <div class="align-middle flex-container align-justify">
+                                    <div class="gap-2 align-middle flex-container">
+                                        <i v-if="
+                                            props.site.frontend.sidebar_menu
+                                        "
                                             class="text-lg align-middle fad fa-check headshot text-muted flex-container align-center flex-child-grow"
-                                            style="height: 38px; width: 38px"
-                                        ></i>
+                                            style="height: 38px; width: 38px"></i>
                                         <div class="text-sm">
                                             Mark All As Read
                                         </div>
@@ -616,95 +449,50 @@ const props = usePage<any>().props;
                         </li>
 
                         <li class="dropdown-item">
-                            <Link
-                                :href="route('notification.page')"
-                                class="dropdown-link"
-                            >
-                                <div
-                                    class="align-middle flex-container align-justify"
-                                >
-                                    <div
-                                        class="gap-2 align-middle flex-container"
-                                    >
-                                        <i
-                                            v-if="
-                                                props.site.frontend.sidebar_menu
-                                            "
-                                            class="text-lg align-middle fad fa-bell headshot text-muted flex-container align-center flex-child-grow"
-                                            style="height: 38px; width: 38px"
-                                        ></i>
-                                        <div class="text-sm">
-                                            Show All Notifications
-                                        </div>
+                            <Link :href="route('notification.page')" class="dropdown-link">
+                            <div class="align-middle flex-container align-justify">
+                                <div class="gap-2 align-middle flex-container">
+                                    <i v-if="
+                                        props.site.frontend.sidebar_menu
+                                    "
+                                        class="text-lg align-middle fad fa-bell headshot text-muted flex-container align-center flex-child-grow"
+                                        style="height: 38px; width: 38px"></i>
+                                    <div class="text-sm">
+                                        Show All Notifications
                                     </div>
-                                    <i
-                                        class="px-1 text-sm fad fa-chevron-right text-muted"
-                                    ></i>
                                 </div>
+                                <i class="px-1 text-sm fad fa-chevron-right text-muted"></i>
+                            </div>
                             </Link>
                         </li>
                     </ul>
                 </div>
             </li>
-            <Link
-                as="li"
-                :href="route(`my.money.page`)"
-                v-if="props.auth?.user"
-                class="nav-item cell shrink"
-            >
-                <a
-                    href="#"
-                    class="text-sm nav-link"
-                    style="line-height: 20px"
-                    v-tippy
-                    :content="props.auth?.user?.next_currency_payout"
-                    data-tooltip-placement="bottom"
-                >
-                    <div class="text-warning">
-                        <i class="fad fa-coins" style="width: 22px"></i
-                        >{{ props.auth?.user?.coins }}
-                    </div>
-                    <div class="text-success">
-                        <i
-                            class="fad fa-money-bill-1-wave"
-                            style="width: 22px"
-                        ></i
-                        >{{ props.auth?.user?.bucks }}
-                    </div>
-                </a>
+            <Link as="li" :href="route(`my.money.page`)" v-if="props.auth?.user" class="nav-item cell shrink">
+            <a href="#" class="text-sm nav-link" style="line-height: 20px" v-tippy
+                :content="props.auth?.user?.next_currency_payout" data-tooltip-placement="bottom">
+                <div class="text-warning">
+                    <i class="fad fa-coins" style="width: 22px"></i>{{ props.auth?.user?.coins }}
+                </div>
+                <div class="text-success">
+                    <i class="fad fa-money-bill-1-wave" style="width: 22px"></i>{{ props.auth?.user?.bucks }}
+                </div>
+            </a>
             </Link>
-            <li
-                v-if="props.auth?.user"
-                class="dropdown position-relative nav-item cell shrink ms-1"
-                id="user_dropdown"
-            >
-                <button
-                    @click="showModal('profile-modal')"
-                    class="gap-2 align-middle flex-container squish"
-                >
-                    <v-lazy-image
-                        :src="usePage<any>().props.auth?.user?.headshot"
-                        width="40"
-                        class="headshot"
-                        alt="Avatar"
-                        src-placeholder="assets/img/dummy_headshot.png"
-                    />
+            <li v-if="props.auth?.user" class="dropdown position-relative nav-item cell shrink ms-1" id="user_dropdown">
+                <button @click="showModal('profile-modal')" class="gap-2 align-middle flex-container squish">
+                    <v-lazy-image :src="usePage<any>().props.auth?.user?.headshot" width="40" class="headshot"
+                        alt="Avatar" src-placeholder="assets/img/dummy_headshot.png" />
                     <div class="text-start show-for-large">
                         <div class="text-sm fw-semibold text-body">
                             {{ props.auth?.user?.display_name }}
                         </div>
-                        <div
-                            v-if="props.auth?.user?.staff"
-                            class="mb-1 badge badge-position badge-danger fw-semibold"
-                        >
+                        <div v-if="props.auth?.user?.staff" class="mb-1 badge badge-position badge-danger fw-semibold">
                             {{ props.auth?.user?.position }}
                         </div>
-                        <div
-                            v-else-if="
-                                props.auth?.user?.settings?.beta_tester != false
-                            "
-                            class="mb-1 badge badge-position badge-success fw-semibold"
-                        >
+                        <div v-else-if="
+                            props.auth?.user?.settings?.beta_tester != false
+                        " class="mb-1 badge badge-position badge-success fw-semibold">
                             Beta Tester
                         </div>
 
@@ -713,37 +501,22 @@ const props = usePage<any>().props;
                             {{ "Lvl. " + props.auth?.user?.level }}
                         </div>
                     </div>
-                    <i
-                        class="text-sm fad fa-chevron-down text-muted show-for-large"
-                    ></i>
+                    <i class="text-sm fad fa-chevron-down text-muted show-for-large"></i>
                 </button>
             </li>
         </ul>
     </nav>
 
-    <nav
-        class="navbar bottom_nav"
-        v-if="!props.site.frontend.sidebar_menu && !landing"
-    >
+    <nav class="navbar bottom_nav" v-if="!props.site.frontend.sidebar_menu && !landing">
         <ul class="navbar-nav grid-x">
-            <NavLink
-                v-for="leftside in left"
-                :link="leftside.url"
-                :ActiveLink="leftside.ActiveLink"
-                :showForLarge=false
-            >
+            <NavLink v-for="leftside in left" :link="leftside.url" :ActiveLink="leftside.ActiveLink"
+                :showForLarge=false>
                 <i :class="leftside.icon"></i> &nbsp;
                 <span>{{ leftside[lang].title }}</span>
             </NavLink>
-            <li
-                class="mx-1 align-middle nav-item cell auto nav-search mx-md-3"
-            ></li>
-            <NavLink
-                v-for="rightside in right"
-                :link="rightside.url"
-                :ActiveLink="rightside.ActiveLink"
-                :showForLarge=false
-            >
+            <li class="mx-1 align-middle nav-item cell auto nav-search mx-md-3"></li>
+            <NavLink v-for="rightside in right" :link="rightside.url" :ActiveLink="rightside.ActiveLink"
+                :showForLarge=false>
                 <i :class="rightside.icon"></i> &nbsp;
                 <span>{{ rightside[lang].title }}</span>
             </NavLink>

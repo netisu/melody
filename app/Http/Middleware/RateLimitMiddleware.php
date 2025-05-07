@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redis;
 
 class RateLimitMiddleware
 {
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next): mixed
     {
         $ip = $request->ip();
         $key = "rate_limit:{$ip}";
@@ -17,9 +17,9 @@ class RateLimitMiddleware
         $currentAttempts = Redis::get($key) ?? 0;
 
         if ($currentAttempts >= $maxAttempts) {
-            return response()->json([
+            return response()->json(data: [
                 'message' => 'Too many requests. Please try again later.'
-            ], 429);
+            ], status: 429);
         }
 
         Redis::incr($key);

@@ -38,26 +38,30 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $pendingItems = Item::where('status', 'pending')->with('creator')->get();
+        $pendingItems = Item::where(column: 'status', operator: 'pending')->with(relations: 'creator')->get();
 
-        $pendingSpaces = Space::where('thumbnail_pending', true)->with('creator')->get();
+        $pendingSpaces = Space::where(column: 'thumbnail_pending', operator: true)->with(relations: 'creator')->get();
 
-        $pendingItemsAndSpaces = $pendingItems->merge($pendingSpaces);
+        $pendingItemsAndSpaces = $pendingItems->merge(items: $pendingSpaces);
+        $notifications = $request->user()->unreadNotifications()->limit(value: 5)->get()
+        ->each(callback: function ($notification): void {
+            $notification->DateHum = $notification->created_at->diffForHumans();
+        });
 
-        return array_merge(parent::share($request), [
-            'site' => config('Values'),
-            'locale' => function () {
+        return array_merge( parent::share(request: $request), [
+            'site' => config(key: 'Values'),
+            'locale' => function (): string {
                 return app()->getLocale();
             },
-            'locales' => function () {
+            'locales' => function (): mixed {
                 return config('ActiveLocales');
             },
-            'language' => function () {
+            'language' => function (): mixed {
                 return translations(
                     resource_path('lang/' . app()->getLocale() . '.json')
                 );
             },
-            'auth' => function () use ($request,  $pendingItemsAndSpaces) {
+            'auth' => function () use ($request,  $pendingItemsAndSpaces, $notifications): array {
                 $response = [
                     'user' => $request->user() ? [
                         'id' => $request->user()->id,
@@ -67,8 +71,6 @@ class HandleInertiaRequests extends Middleware
                         'coins' => shortNum($request->user()->coins),
                         'bucks' => shortNum($request->user()->bucks),
                         'staff' => $request->user()->isStaff() ?? false,
-                        'position' => $request->user()->CurrentPosition() ?? null,
-                        'positionID' => $request->user()->CurrentPositionID() ?? null,
                         'headshot' => $request->user()->headshot(),
                         'thumbnail' => $request->user()->thumbnail(),
                         'settings' => $request->user()->settings,
@@ -77,23 +79,22 @@ class HandleInertiaRequests extends Middleware
                         'nextlevelxp' =>  $request->user()->nextLevelAt(),
                         'mainSpaces' => $request->user()->mainSpaces(),
                         'navSpaces' => $request->user()->navSpaces(),
-                        'notifications' => $request->user()->unreadNotifications()->limit(5)->get()
-                            ->each(function ($notification) {
-                                $notification->DateHum = $notification->created_at->diffForHumans();
-                            }),
+                        'notifications' => $notifications,
                     ] : null,
                 ];
 
                 if ($request->user() && $request->user()->isStaff()) {
+                    $response['user']['position'] = $request->user()->CurrentPosition();
+                    $response['user']['positionID'] = $request->user()->CurrentPositionID();
                     $response['user']['pendingAssets'] = $pendingItemsAndSpaces->count();
                 };
 
-                if ($request->user() && config('Values.in_event')) {
-                     $response['user']['event_currency'] = shortNum($request->user()->event_currency);
+                if ($request->user() && config(key: 'Values.in_event')) {
+                     $response['user']['event_currency'] = shortNum(num: $request->user()->event_currency);
                 };
 
-                if ($request->user() && $request->route()->named('user.settings.page')){
-                         $response['user']['email'] = preg_replace('/[^@]+@([^\s]+)/', ''.substr($request->user()->email, 0, 3).'********@$1', $request->user()->email);
+                if ($request->user() && $request->route()->named(patterns: 'user.settings.page')){
+                         $response['user']['email'] = preg_replace(pattern: '/[^@]+@([^\s]+)/', replacement: ''.substr(string: $request->user()->email, offset: 0, length: 3).'********@$1', subject: $request->user()->email);
                          $response['user']['birthdate'] = $request->user()->birthdate;
                          $response['user']['email_verified_at'] = $request->user()->email_verified_at;
                 };
