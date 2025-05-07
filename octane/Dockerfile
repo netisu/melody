@@ -1,31 +1,39 @@
-ARG WWWUSER=www-data
-ARG WWWGROUP=www-data
-ARG NODE_VERSION=20
-ARG PHP_VERSION=8.4
+FROM dunglas/frankenphp:1.1-builder-php8.2.16
 
-FROM node:${NODE_VERSION}-alpine AS builder
+# Set Caddy server name to "http://" to serve on 80 and not 443
+# Read more: https://frankenphp.dev/docs/config/#environment-variables
+ENV SERVER_NAME="http://"
 
-WORKDIR /app
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    git \
+    unzip \
+    librabbitmq-dev \
+    libpq-dev \
+    supervisor
 
-COPY package.json bun.lockb ./
+RUN install-php-extensions \
+    gd \
+    pcntl \
+    opcache \
+    pdo \
+    pdo_mysql \
+    redis
 
-RUN npm i bun -g
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN bun install
+WORKDIR /var/www/html
 
+# Copy the Laravel application files into the container.
 COPY . .
 
-RUN bun run build
+# Start with base PHP config, then add extensions.
+COPY ./octane/start-container /usr/local/bin/start-container
+COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 
-# --- Get Composer ---
-FROM composer:latest AS composer
 
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-COPY database/ database/
-COPY . .
-
+# Install Laravel dependencies using Composer.
 RUN composer install \
     -a \
     --verbose \
@@ -35,70 +43,23 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
-    RUN composer dump-autoload --optimize
+# Install bun
+RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer 
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg 
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" > /etc/apt/sources.list.d/nodesource.list 
+RUN apt-get update 
+RUN apt-get install -y nodejs 
+RUN npm install -g npm 
+RUN npm install -g bun 
 
-FROM ubuntu:24.04 AS production
+#Build Frontend
+RUN bun install
+RUN bun run build
+    
+# Set permissions for Laravel.
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-ARG WWWUSER
-ARG WWWGROUP
-ARG PHP_VERSION
+EXPOSE 80 443
 
-WORKDIR /var/www/html
-
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=UTC
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gnupg gosu curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev python3 dnsutils librsvg2-bin fswatch ffmpeg
-
-# Install PHP and essential extensions for Swoole
-RUN apt-get update \
-    && mkdir -p /etc/apt/keyrings \
-    && curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c" | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends php${PHP_VERSION}-cli php${PHP_VERSION}-dev php${PHP_VERSION}-pgsql php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-gd php${PHP_VERSION}-imagick \
-    php${PHP_VERSION}-curl php${PHP_VERSION}-mbstring php${PHP_VERSION}-xml php${PHP_VERSION}-zip php${PHP_VERSION}-bcmath php${PHP_VERSION}-gmp php${PHP_VERSION}-intl php${PHP_VERSION}-mysql \
-    php${PHP_VERSION}-redis php${PHP_VERSION}-swoole
-
-RUN groupadd --system --gid 1000 $WWWGROUP || true && \
-    useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
-
-# Set file permissions
-RUN chown -R $WWWUSER:$WWWGROUP .
-
-# Copy application code
-COPY ./octane/start-container /usr/local/bin/start-container
-COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
-
-COPY --chown=$WWWUSER:$WWWGROUP . .
-
-# Copy built frontend assets from the builder stage
-COPY --from=builder /app/public/build public/build
-
-# Copy composer vendor folder
-COPY --from=composer /app/vendor vendor
-
-# ensure .env
-RUN cp -a .env.example .env
-RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
-# Cache all values
-RUN php artisan event:cache
-RUN php artisan route:cache
-
-RUN php artisan view:cache
-RUN php artisan key:generate
-
-# Install Swoole Binary
-RUN php artisan octane:install --server="swoole"
-
-# Expose the port Swoole will listen on
-EXPOSE 8000
-
-# Start the Octane Swoole server
-USER $WWWUSER
-ENTRYPOINT ["start-container"]
-
-HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD healthcheck || exit 1
+# Start Supervisor.
+CMD ["start-container"]

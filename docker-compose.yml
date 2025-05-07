@@ -4,22 +4,13 @@ services:
         build:
             context: ./
             dockerfile: ./octane/Dockerfile
-            args:
-                WWWUSER: '${WWWUSER:-www-data}'
-                WWWGROUP: '${WWWGROUP:-www-data}'
-                PHP_VERSION: '${PHP_VERSION:-8.4}'
-                NODE_VERSION: '${NODE_VERSION:-20}'
         restart: unless-stopped
         ports:
-            - '${APP_PORT:-8000}:8000' # Expose Swoole port
-            - '${REDIS_PORT:-6379}:6379'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-            - '${VITE_REVERB_PORT:-8080}:${VITE_REVERB_PORT:-8080}'
-            - '443:443' 
-            - '443:443/udp'
+            - ${APP_PORT:-8000}:8000
+            - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
         volumes:
-            - laravel_storage:/var/www/html/storage
-            - laravel_bootstrap_cache:/var/www/html/bootstrap/cache
+            - ./:${WORKDIR}
+            - ./vendor/:${WORKDIR}/vendor
         depends_on:
             - mysql
             - redis
@@ -28,7 +19,7 @@ services:
         networks:
             - netisu
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-8000}/_health"] # Implement a health check endpoint for Octane
+            test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-8000}/up"] # Implement a health check endpoint for Octane
             interval: 5s
             timeout: 3s
             retries: 3
@@ -117,7 +108,3 @@ services:
 networks:
     netisu:
         driver: bridge
-
-volumes:
-    laravel_storage:
-    laravel_bootstrap_cache:
