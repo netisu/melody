@@ -4,7 +4,7 @@ import { route } from 'ziggy-js';
 import { usePage } from "@inertiajs/vue3";
 import Navbar from "@/Components/LayoutParts/Admin/AdminNav.vue";
 import AppHead from "@/Components/AppHead.vue";
-import AdminPagination from "@/Components/AdminPagination.vue";
+import Pagination from "@/Components/Pagination.vue";
 
 </script>
 
@@ -66,7 +66,7 @@ import AdminPagination from "@/Components/AdminPagination.vue";
                     </div>
                     <div class="media-right"></div>
                 </article>
-                <AdminPagination :pagedata="usePage<any>().props.items"></AdminPagination>
+                <Pagination :pagedata="usePage<any>().props.items"></Pagination>
                 <div v-if="!usePage<any>().props.items.data.length">
                     No items found
                 </div>
