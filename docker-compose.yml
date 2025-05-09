@@ -9,7 +9,6 @@ services:
             - ${APP_PORT:-8000}:8000
             - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
         volumes:
-            - .:/app
             - ./vendor/:${WORKDIR}/vendor
         depends_on:
             - mysql
