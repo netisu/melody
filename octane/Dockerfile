@@ -28,7 +28,6 @@ WORKDIR /var/www/html
 COPY . .
 
 # Start with base PHP config, then add extensions.
-COPY ./octane/start-container /usr/local/bin/start-container
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 
