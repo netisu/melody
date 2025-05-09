@@ -22,10 +22,10 @@ RUN install-php-extensions \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+WORKDIR /var/www/html
 
 # Copy the Laravel application files into the container.
-COPY . /app
-
+COPY . .
 # Start with base PHP config, then add extensions.
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
