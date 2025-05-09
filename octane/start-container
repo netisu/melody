@@ -9,11 +9,12 @@ if ! grep -q "^APP_KEY=" .env; then
     php /var/www/html/artisan key:generate --ansi
 fi
 
-if [ ! -d /.composer ]; then
-    mkdir /.composer
+# Create .composer directory within the application's working directory
+if [ ! -d /var/www/html/.composer ]; then
+    mkdir /var/www/html/.composer
 fi
 
-chmod -R ugo+rw /.composer
+chmod -R ugo+rw /var/www/html/.composer
 
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
