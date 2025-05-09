@@ -10,7 +10,7 @@ services:
             - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
         volumes:
             - ./:${WORKDIR}
-            - ./vendor/:${WORKDIR}/vendor
+            - ./:${WORKDIR}/vendor
         depends_on:
             - mysql
             - redis
