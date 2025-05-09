@@ -1,20 +1,10 @@
 #!/usr/bin/env bash
 
-if [ ! -z "$WWWUSER" ]; then
-    usermod -u $WWWUSER sail
-fi
 
 if ! grep -q "^APP_KEY=" .env; then
     echo "Generating application key..."
     php /var/www/html/artisan key:generate --ansi
 fi
-
-# Create .composer directory within the application's working directory
-if [ ! -d /var/www/html/.composer ]; then
-    mkdir /var/www/html/.composer
-fi
-
-chmod -R ugo+rw /var/www/html/.composer
 
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
