@@ -55,4 +55,4 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 EXPOSE 80 443
 
 # Start Supervisor.
-CMD ["start-container"]
+CMD ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisor/conf.d/supervisord.conf"]
