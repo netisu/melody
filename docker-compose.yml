@@ -2,14 +2,14 @@
 services:
     web:
         build:
-            context: ./
+            context: .
             dockerfile: ./octane/Dockerfile
         restart: unless-stopped
         ports:
             - ${APP_PORT:-8000}:8000
             - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
         volumes:
-            - ./:${WORKDIR}
+            - .:/app
             - ./vendor/:${WORKDIR}/vendor
         depends_on:
             - mysql
