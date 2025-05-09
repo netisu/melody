@@ -58,7 +58,6 @@ RUN bun run build
 # Set permissions for Laravel.
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-USER www
 
 EXPOSE 80 443
 
