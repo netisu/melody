@@ -16,6 +16,7 @@ services:
             - redis
             - minio 
             - meilisearch
+        working_dir: /var/www/html
         networks:
             - netisu
         healthcheck:

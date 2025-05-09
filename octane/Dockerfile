@@ -30,6 +30,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+
 # Copy the Laravel application files into the container.
 COPY . /var/www/html
 
@@ -58,6 +62,8 @@ RUN bun run build
 # Set permissions for Laravel.
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+# Change current user to www
+USER www
 
 EXPOSE 80 443
 
