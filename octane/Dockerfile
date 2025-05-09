@@ -35,7 +35,6 @@ COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 
 # Install Laravel dependencies using Composer.
 RUN composer install \
-    -a \
     --verbose \
     --no-interaction \
     --ignore-platform-reqs \
