@@ -31,7 +31,7 @@ COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy the Laravel application files into the container.
-COPY . .
+COPY . /var/www/html
 
 # Install Laravel dependencies using Composer.
 RUN composer install \
@@ -43,6 +43,7 @@ RUN composer install \
     --prefer-dist
 
 RUN cp -a .env.example .env
+COPY --chown=www:www . /var/www/html
 
 # Run only when in production
 RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
@@ -56,6 +57,8 @@ RUN bun run build
     
 # Set permissions for Laravel.
 RUN chown -R www-data:www-data storage bootstrap/cache
+
+USER www
 
 EXPOSE 80 443
 
