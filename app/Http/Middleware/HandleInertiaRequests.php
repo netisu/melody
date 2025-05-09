@@ -7,6 +7,7 @@ use Inertia\Middleware;
 use App\Models\Item;
 use App\Models\Space;
 use Illuminate\Support\Carbon;
+use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -49,6 +50,10 @@ class HandleInertiaRequests extends Middleware
         }) : null;
 
         return array_merge( parent::share(request: $request), [
+            'ziggy' => fn () => [
+                ...(new Ziggy())->toArray(),
+                'location' => $request->url(),
+            ],
             'site' => config(key: 'Values'),
             'locale' => function (): string {
                 return app()->getLocale();

@@ -6,7 +6,7 @@ import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import { computed, onMounted, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
-import { route } from 'momentum-trail';
+import { route } from "ziggy-js";
 
 
 const site = computed<any>(() => usePage<any>().props.site);

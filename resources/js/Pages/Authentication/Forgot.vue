@@ -6,7 +6,7 @@ import { ref, computed } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import AppHead from '@/Components/AppHead.vue';
 import axios from 'axios';
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 
 const form = useForm({

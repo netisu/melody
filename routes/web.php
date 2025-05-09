@@ -24,7 +24,10 @@ use App\Http\Controllers\{
     Notification,
     MembershipController,
 };
-use App\Http\Middleware\EnsurePasswordIsConfirmed;
+use App\Http\Middleware\{
+    EnsurePasswordIsConfirmed,
+    Admin
+};
 
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
@@ -304,7 +307,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(middleware: 'throttle:6,1')->name('verification.send');
 
 
-Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => [EnsurePasswordIsConfirmed::class,  'auth', 'verified']], function () {
+Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => [Admin::class, EnsurePasswordIsConfirmed::class,  'verified']], function () {
 
     Route::get('/', [AdminController::class, 'AdminIndex'])->name('page');
     Route::group(['as' => 'users.', 'prefix' => 'users'], function () {

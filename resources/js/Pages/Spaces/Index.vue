@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import axios from "axios";
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import AppHead from "@/Components/AppHead.vue";

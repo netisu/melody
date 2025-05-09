@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { route } from 'momentum-trail';
+import { route } from "ziggy-js";
 import { router, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import Navbar from "@/Components/LayoutParts/Navbar.vue";

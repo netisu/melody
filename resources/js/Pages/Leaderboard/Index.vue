@@ -3,7 +3,7 @@ import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import AppHead from "@/Components/AppHead.vue";
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 // If you're using the 'route' function from 'momentum-trail'
 import { usePage } from "@inertiajs/vue3";
 

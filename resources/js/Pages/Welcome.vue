@@ -4,7 +4,7 @@ import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import { computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
-import { route } from 'momentum-trail';
+import { route } from "ziggy-js";
 
 const site = computed<any>(() => usePage<any>().props.site);
 

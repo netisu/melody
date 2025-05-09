@@ -31,11 +31,7 @@ class AdminController extends Controller
         $userId = Auth::check() ? Auth::user()->id() : null;
 
         $this->admin = Admin::where( 'user_id', $userId)->first();
-
-        if (!$this->admin) {
-            abort(403);
-        }
-
+        
         $isProduction = app()->environment('production');
 
         if ($isProduction) {

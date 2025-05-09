@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 import AdminNav from "@/Components/LayoutParts/Admin/AdminNav.vue";
 import Navbar from "@/Components/LayoutParts/Navbar.vue";
 

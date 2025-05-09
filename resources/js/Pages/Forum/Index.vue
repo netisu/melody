@@ -5,7 +5,7 @@ import ForumSidebar from '@/Components/LayoutParts/ForumSidebar.vue';
 import Footer from '@/Components/LayoutParts/Footer.vue';
 import AppHead from '@/Components/AppHead.vue';
 import VLazyImage from "v-lazy-image";
-import { route } from 'momentum-trail'; // If you're using the 'route' function from 'momentum-trail'
+import { route } from "ziggy-js"; // If you're using the 'route' function from 'momentum-trail'
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 

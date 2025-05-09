@@ -2,6 +2,7 @@
 import "./bootstrap";
 import "vue-skeletor/dist/vue-skeletor.css";
 import "../css/NProgress.css";
+import "../css/style.css";
 
 // アプリの作成
 import { Skeletor } from "vue-skeletor";
@@ -10,9 +11,8 @@ import type { DefineComponent } from "vue";
 import { createInertiaApp, Head, Link } from "@inertiajs/vue3";
 import Pagination from "./Components/Pagination.vue";
 import AppHead from "./Components/AppHead.vue";
-import { trail } from "momentum-trail";
-import routes from "../routes/js/routing.json";
-import "../css/style.css";
+import { ZiggyVue } from 'ziggy-js';
+import { Ziggy } from './ziggy';
 
 if (import.meta.hot) {
     import.meta.hot.accept();
@@ -38,7 +38,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createSSRApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(trail, { routes })
+            .use(ZiggyVue, Ziggy) 
             .use(VueTippy)
             .component("Skeletor", Skeletor)
             .component("Pagination", Pagination)

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { route, current } from 'momentum-trail';
+import { route } from "ziggy-js";
 
 const { section_one, section_two, section_three } = defineProps([
     'section_one',
@@ -32,7 +32,7 @@ function setActiveTopCat(categoryName): void {
         <div class="mb-2 collapsible-menu">
             <Link as="button" v-for="Official in section_one" :key="Official.id"
                 :href="route('forum.page', { id: Official.id })" class="text-xs market-section-item"
-                :class="[current('forum.page', Official.id) ? 'active' : '']">
+                :class="[route().current('forum.page', Official.id) ? 'active' : '']">
             <i v-if="Official.role_required_to_post != null" class="fas fa-lock"></i>&nbsp;{{ Official.name }}
             </Link>
         </div>
@@ -47,7 +47,7 @@ function setActiveTopCat(categoryName): void {
         <div class="mb-2 collapsible-menu">
             <Link as="button" v-for="Community in section_two" :key="Community.id"
                 :href="route('forum.page', { id: Community.id })" class="text-xs market-section-item"
-                :class="[current('forum.page', Community.id) ? 'active' : '']">
+                :class="[route().current('forum.page', Community.id) ? 'active' : '']">
             <i v-if="Community.role_required_to_post != null" class="fas fa-lock"></i>&nbsp;{{ Community.name }}
             </Link>
         </div>
@@ -62,7 +62,7 @@ function setActiveTopCat(categoryName): void {
         <div class="mb-2 collapsible-menu">
             <Link as="button"  v-for="Serious in section_three" :key="Serious.id"
                 :href="route('forum.page', { id: Serious.id })" class="text-xs market-section-item"
-                :class="[current('forum.page', Serious.id) ? 'active' : '']">
+                :class="[route().current('forum.page', Serious.id) ? 'active' : '']">
             <i v-if="Serious.role_required_to_post != null" class="fas fa-lock"></i>&nbsp;{{ Serious.name }}
             </Link>
         </div>

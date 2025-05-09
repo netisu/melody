@@ -6,7 +6,7 @@ import ItemPreviewer from '@/Components/ItemPreviewer.vue';
 import Footer from '@/Components/LayoutParts/Footer.vue';
 import AppHead from '@/Components/AppHead.vue';
 import { usePage } from '@inertiajs/vue3';
-import { route } from 'momentum-trail'
+import { route } from "ziggy-js";
 import axios from 'axios';
 import { ref } from 'vue';
 import throttle from 'lodash/throttle';

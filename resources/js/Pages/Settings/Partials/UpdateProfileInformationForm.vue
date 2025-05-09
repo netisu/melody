@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, useForm, usePage } from '@inertiajs/vue3';
-//import { route, current } from "momentum-trail";
+//import { route } from 'ziggy-js';;
 
 const props = defineProps({
     mustVerifyEmail: Boolean,

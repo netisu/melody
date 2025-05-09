@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { ref, computed, watch, onMounted, reactive } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 import VLazyImage from "v-lazy-image";
 import Footer from '@/Components/LayoutParts/Footer.vue';

@@ -26,30 +26,19 @@ use App\Models\Space;
 
 class AdminController extends Controller
 {
-    private $admin;
-
-    public function __construct()
-    {
-        $userId = Auth::check() ? Auth::id() : null;
-
-        $this->admin = Admin::where(column: 'user_id', operator: $userId)->first();
-
-        if(!$this->admin){
-            abort(code: 404);
-        };
-    }
-
+   
     public function AdminIndex()
     {
+        $admin = Admin::where('user_id', Auth::user()->id)->first();
         return inertia('Admin/Dashboard', [
             'stats' => [
-                'adminPoints' => $this->admin->adminPoints,
-                'canControlMarketPurchases' => $this->admin->rolePermissions('can_enable_market_purchases') ?? false,
-                'canControlDiscussion' => $this->admin->rolePermissions('can_enable_discussion') ?? false,
-                'canControlCustomization' => $this->admin->rolePermissions('can_enable_customization') ?? false,
-                'canControlSpaces' => $this->admin->rolePermissions('can_enable_spaces') ?? false,
-                'canControlMaintenance' => $this->admin->rolePermissions('can_activate_maintenance') ?? false,
-                'canEnableAnnouncement' => $this->admin->rolePermissions('can_enable_announcement') ?? false,
+                'adminPoints' => $admin->adminPoints,
+                'canControlMarketPurchases' => $admin->rolePermissions('can_enable_market_purchases') ?? false,
+                'canControlDiscussion' => $admin->rolePermissions('can_enable_discussion') ?? false,
+                'canControlCustomization' => $admin->rolePermissions('can_enable_customization') ?? false,
+                'canControlSpaces' => $admin->rolePermissions('can_enable_spaces') ?? false,
+                'canControlMaintenance' => $admin->rolePermissions('can_activate_maintenance') ?? false,
+                'canEnableAnnouncement' => $admin->rolePermissions('can_enable_announcement') ?? false,
             ],
             'siteSettings' => [
                 'inMaintenance' => siteSetting("site_maintenance"),
@@ -63,7 +52,8 @@ class AdminController extends Controller
 
     public function ContentApprovingIndex()
     {
-        if ($this->admin->rolePermissions('can_manage_items') ?? false != false):
+        $admin = Admin::where('user_id', Auth::user()->id)->first();
+        if ($admin->rolePermissions('can_manage_items') ?? false != false):
             $pendingItems = Item::where('status', 'pending')->with('creator')->get();
 
             $pendingSpaces = Space::where('thumbnail_pending', true)->with('creator')->get();
@@ -121,6 +111,7 @@ class AdminController extends Controller
     public function GiftUser(int $userID)
     {
         $user = User::where(['id' => $userID])->first();
+        $admin = Admin::where('user_id', Auth::user()->id)->first();
 
         if (!$user) {
             abort(404);
@@ -130,7 +121,7 @@ class AdminController extends Controller
             abort(403);
         }
 
-        if ($this->admin->rolePermissions('can_gift_users') ?? false != false):
+        if ($admin->rolePermissions('can_gift_users') ?? false != false):
             $response = inertia('Admin/Users/Gift', [
                 'userID' => $userID,
             ]);
@@ -194,7 +185,9 @@ class AdminController extends Controller
 
     public function CreateIndex()
     {
-        if ($this->admin->rolePermissions('can_manage_items') ?? false != false):
+        $admin = Admin::where('user_id', Auth::user()->id)->first();
+
+        if ($admin->rolePermissions('can_manage_items') ?? false != false):
             $response =  inertia('Admin/Items/Create');
         else:
             $response =  inertia('Admin/Error/PermissionError', [
@@ -309,6 +302,7 @@ class AdminController extends Controller
 
     public function ManageUser(int $id)
     {
+        $admin = Admin::where('user_id', Auth::user()->id)->first();
         // Define a cache key for this query result
         $cacheKey = 'users_manage_' . $id;
         $user = Cache::remember($cacheKey, now()->addMinutes(30), function () use ($id) {
@@ -342,9 +336,9 @@ class AdminController extends Controller
                 ],
             ],
             'permissions' => [
-                'canMangeUser' => $this->admin->rolePermissions('can_manage_users') ?? false,
-                'canMangeUserSettings' => $this->admin->rolePermissions('can_manage_user_settings') ?? false,
-                'canGiftUser' => $this->admin->rolePermissions('can_gift_users') ?? false,
+                'canMangeUser' => $admin->rolePermissions('can_manage_users') ?? false,
+                'canMangeUserSettings' => $admin->rolePermissions('can_manage_user_settings') ?? false,
+                'canGiftUser' => $admin->rolePermissions('can_gift_users') ?? false,
 
             ],
         ]);

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePage } from "@inertiajs/vue3";
 import { computed } from "vue";
-import { route, current } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 const topbar = [
     {
@@ -41,7 +41,7 @@ const { props } = usePage<any>();
             <ul class="tabs flex-dir-column">
                 <li class="tab-item">
                     <Link class="tab-link squish" v-for="topbarlinks in topbar" :href="topbarlinks.url"
-                    :class="[current(topbarlinks.active_link) ? 'active' : '']">
+                    :class="[route().current(topbarlinks.active_link) ? 'active' : '']">
                     <i :class="topbarlinks.icon"></i> &nbsp;
                     {{ topbarlinks[lang].title }}
                 </Link>

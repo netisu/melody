@@ -46,7 +46,7 @@ export default {
         }),
         watch({
             pattern: "routes/*.php",
-            command: "php artisan trail:generate",
+            command: "php artisan ziggy:generate --types",
         }),
         laravel({
             input: ["resources/js/app.ts"],
@@ -77,6 +77,10 @@ export default {
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
             "@": path.resolve(__dirname, "resources/js"),
+            'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
         },
+    },
+    optimizeDeps: {
+        include: ["ziggy-js"],
     },
 } satisfies UserConfig;

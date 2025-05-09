@@ -3,7 +3,7 @@ import Navbar from '@/Components/LayoutParts/Navbar.vue';
 import Sidebar from '@/Components/LayoutParts/Sidebar.vue';
 import Footer from '@/Components/LayoutParts/Footer.vue';
 import AeoPagination from '@/Components/Pagination.vue';
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 import { ref } from 'vue';
 import axios from 'axios';

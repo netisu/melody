@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios"; // Import Axios
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 import AppHead from "@/Components/AppHead.vue";
 import { usePage } from "@inertiajs/vue3";

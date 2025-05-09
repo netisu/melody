@@ -3,7 +3,7 @@ import { ref, reactive, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
-import { route } from "momentum-trail";
+import { route } from 'ziggy-js';;
 
 import AppHead from "@/Components/AppHead.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";

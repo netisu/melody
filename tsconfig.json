@@ -31,7 +31,8 @@
         "paths": {
             "@/*": [
                 "resources/js/*"
-            ]
+            ],
+            "ziggy-js": ["vendor/tightenco/ziggy"]
         },
         "baseUrl": ".",
         "isolatedModules": true,

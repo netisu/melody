@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
-import { route } from "momentum-trail";
+import { route } from 'ziggy-js';;
 
 import LanguageModal from "../Modal/LanguageModal.vue";
 import SearchResult from "../SearchResult.vue";

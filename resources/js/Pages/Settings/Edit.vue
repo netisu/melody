@@ -8,7 +8,7 @@ import LanguageModal from '@/Components/Modal/LanguageModal.vue';
 // import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import Upload from '@/Components/Upload.vue';
 import { usePage, router } from '@inertiajs/vue3';
-import { route } from 'momentum-trail'
+import { route } from "ziggy-js";
 import { computed, ref } from 'vue';
 import type { Ref } from 'vue';
 import axios from "axios";

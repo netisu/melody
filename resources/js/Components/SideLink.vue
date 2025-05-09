@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { current } from "momentum-trail";
+import { route } from 'ziggy-js';;
 
 // Props
 defineProps<{
@@ -9,7 +9,7 @@ defineProps<{
 </script>
 <template>
     <li class="side-item">
-        <Link class="side-link" :href="link" :class="[current(ActiveLink) ? 'active' : '']" prefetch>
+        <Link class="side-link" :href="link" :class="[route().current(ActiveLink) ? 'active' : '']" prefetch>
             <slot />
         </Link>
     </li>

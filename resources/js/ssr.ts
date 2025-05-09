@@ -8,10 +8,10 @@ import "../css/style.css";
 import { createSSRApp, h } from "vue";
 import type { DefineComponent } from "vue";
 
-import { trail } from "momentum-trail";
+import { ZiggyVue } from 'ziggy-js';
+import { Ziggy } from './ziggy.js';
 import { Skeletor } from "vue-skeletor";
 import AppHead from "./Components/AppHead.vue";
-import routes from "../routes/js/routing.json";
 import createServer from "@inertiajs/vue3/server";
 import { renderToString } from "@vue/server-renderer";
 import Pagination from "./Components/Pagination.vue";
@@ -30,7 +30,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 
 const appName = import.meta.env?.["VITE_APP_NAME"] || "Laravel";
 
-createServer(page =>
+createServer((page) =>
     createInertiaApp({
         page,
         render: renderToString,
@@ -39,10 +39,7 @@ createServer(page =>
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob<DefineComponent>('./Pages/**/*.vue')),
         setup({ App, props, plugin }) {
             return createSSRApp({ render: () => h(App, props) })
-                .use(trail, {
-                    routes,
-                    url: props.initialPage.url,
-                })
+                .use(ZiggyVue, Ziggy)
                 .use(plugin)
                 .use(VueTippy)
                 .component("Skeletor", Skeletor)

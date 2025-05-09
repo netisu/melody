@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import { route } from 'momentum-trail'
+import { route } from "ziggy-js";
 import axios from 'axios';
 import { ref } from 'vue';
 

@@ -7,7 +7,7 @@ import { ref, onMounted, reactive, computed } from "vue";
 import type { Ref } from "vue";
 
 import axios from "axios"; // Import Axios
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 import JsonPagination from '@/Components/JsonPagination.vue';
 
 import { usePage } from "@inertiajs/vue3";

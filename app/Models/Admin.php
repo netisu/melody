@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as AeoAuthenticatable;
+use App\Models\User;
 
 use Illuminate\Support\Facades\{
     Cache,

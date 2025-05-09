@@ -2,7 +2,7 @@
 import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 import FlashMessages from "@/Components/Messages/FlashMessages.vue";
 import AppHead from "@/Components/AppHead.vue";

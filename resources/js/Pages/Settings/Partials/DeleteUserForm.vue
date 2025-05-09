@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 
 const confirmingUserDeletion = ref(false);

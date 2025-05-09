@@ -4,7 +4,7 @@ import AppHead from "@/Components/AppHead.vue";
 import { ref } from 'vue';
 import axios from 'axios';
 import { useForm, usePage } from "@inertiajs/vue3";
-import { route } from "momentum-trail"
+import { route } from 'ziggy-js';
 
 
 defineProps<{

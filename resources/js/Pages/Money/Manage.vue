@@ -2,7 +2,7 @@
 import Navbar from '@/Components/LayoutParts/Navbar.vue'
 import Sidebar from '@/Components/LayoutParts/Sidebar.vue'
 import { usePage, usePoll } from '@inertiajs/vue3';
-import { route } from 'momentum-trail';
+import { route } from "ziggy-js";
 import AppHead from "@/Components/AppHead.vue";
 import Footer from '@/Components/LayoutParts/Footer.vue';
 import { ref } from 'vue';
@@ -39,7 +39,7 @@ usePoll(10000, { only: ['purchases'] })
     <AppHead pageTitle="Money" :description="'Manage your finances on ' + usePage<any>().props.site.name + '.'"
         :url="route('my.money.page')" />
     <Navbar />
-    <Sidebar>
+    <Sidebar :JSONALERT="JSONALERT">
         <div class="cell medium-3">
             <div class="mb-2 text-xl fw-semibold">Manage Your Finances</div>
             <ul class="tabs flex-dir-column">
