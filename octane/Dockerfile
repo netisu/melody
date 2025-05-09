@@ -22,7 +22,6 @@ RUN install-php-extensions \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
 
 # Copy the Laravel application files into the container.
 COPY . /app
