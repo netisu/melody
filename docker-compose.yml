@@ -2,12 +2,11 @@
 services:
     web:
         build:
-            context: .
+            context: ./
             dockerfile: ./octane/Dockerfile
             args:
                 WWWUSER: '${WWWUSER:-www-data}'
                 WWWGROUP: '${WWWGROUP:-www-data}'
-        restart: unless-stopped
         ports:
             - '${APP_PORT:-8000}:8000'
             - '${REDIS_PORT:-6379}:6379'
