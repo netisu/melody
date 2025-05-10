@@ -68,12 +68,9 @@ RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 RUN bun install
 RUN bun run build
 
-# Set permissions for Laravel.
-RUN chown -R www-data:www-data storage bootstrap/cache
-
-# Change current user to www
 EXPOSE 80 443
 
+# Change current user to www
 USER $WWWUSER
 # Start Supervisor.
 CMD ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisor/conf.d/supervisord.conf"]
