@@ -28,18 +28,16 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Start with base PHP config, then add extensions.
 COPY ./octane/start-container /usr/local/bin/start-container
+RUN chmod +x /usr/local/bin/start-container
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /usr/local/bin/start-container
 # Add user for laravel application
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
     
 # Set file permissions
 RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
-
-# Copy the Laravel application files into the container.
 COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
 
 # Install Laravel dependencies using Composer.
