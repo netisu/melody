@@ -68,7 +68,7 @@ RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 RUN bun install
 RUN bun run build
 
-EXPOSE 80 443
+EXPOSE 8000
 
 # Change current user to www
 USER $WWWUSER
