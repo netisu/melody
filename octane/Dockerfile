@@ -27,6 +27,7 @@ RUN install-php-extensions \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Start with base PHP config, then add extensions.
+COPY ./octane/start-container /usr/local/bin/start-container
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
