@@ -1,9 +1,9 @@
+ARG WWWUSER=www-data
+ARG WWWGROUP=www-data
+
 FROM dunglas/frankenphp:1.1-builder-php8.2.16
 
 WORKDIR /var/www/html
-
-ENV WWWUSER=www \
-    WWWGROUP=www
 # Set Caddy server name to "http://" to serve on 80 and not 443
 # Read more: https://frankenphp.dev/docs/config/#environment-variables
 ENV SERVER_NAME="https://"
@@ -26,18 +26,19 @@ RUN install-php-extensions \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-
-
 # Start with base PHP config, then add extensions.
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN groupadd --system --gid 1000 $WWWGROUP || true && \
+    useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
+    
+# Set file permissions
+RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
 
 # Copy the Laravel application files into the container.
-COPY . /var/www/html
+COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
 
 # Install Laravel dependencies using Composer.
 RUN composer install \
@@ -48,11 +49,17 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
+# Copy application code
 RUN cp -a .env.example .env
-COPY --chown=www:www . /var/www/html
 
 # Run only when in production
 RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
+
+# Cache all values
+RUN php artisan event:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
+
 
 # Install bun
 RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
@@ -60,12 +67,13 @@ RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 #Build Frontend
 RUN bun install
 RUN bun run build
-    
+
 # Set permissions for Laravel.
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Change current user to www
 EXPOSE 80 443
 
+USER $WWWUSER
 # Start Supervisor.
 CMD ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisor/conf.d/supervisord.conf"]
