@@ -60,7 +60,6 @@ RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
 
-
 # Install bun
 RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 
@@ -73,4 +72,4 @@ EXPOSE 80 443
 # Change current user to www
 USER $WWWUSER
 # Start Supervisor.
-CMD ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisor/conf.d/supervisord.conf"]
+ENTRYPOINT ["start-container"]
