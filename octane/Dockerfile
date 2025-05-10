@@ -31,6 +31,7 @@ COPY ./octane/start-container /usr/local/bin/start-container
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+RUN chmod +x /usr/local/bin/start-container
 # Add user for laravel application
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
@@ -70,7 +71,5 @@ RUN bun run build
 
 EXPOSE 8000
 
-# Change current user to www
-USER $WWWUSER
 # Start Supervisor.
-ENTRYPOINT ["start-container"]
+ENTRYPOINT ["/usr/local/bin/start-container"]
