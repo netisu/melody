@@ -2,6 +2,8 @@ FROM dunglas/frankenphp:1.1-builder-php8.2.16
 
 WORKDIR /var/www/html
 
+ENV WWWUSER=www \
+    WWWGROUP=www
 # Set Caddy server name to "http://" to serve on 80 and not 443
 # Read more: https://frankenphp.dev/docs/config/#environment-variables
 ENV SERVER_NAME="https://"
@@ -63,8 +65,6 @@ RUN bun run build
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Change current user to www
-USER www
-
 EXPOSE 80 443
 
 # Start Supervisor.
