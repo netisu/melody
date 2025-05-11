@@ -4,9 +4,6 @@ services:
         build:
             context: .
             dockerfile: ./octane/Dockerfile
-            args:
-                WWWUSER: '${WWWUSER:-www-data}'
-                WWWGROUP: '${WWWGROUP:-www-data}'
         ports:
             - '${APP_PORT:-8000}:8000'
             - '${REDIS_PORT:-6379}:6379'
@@ -24,7 +21,6 @@ services:
             - meilisearch
         extra_hosts:
             - 'host.docker.internal:host-gateway'
-        working_dir: /var/www/html
         networks:
             - netisu
         healthcheck:
