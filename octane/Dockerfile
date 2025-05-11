@@ -66,6 +66,9 @@ RUN bun run build
 
 RUN chmod +x /usr/local/bin/start-container
 
+# Set permissions for Laravel.
+RUN chown -R www-data:www-data storage bootstrap/cache
+
 WORKDIR /app
 
 EXPOSE 80 443
