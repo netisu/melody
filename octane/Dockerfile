@@ -1,5 +1,7 @@
 FROM dunglas/frankenphp
 
+WORKDIR /app
+
 # Set Caddy server name to "http://" to serve on 80 and not 443
 # Read more: https://frankenphp.dev/docs/config/#environment-variables
 ENV SERVER_NAME="https://"
@@ -68,8 +70,6 @@ RUN chmod +x /usr/local/bin/start-container
 
 # Set permissions for Laravel.
 RUN chown -R www-data:www-data storage bootstrap/cache
-
-WORKDIR /app
 
 EXPOSE 80 443
 
