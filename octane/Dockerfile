@@ -20,7 +20,6 @@ RUN install-php-extensions \
     pdo_mysql \
     redis
     
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
