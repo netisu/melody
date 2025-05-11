@@ -13,7 +13,7 @@ services:
             - '443:443/udp'
         volumes:
             - .:/app
-            - ./vendor/:app/vendor
+            - ./vendor/.:/app/vendor
         depends_on:
             - mysql
             - redis
