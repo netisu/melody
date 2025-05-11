@@ -15,8 +15,8 @@ services:
             - '443:443'
             - '443:443/udp'
         volumes:
-            - ./:${WORKDIR}
-            - /:${WORKDIR}/vendor
+            - .:/app
+            - .:/app/vendor
         depends_on:
             - mysql
             - redis
