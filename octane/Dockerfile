@@ -1,8 +1,23 @@
-ARG WWWUSER=www-data
-ARG WWWGROUP=www-data
+ARG PHP_VERSION=8.4
+ARG FRANKENPHP_VERSION=1.5
+ARG COMPOSER_VERSION=2.8
+ARG BUN_VERSION="latest"
 
-FROM dunglas/frankenphp:1.1-builder-php8.2.16
+FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-builder-php${PHP_VERSION}
 
+COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
+
+RUN CGO_ENABLED=1 \
+    XCADDY_SETCAP=1 \
+    XCADDY_GO_BUILD_FLAGS="-ldflags='-w -s' -tags=nobadger,nomysql,nopgx" \
+    CGO_CFLAGS=$(php-config --includes) \
+    CGO_LDFLAGS="$(php-config --ldflags) $(php-config --libs)" \
+    xcaddy build \
+        --output /usr/local/bin/frankenphp \
+        --with github.com/dunglas/frankenphp=./ \
+        --with github.com/dunglas/frankenphp/caddy=./caddy/ \
+        --with github.com/dunglas/caddy-cbrotli
+        
 WORKDIR /var/www/html
 # Set Caddy server name to "http://" to serve on 80 and not 443
 # Read more: https://frankenphp.dev/docs/config/#environment-variables
