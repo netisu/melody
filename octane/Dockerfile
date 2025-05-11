@@ -3,7 +3,7 @@ ARG FRANKENPHP_VERSION=1.5
 ARG COMPOSER_VERSION=2.8
 ARG BUN_VERSION="latest"
 
-FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-builder-php${PHP_VERSION}
+FROM dunglas/frankenphp
 
 COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
 
