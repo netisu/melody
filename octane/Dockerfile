@@ -23,22 +23,21 @@ RUN install-php-extensions \
     pdo \
     pdo_mysql \
     redis
+    
+RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Start with base PHP config, then add extensions.
-COPY ./octane/start-container /usr/local/bin/start-container
-RUN chmod +x /usr/local/bin/start-container
-COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
-COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Add user for laravel application
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www/html --shell /bin/bash $WWWUSER || true
     
+# Start with base PHP config, then add extensions.
+COPY ./octane/start-container /usr/local/bin/start-container
+COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
+COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+    
 # Set file permissions
-RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
-COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html
+COPY . .
 
 # Install Laravel dependencies using Composer.
 RUN composer install \
@@ -60,6 +59,10 @@ RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
 
+# Regenerate Application Key
+RUN php artisan key:generate
+
+
 # Install bun
 RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 
@@ -67,7 +70,9 @@ RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 RUN bun install
 RUN bun run build
 
+RUN chmod +x /usr/local/bin/start-container
+
 EXPOSE 8000
 
 # Start Supervisor.
-ENTRYPOINT ["/usr/local/bin/start-container"]
+ENTRYPOINT ["start-container"]
