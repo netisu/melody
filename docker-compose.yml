@@ -2,7 +2,7 @@
 services:
     web:
         build:
-            context: ./
+            context: .
             dockerfile: ./octane/Dockerfile
             args:
                 WWWUSER: '${WWWUSER:-www-data}'
