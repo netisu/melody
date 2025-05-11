@@ -13,6 +13,16 @@ import compression from 'vite-plugin-compression2'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default {
+    build: {
+    cacheDir: '.vite', // Make sure the cache is stored in a persistent location
+    target: 'esnext', // Target modern JavaScript only
+    minify: 'esbuild', // Enable esbuild for minification
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console logs for production
+      },
+    },
+  },
     server: {
         host: '100.115.92.197',
         cors: true,
