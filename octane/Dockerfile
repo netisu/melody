@@ -34,7 +34,7 @@ COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Add user for laravel application
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
-    useradd --system --uid 1000 --gid $WWWGROUP --home /var/www --shell /bin/bash $WWWUSER || true
+    useradd --system --uid 1000 --gid $WWWGROUP --home /var/www/html --shell /bin/bash $WWWUSER || true
     
 # Set file permissions
 RUN chown -R $WWWUSER:$WWWGROUP /var/www/html
