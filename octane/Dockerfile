@@ -1,24 +1,5 @@
-ARG PHP_VERSION=8.4
-ARG FRANKENPHP_VERSION=1.5
-ARG COMPOSER_VERSION=2.8
-ARG BUN_VERSION="latest"
-
 FROM dunglas/frankenphp
 
-COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
-
-RUN CGO_ENABLED=1 \
-    XCADDY_SETCAP=1 \
-    XCADDY_GO_BUILD_FLAGS="-ldflags='-w -s' -tags=nobadger,nomysql,nopgx" \
-    CGO_CFLAGS=$(php-config --includes) \
-    CGO_LDFLAGS="$(php-config --ldflags) $(php-config --libs)" \
-    xcaddy build \
-        --output /usr/local/bin/frankenphp \
-        --with github.com/dunglas/frankenphp=./ \
-        --with github.com/dunglas/frankenphp/caddy=./caddy/ \
-        --with github.com/dunglas/caddy-cbrotli
-        
-WORKDIR /var/www/html
 # Set Caddy server name to "http://" to serve on 80 and not 443
 # Read more: https://frankenphp.dev/docs/config/#environment-variables
 ENV SERVER_NAME="https://"
@@ -45,14 +26,13 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www/html --shell /bin/bash $WWWUSER || true
-    
-# Start with base PHP config, then add extensions.
+        
+# Copy Application and Configuration
+COPY . /app
+
 COPY ./octane/start-container /usr/local/bin/start-container
 COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-    
-# Set file permissions
-COPY . .
 
 # Install Laravel dependencies using Composer.
 RUN composer install \
@@ -87,7 +67,9 @@ RUN bun run build
 
 RUN chmod +x /usr/local/bin/start-container
 
-EXPOSE 8000
+WORKDIR /app
+
+EXPOSE 80 443
 
 # Start Supervisor.
 ENTRYPOINT ["start-container"]
