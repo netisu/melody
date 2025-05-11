@@ -28,8 +28,12 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www/html --shell /bin/bash $WWWUSER || true
         
-# Copy only composer.json and composer.lock first
-COPY composer.json composer.lock ./
+# Copy Application and Configuration
+COPY . /app
+COPY ./octane/start-container /usr/local/bin/start-container
+COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
+COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 
 # Install Laravel dependencies using Composer.
 RUN composer install \
@@ -39,13 +43,6 @@ RUN composer install \
     --no-plugins \
     --no-dev \
     --prefer-dist
-
-# Copy the rest of the application code
-COPY . /app
-
-COPY ./octane/start-container /usr/local/bin/start-container
-COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
-COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy application code
 RUN cp -a .env.example .env
