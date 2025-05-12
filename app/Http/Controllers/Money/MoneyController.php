@@ -38,7 +38,7 @@ class MoneyController extends Controller
     public function convert(Request $request): JsonResponse
     {
         $request->validate(rules: [
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|integer|min:0',
             'type' => 'required|in:bucks,coins',
         ]);
 
