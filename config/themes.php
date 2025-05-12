@@ -13,28 +13,28 @@ return [
             'name' => 'Dark',
             'lowercase' => 'dark',
             'file' => '/css/themes/variables-dark.css',
-            'available' => false
+            'available' => true
         ],
 
         'amoled' => [
             'name' => 'Amoled',
             'lowercase' => 'amoled',
             'file' => '/css/themes/variables-amoled.css',
-            'available' => false
+            'available' => true
         ],
 
         'vistora' => [
             'name' => 'Vistora',
             'lowercase' => 'vistora',
             'file' => '/css/themes/variables-vistora.css',
-            'available' => false
+            'available' => true
         ],
 
         'discord' => [
             'name' => 'Purple',
             'lowercase' => 'discord',
             'file' => '/css/themes/variables-discord.css',
-            'available' => false
+            'available' => true
         ],
 
         'halloween' => [
@@ -55,7 +55,7 @@ return [
             'name' => 'THE "DEEP"',
             'lowercase' => 'classic',
             'file' => '/css/themes/variables-classic.css',
-            'available' => false
+            'available' => true
         ]
     ]
 ];
