@@ -47,7 +47,7 @@ class MoneyController extends Controller
 
         if ($type === 'bucks') {
             // Converting Bucks to Coins
-            if ($amount % 10 == 0) {
+            if (is_int($amount)) {
             // Bucks should ALWAYS be whole numbers
                 if (Auth::user()->bucks >= $amount) {
                     $coinsToAdd = $amount * 10;
@@ -63,7 +63,7 @@ class MoneyController extends Controller
             } else {
                 return response()->json(data: [
                     'type' => 'error',
-                    'message' => 'Buck amount must must be a multiple of 10.',
+                    'message' => 'Buck amount must be an integer.',
                 ], status: 400);
             }
         } elseif ($type === 'coins') {
