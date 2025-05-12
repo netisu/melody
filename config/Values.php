@@ -34,7 +34,8 @@ return [
 
     'shop' => [
         'previews_enabled' => true,
-        'preview_types' => ['hat', 'addon', 'face', 'tool']
+        'preview_types' => ['hat', 'addon', 'face', 'tool'],
+        'threed_types' => ['hat', 'addon', 'tool']
     ],
 
     'socials' => [

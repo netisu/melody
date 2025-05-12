@@ -227,7 +227,7 @@ function onImgErrorSmall(id) {
                                     </button>
                                 </div>
                                 <div class="ms-auto">
-                                    <button class="btn btn-secondary btn-xs"
+                                    <button v-if="usePage<any>().props.site.threed_types.includes(usePage<any>().props.item.type)" class="btn btn-secondary btn-xs"
                                         @click="set3D()">
                                         {{ is3d ? 'Item Image' : '3D' }}
                                     </button>
@@ -246,7 +246,7 @@ function onImgErrorSmall(id) {
                                 </div>
                             </div>
                             <ItemPreviewer v-if="is3d" class="mx-auto d-block" width="512" height="512" :hash="usePage<any>().props.item.hash" />
-                            <img :src="usePage<any>().props.item.thumbnail && !is3d" @error="onImgErrorSmall('thumbnail')"
+                            <img v-if="!is3d" :src="usePage<any>().props.item.thumbnail" @error="onImgErrorSmall('thumbnail')"
                                 class="mx-auto d-block" id="thumbnail" ref="thumbnail" width="512" height="512">
                         </div>
                         <div v-if="itemOwnership"
