@@ -9,7 +9,6 @@ import { createSSRApp, h } from "vue";
 import type { DefineComponent } from "vue";
 
 import { ZiggyVue } from 'ziggy-js';
-import { Ziggy } from './ziggy.js';
 import { Skeletor } from "vue-skeletor";
 import AppHead from "./Components/AppHead.vue";
 import createServer from "@inertiajs/vue3/server";
@@ -39,7 +38,7 @@ createServer((page) =>
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob<DefineComponent>('./Pages/**/*.vue')),
         setup({ App, props, plugin }) {
             return createSSRApp({ render: () => h(App, props) })
-                .use(ZiggyVue, Ziggy)
+                .use(ZiggyVue)
                 .use(plugin)
                 .use(VueTippy)
                 .component("Skeletor", Skeletor)
