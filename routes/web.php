@@ -290,7 +290,6 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     UserSettings::where('id', Auth::id())->update(['verified_email' => false]);
     $request->fulfill();
 
-
     return redirect('/my/dashboard');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
@@ -298,13 +297,16 @@ Route::post('/email/verification-notification', function (Request $request) {
     if (env('APP_ENV') === 'production') {
         UserSettings::where('id', Auth::id())->update(['verified_email' => true]);
         if (!$request->user()->hasVerifiedEmail()) {
-            $request->user()->sendEmailVerificationNotification();
+            // Dispatch the SendVerificationEmail job to the queue
+            Queue::push(new SendVerificationEmail($request->user()));
+        } else {
+            // Even if already sent, we'll re-queue to be safe and consistent
+            Queue::push(new SendVerificationEmail($request->user()));
         }
-        $request->user()->sendEmailVerificationNotification();
     } else {
         User::where('id', Auth::id())->update(['email_verified_at' => now()]);
     }
-})->middleware(middleware: 'throttle:6,1')->name('verification.send');
+})->middleware('throttle:6,1')->name('verification.send');
 
 
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => [Admin::class, EnsurePasswordIsConfirmed::class,  'verified']], function () {
