@@ -140,10 +140,13 @@ async function loadItem(hash: string): Promise<void> {
 }
 
 function animate(): void {
-  if (renderer.value && scene.value && camera.value && controls.value) {
+  if (renderer.value && scene.value && camera.value && controls.value && model.value) {
     requestAnimationFrame(animate);
     controls.value.update();
     renderer.value.render(scene.value, camera.value);
+  } else {
+    requestAnimationFrame(animate); // Continue the animation loop
+    controls.value?.update(); // Still update controls if they exist
   }
 }
 
