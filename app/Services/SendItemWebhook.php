@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class SendItemWebhook
 {
-    public function sendDiscordNotification(string $name, string $description, array $formattedPrice, string $thumbnail, string $link)
+public function sendDiscordNotification(string $itemType, string $name, string $description, array $formattedPrice, string $thumbnail, string $link)
     {
         $webhookUrl = env('DISCORD_ALERT_WEBHOOK');
 
@@ -14,7 +14,7 @@ class SendItemWebhook
         $priceString = implode(' | ', array_filter($formattedPrice)); // Remove empty elements
 
         $messageData = [
-            'content' => "New item",
+            'content' => "New " . ucfirst($itemType) . "!",
             'username' => config('site.name') . ' Item Notifier',
             'embeds' => [
                 [
@@ -26,7 +26,7 @@ class SendItemWebhook
                     'color' => hexdec('3366ff'),
                     'footer' => [
                         'text' => '&copy; ' . config('Values.name'),
-                        'icon_url' => 'icon',
+                        'icon_url' => config('Values.icon'),
                     ],
                     // Thumbnail
                     'image' => [
