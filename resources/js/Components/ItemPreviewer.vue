@@ -5,9 +5,9 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import * as THREE from 'three';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { debounce } from 'lodash'; // Import debounce
 
 const container = ref<HTMLElement | null>(null);
 const scene = ref<THREE.Scene | null>(null);
@@ -28,27 +28,31 @@ onMounted(() => {
   animate();
 });
 
+const debouncedLoadItem = debounce(async (hash: string) => {
+  if (scene.value && model.value) {
+    scene.value.remove(model.value);
+    model.value.traverse((object: THREE.Object3D) => {
+      if ((object as THREE.Mesh).isMesh) {
+        const mesh = object as THREE.Mesh;
+        mesh.geometry.dispose();
+        if (mesh.material) {
+          if (Array.isArray(mesh.material)) {
+            mesh.material.forEach((m) => m.dispose());
+          } else {
+            (mesh.material as THREE.Material).dispose();
+          }
+        }
+      }
+    });
+    model.value = null;
+  }
+  await loadItem(hash);
+}, 100);
+
 watch(
   () => props.hash,
   (newHash) => {
-    if (scene.value && model.value) {
-      scene.value.remove(model.value);
-      model.value.traverse((object: THREE.Object3D) => {
-        if ((object as THREE.Mesh).isMesh) {
-          const mesh = object as THREE.Mesh;
-          mesh.geometry.dispose();
-          if (mesh.material) {
-            if (Array.isArray(mesh.material)) {
-              mesh.material.forEach((m) => m.dispose());
-            } else {
-              (mesh.material as THREE.Material).dispose();
-            }
-          }
-        }
-      });
-      model.value = null;
-    }
-    loadItem(newHash);
+    debouncedLoadItem(newHash);
   }
 );
 
