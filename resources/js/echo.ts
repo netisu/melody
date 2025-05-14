@@ -5,11 +5,12 @@ import axios from 'axios';
 
 interface TypingResponse {
     userID: number;
-}  
+}
 
 declare const window: { [x: string]: any } & Window &
-    typeof globalThis & { Pusher: typeof Pusher; Echo: Echo };
+    typeof globalThis & { Pusher: typeof Pusher; Echo: typeof Echo };
 window.Pusher = Pusher;
+window._Echo = Echo;
 
 const _Echo = (window._Echo = new Echo({
     broadcaster: 'reverb',
@@ -17,18 +18,18 @@ const _Echo = (window._Echo = new Echo({
     wsHost: import.meta.env?.['VITE_REVERB_HOST'],
     wsPort: import.meta.env?.['VITE_REVERB_PORT'] ?? 80,
     wssPort: import.meta.env?.['VITE_REVERB_PORT'] ?? 443,
-    authorizer: (channel, options) => {
+    authorizer: (channel) => {
         return {
-            authorize: (socketId, callback) => {
+            authorize: (socketId) => {
                 axios.post('/api/broadcasting/auth', {
                     socket_id: socketId,
                     channel_name: channel.name
                 })
                 .then(response => {
-                    callback(false, response.data);
+                    console.log(response.data);
                 })
                 .catch(error => {
-                    callback(true, error);
+                    console.log(error);
                 });
             }
         };
@@ -48,22 +49,22 @@ export function PushMessage(
         .listen('MessageSent', (response: { message: string }) => {
           messageHandler(response.message); // Call the provided handler
         });
-  
+
       _Echo.private(`chat.${toUserId}`)
         .listenForWhisper('typing', (response: TypingResponse) => {
           isFriendTyping.value = response.userID === toUserId;
-  
+
           if (isFriendTypingTimer.value) {
             clearTimeout(isFriendTypingTimer.value);
           }
-  
+
           isFriendTypingTimer.value = setTimeout(() => {
             isFriendTyping.value = false;
           }, 1000);
         });
     }
   }
-  
+
   // Function to send typing whisper (unchanged)
   export function sendTypingWhisper(toUserId: number, authUserId: number) {
     if (_Echo) {

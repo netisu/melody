@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
+import type { Ref } from "vue";
 
 import SideLink from "../SideLink.vue";
 import FlashMessages from "@/Components/Messages/FlashMessages.vue";

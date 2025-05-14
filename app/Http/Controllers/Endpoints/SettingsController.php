@@ -75,23 +75,23 @@ class SettingsController extends Controller
      * Update the user's profile information.
      */
 
-     public function changePassword(Request $request)
-     {
+    public function changePassword(Request $request)
+    {
         $request->validate([
             'current_password' => ['required', new MatchOldPassword],
             'new_password' => ['required'],
             'new_password_confirmation' => ['same:new_password'],
-         ]);
- 
+        ]);
+
         User::find(Auth::id())->update([
             'password' => Hash::make($request->new_password)
         ]);
 
-         return response()->json([
+        return response()->json([
             'message' => 'Password changed successfully.',
             'type' => 'success',
-        ], 200); 
-     }
+        ], 200);
+    }
 
     private function uploadImage(string $folder, UploadedFile $file, string $name): string
     {
@@ -144,6 +144,46 @@ class SettingsController extends Controller
         $settings->profile_picture_url = $assetHash;
 
         return redirect()->back();
+    }
+    public function bannerVisibility(Request $request)
+    {
+        $request->validate([
+            'value' => 'required|boolean',
+        ]);
+
+        $user = Auth::user();
+        $user->banner_visibility = $request->value;
+        $user->save();
+
+        return response()->json(['message' => 'Banner visibility updated successfully']);
+    }
+
+    public function uploadBanner(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:png,jpg,jpeg|max:2048', // Adjust mime types and size as needed
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = Auth::user();
+
+        if ($request->hasFile('image')) {
+            // Delete the old banner if it exists
+            if ($user->banner_path) {
+                Storage::delete($user->banner_path);
+            }
+
+            $path = $request->file('image')->store('public/banners'); // Store in storage/app/public/banners
+            $user->banner_path = str_replace('public/', 'storage/', $path); // Store the public path in the database
+            $user->save();
+
+            return response()->json(['message' => 'Banner uploaded successfully', 'path' => asset($user->banner_path)]);
+        }
+
+        return response()->json(['error' => 'No image file provided'], 400);
     }
 
     /**

@@ -44,17 +44,6 @@ function openCategory(categoryName: string): void {
         console.warn(`Element with ID '${categoryName}' not found.`);
     }
 }
-function openCategory2(categoryName): void {
-    // Select the element with the matching ID
-    selectedSubCategory.value = categoryName;
-    const element = document.getElementById(categoryName);
-    if (element) {
-        // Add or remove the desired class
-        element.classList.add("active"); // Replace 'active' with your class name
-    } else {
-        console.warn(`Element with ID '${categoryName}' not found.`);
-    }
-}
 onMounted(() => {
     if (categories?.["length"] > 0) {
         selectCategory(categories[1].name);

@@ -32,12 +32,23 @@ function showModal(modalId: string): void {
 const locale_active = usePage().props?.['locale'];
 const locales = usePage().props?.['locales'];
 
-const bannerVisible = ref(usePage<any>().props.auth.user.settings.profile_banner_enabled);
+const bannerVisibilityEnabled = ref(usePage<any>().props.auth.user.settings.profile_banner_enabled);
+const isBannerUploading = ref(false);
+const isBannerUploading = ref(false);
+const uploadProgress = ref(0);
+const uploadError = ref('');
+const bannerImageFile = ref(null);
+
 const ActiveCategory: Ref<string> = ref("Profile");
 
 function setActiveCategory(category): void {
     ActiveCategory.value = category;
 };
+
+const handleBannerImageChange = (event) => {
+    bannerImageFile.value = event.target.files[0];
+};
+
 function changeCountry(country): void {
     axios.post(route(`api.settings.changeCountry`, { country: country }))
         .then(response => {
@@ -66,18 +77,54 @@ function uploadProfilePicture(image): void {
     console.log(image);
 };
 
-function enableBannerVisibility(visible): void {
-    axios.post(route(`api.settings.bannerVisibility`, { value: visible }))
-        .then(response => {
-            // Handle the success response here
-            console.error('Success:', response);
+const uploadBannerImage = () => {
+    if (!bannerImageFile.value) {
+        alert('Please select an image to upload.');
+        return;
+    }
 
+    isBannerUploading.value = true;
+    uploadProgress.value = 0;
+    uploadError.value = '';
+
+    const formData = new FormData();
+    formData.append('image', bannerImageFile.value);
+
+    axios.post(route('api.settings.uploadBanner'), formData, { // Ensure this route is defined
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: (progressEvent) => {
+            uploadProgress.value = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        },
+    })
+    .then(response => {
+        isBannerUploading.value = false;
+        uploadProgress.value = 100;
+        console.log('Banner uploaded successfully:', response);
+        bannerImageFile.value = null; // Clear the selected file
+        showModal('banner-modal'); // Close the modal on success, or handle UI update
+    })
+    .catch(error => {
+        isBannerUploading.value = false;
+        uploadProgress.value = 0;
+        console.error('Error uploading banner:', error);
+        uploadError.value = 'Error uploading banner. Please try again.';
+    });
+};
+
+const enableBannerVisibility = (visible) => {
+    axios.post(route('api.settings.bannerVisibility'), { value: visible })
+        .then(response => {
+            bannerVisibilityEnabled.value = visible;
+            console.log('Banner visibility updated:', response);
         })
         .catch(error => {
-            // Handle the error response here
-            console.error('Error changing your banner visibility:', error);
+            console.error('Error changing banner visibility:', error);
+            // Revert the toggle state on error
+            bannerVisibilityEnabled.value = !visible;
         });
-    console.log(country);
+    console.log('Banner visibility:', visible);
 };
 
 const currentTheme = localStorage.getItem('theme');
@@ -192,22 +239,44 @@ const isVerifiedEmail = computed(() => {
                         <div class="text-xs fw-bold text-muted text-uppercase">
                             Visibility
                         </div>
-                        <button @change="changeCountry($event.target.value)" class="btn btn-success btn-sm w-100">
-                            Enable Banner</button>
+                        <button @change="enableBannerVisibility($event.target.checked)" class="btn btn-success btn-sm w-100"
+                        :disabled="isBannerUploading">
+                        {{ bannerVisibilityEnabled ? 'Disable Banner' : 'Enable Banner' }}
+                    </button>
                     </div>
                     <div class="mb-2">
-                        <Upload modal="" />
+                        <div class="gap-2 align-middle flex-container-lg">
+                        <div class="text-xs fw-bold text-muted text-uppercase">
+                            Image
+                        </div>
                     </div>
-                    <div class="text-xs text-muted fw-semibold">
-                        After changing your email address, a confirmation email
-                        will be sent to your inbox to confirm your identity.
+                    <form @submit.prevent="uploadBannerImage">
+                        <input class="form text-body" type="file" ref="bannerImageInput"
+                            @change="handleBannerImageChange">
+                        <button type="submit" class="btn btn-primary btn-sm w-100 mt-2"
+                            :disabled="isBannerUploading">
+                            <span v-if="isBannerUploading">Uploading...</span>
+                            <span v-else>Upload Banner</span>
+                        </button>
+                        <div v-if="uploadProgress > 0 && uploadProgress < 100" class="mt-2">
+                            Uploading: {{ uploadProgress }}%
+                        </div>
+                        <div v-if="uploadError" class="text-xs text-danger mt-2">
+                            {{ uploadError }}
+                        </div>
+                    </form>
                     </div>
+                     <div class="text-xs text-muted fw-semibold">
+                    Only PNG and JPG files are allowed. Maximum size: 2MB.
+                </div>
                 </div>
                 <div class="flex-wrap gap-2 flex-container justify-content-end section-borderless">
-                    <button class="btn btn-secondary" @click="showModal('banner-modal')">
-                        Cancel
-                    </button>
-                    <input type="submit" class="btn btn-success" value="Change Email" />
+                <button class="btn btn-secondary" @click="showModal('banner-modal')" :disabled="isBannerUploading">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-success" @click="submitBanner" :disabled="isBannerUploading || !bannerImageFile">
+                    Change Banner
+                </button>
                 </div>
             </div>
         </div>
