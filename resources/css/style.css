@@ -251,36 +251,6 @@ html.nprogress-busy {
     z-index: 9999;
 }
 
-html,
-body {
-    height: 100%;
-    margin: 0;
-    min-height: -webkit-calc(100% - 100px);
-    /* Chrome */
-    min-height: -moz-calc(100% - 100px);
-    /* Firefox */
-    min-height: calc(100% - 100px);
-    /* native */
-}
-
-html {
-    height: 100%;
-    font-size: 16px;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    min-width: 300px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    text-rendering: optimizeLegibility;
-    text-size-adjust: 100%;
-}
-
-body {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
 .mini-text {
     font-size: 11px;
 }
@@ -397,9 +367,23 @@ html,
 body {
     height: 100%;
     position: relative !important; /* For layering pseudo-elements */
-    overflow-x: hidden; /* Prevent horizontal scrollbar if streaks extend slightly */
+    overflow-x: initial !important;
     font-weight: 500;
     background: var(--body-bg);
     color: var(--body-color) !important;
-    font-family: "Lexend Deca", sans-serif;    
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 16px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    min-width: 300px;
+    text-rendering: optimizeLegibility;
+    min-height: -webkit-calc(100% - 100px);
+    /* Chrome */
+    min-height: -moz-calc(100% - 100px);
+    /* Firefox */
+    min-height: calc(100% - 100px);
+    display: flex;
+    margin: 0;
+    flex-direction: column;
 }
+

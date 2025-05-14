@@ -24,11 +24,11 @@ export default {
     },
   },
     server: {
-        host: '100.115.92.197',
+        host: 'localhost',
         cors: true,
         strictPort: true,
         hmr: {
-            host: '100.115.92.197',
+            host: 'localhost',
         },
         watch: {
             usePolling: true,
