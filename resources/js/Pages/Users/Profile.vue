@@ -511,7 +511,7 @@ watch(following, (newValue, oldValue) => {
                             </template>
                             <div v-else class="cell large-3 medium-3 small-6"
                                 v-for="(item, index) in CurentlyWearingItems" :key="index">
-                                <div class="d-block" @click="SortItemByType(item.id, item.item_type, 'remove')">
+                                <div class="d-block">
                                     <div class="p-2 mb-1 card card-item position-relative">
                                         <div style="
                                     position: absolute;
@@ -580,13 +580,13 @@ watch(following, (newValue, oldValue) => {
                                     left: 10px;
                                 ">
                                     <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
-                                        <i class="fas fa-calendar-star" style="width: 18px"></i>Event
+                                        <i class="fad fa-calendar-star" style="width: 18px"></i>Event
                                     </div>
                                     <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                        <i class="fas  fa-stars" style="width: 18px"></i>Rare
+                                        <i class="fad fa-comet" style="width: 18px"></i>Rare
                                     </div>
                                     <div v-if="item.sale_ongoing" class="mb-1 badge badge-danger fw-semibold">
-                                        <i class="fas fa-badge-percent" style="width: 18px"></i>{{
+                                        <i class="fad fa-badge-percent" style="width: 18px"></i>{{
                                             item.percent_off + "%" }} off
                                     </div>
                                 </div>

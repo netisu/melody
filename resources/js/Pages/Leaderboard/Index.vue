@@ -80,18 +80,18 @@ const TopList = (indexKey: Number) => {
             </div>
         </div>
         <div class="cell large-6">
-            <div class="mb-2 text-xl fw-semibold">Top Cash Earners</div>
+            <div class="mb-2 text-xl fw-semibold">Stargazers</div>
             <div class="card">
                 <div class="pb-0 card-body">
                     <div class="gap-3 text-center mb-3 flex-container flex-dir-column" v-if="!Stars?.['length']">
-                        <i class="text-5xl fad fa-sparkles text-muted"></i>
+                        <i class="text-5xl fad fa-stars text-muted"></i>
                         <div style="line-height: 16px">
                             <div class="text-xs fw-bold text-muted text-uppercase">
-                                No Leaders
+                                No Stars to gaze upon?
                             </div>
                             <div class="text-muted fw-semibold">
                                 <p class="text-xs">
-                                    There are currently no leaders.
+                                    Oh, there are no stargazers.
                                 </p>
                             </div>
                         </div>

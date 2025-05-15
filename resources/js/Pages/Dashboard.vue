@@ -265,7 +265,7 @@ onMounted(() => {
                     </div>
                 </div>
                     <div class="mb-1 text-xl fw-semibold">
-                        Today's Recomendations
+                        Today's Recommendations
                     </div>
                     <div class="divider mx-1 my-2" />
                     <div class="text-sm text-muted mt-2">
@@ -283,7 +283,7 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div v-else class="text-sm fw-bold text-muted">
-                                There is no recomendations.
+                                There is no Recommendations.
                             </div>
                         </div>
                     </div>
