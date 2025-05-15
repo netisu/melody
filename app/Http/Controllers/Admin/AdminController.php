@@ -26,7 +26,7 @@ use App\Models\Space;
 
 class AdminController extends Controller
 {
-   
+
     public function AdminIndex()
     {
         $admin = Admin::where('user_id', Auth::user()->id)->first();
@@ -198,6 +198,30 @@ class AdminController extends Controller
         return $response;
     }
 
+    public function approveBanner(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+        $userSettings = $user->settings;
+
+        if ($userSettings->banner_status === 'pending' && $userSettings->pending_banner_path) {
+            // Determine the final storage path
+            $finalPath = 'public/banners/' . basename($userSettings->pending_banner_path);
+
+            // Copy the temporary image to the final location
+            Storage::move($userSettings->pending_banner_path, $finalPath);
+
+            // Update the settings
+            $userSettings->profile_banner_url = str_replace('public/', 'storage/', $finalPath);
+            $userSettings->banner_status = 'approved';
+            $userSettings->pending_banner_path = null; // Clean up
+            $userSettings->save();
+
+            return response()->json(['message' => 'Banner approved successfully for user ' . $userId]);
+        }
+
+        return response()->json(['error' => 'Invalid banner status or pending path not found.'], 400);
+    }
+
     public function uploadItem(Request $request)
     {
         $this->validateRequest($request);
@@ -257,11 +281,11 @@ class AdminController extends Controller
 
         $formattedPrice = [
             $request->price_coins . 'Coins',
-            $request->price_bucks . 'Bucks',
+            $request->price_bucks . 'Stars',
         ];
 
         $sendWebhook = new SendItemWebhook;
-        $sendWebhook->sendDiscordNotification($item->name, $item->description, $formattedPrice, $item->thumbnail(), $itemUrl);
+        $sendWebhook->sendDiscordNotification($item->item_type, $item->name, $item->description, $formattedPrice, $item->thumbnail(), $itemUrl);
 
 
         return inertia()->location($itemUrl);

@@ -122,7 +122,7 @@ provide("selectedSubCategory", selectedSubCategory);
                                 <i class="fad fa-calendar-star"></i>
                             </div>
                             <div v-else-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                <i class="fad fa-star"></i>
+                                <i class="fad  fa-stars"></i>
                             </div>
                             <div v-else-if="item.time_off_sale != null" class="mb-1 badge badge-warning fw-semibold">
                                 <i class="fad fa-clock"></i>

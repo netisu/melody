@@ -91,7 +91,7 @@ Unauthorized use of this code (Not Mendcore) is strictly prohibited.
             }
         });
     }
-    
+
     // Call initializeTheme
     initializeTheme();
 </script>

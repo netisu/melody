@@ -53,7 +53,7 @@ const canPost = () => computed(() => {
                         <div class="mb-2 flex-container flex-child-grow">
                             <Link :href="route(`forum.your.posts`)" as="button"
                                 class="text-center btn btn-info btn-xs flex-child-grow"><i
-                                class="fad fa-star-circle"></i>&nbsp; Your Posts</Link>
+                                class="fad  fa-stars-circle"></i>&nbsp; Your Posts</Link>
                         </div>
                         <div class="mb-2 flex-container flex-child-grow">
                             <Link as="button"

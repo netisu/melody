@@ -16,7 +16,7 @@ function setActiveCategory(category): void {
 };
 
 const conversionAmount = ref<number>(0);
-const conversionType = ref('bucks');
+const conversionType = ref('Stars');
 const JSONALERT = ref<{ message: string; type: string } | null>(null);
 
 const handleConvertAndUpdate = () => {
@@ -57,21 +57,21 @@ usePoll(10000, { only: ['purchases'] })
         </div>
         <div class="cell medium-8">
             <template v-if="ActiveCategory === 'Information'">
-                <div class="grid-x grid-margin-x">
+                <div class="grid-x grid-margin-x mb-2">
                     <div class="cell medium-6">
                         <div class="card card-body">
                             <div class="align-middle w-100 h-100 flex-container flex-dir-column align-center">
                                 <div class="text-3xl text-warning">
-                                    <i class="text-3xl fad fa-coins "></i>
-                                    {{ usePage<any>().props.auth.user.coins }}
+                                    <i class="text-3xl fad fa-sparkles "></i>
+                                    {{ usePage<any>().props.auth?.user?.coins }}
 
                                 </div>
                                 <div class="text-sm fw-semibold text-warning">
-                                    Coins
+                                    Sparkles
                                 </div>
-                                <button class="text-info text-sm">
+                                <span class="text-warning text-sm">
                                     {{ usePage<any>().props.auth.user.next_currency_payout }}
-                                </button>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -79,17 +79,17 @@ usePoll(10000, { only: ['purchases'] })
 
                         <div class="card card-body">
                             <div class="align-middle w-100 h-100 flex-container flex-dir-column align-center">
-                                <div class="text-3xl text-success">
-                                    <i class="text-3xl fad fa-money-bill-1-wave "></i>
+                                <div class="text-3xl text-info">
+                                    <i class="text-3xl fad fa-stars "></i>
 
                                     {{ usePage<any>().props.auth.user.bucks }}
                                 </div>
-                                <div class="text-sm fw-semibold text-success">
-                                    Bucks
+                                <div class="text-sm fw-semibold text-info">
+                                    Stars
                                 </div>
-                                <button class="text-info text-sm">
+                                <span class="text-info text-sm">
                                     {{ usePage<any>().props.auth.user.next_currency_payout }}
-                                </button>
+                                </span>
                             </div>
 
                         </div>
@@ -97,7 +97,7 @@ usePoll(10000, { only: ['purchases'] })
                 </div>
                 <div class="mb-2 text-xl fw-semibold">Purchases</div>
                 <div class="card">
-                    <div class="card-body" v-for="purchase in usePage<any>().props.purchases.data">
+                    <div class="card-body" v-if="!usePage<any>().props.purchases.data" v-for="purchase in usePage<any>().props.purchases.data">
                         <div class="gap-2 align-middle flex-container">
                             <img :src="purchase.thumbnail" width="70" height="70" />
                             <div class="flex-wrap col-md-4 d-flex justify-content-center align-content-start"
@@ -112,8 +112,8 @@ usePoll(10000, { only: ['purchases'] })
                                         ' text-success': purchase.currency_used === 'bucks'
                                     }">
                                         <i class="fad" :class="{
-                                            ' fa-coins': purchase.currency_used === 'coins',
-                                            '  fa-money-bill-1-wave': purchase.currency_used === 'bucks'
+                                            ' fa-sparkles': purchase.currency_used === 'coins',
+                                            '  fa-stars': purchase.currency_used === 'bucks'
                                         }"></i>
 
                                         {{ purchase.price + " " + purchase.currency_used }}
@@ -126,6 +126,10 @@ usePoll(10000, { only: ['purchases'] })
                         </div>
                         <div class="divider mx-1 my-3"></div>
                     </div>
+                                        <div v-else class="card-body">
+                                            no purchases
+                                        </div>
+
                 </div>
                 <div :class="{ divider: usePage<any>().props.purchases.data.length > 0 }" class="mx-1 my-3"></div>
                 <Pagination v-if="usePage<any>().props.purchases.data.length" class="mx-1 my-3"
@@ -141,11 +145,11 @@ usePoll(10000, { only: ['purchases'] })
                     <div class="cell large-4">
                         <div class="gap-2 align-middle flex-container-lg">
                             <select class="form form-xs form-select form-has-section-color" v-model="conversionType">
-                                <option value="bucks">
-                                    Bucks to Coins
+                                <option value="Stars">
+                                    Stars to Sparkles
                                 </option>
-                                <option value="coins">
-                                    Coins to Bucks
+                                <option value="Sparkles">
+                                    Sparkles to Stars
                                 </option>
                             </select>
                         </div>

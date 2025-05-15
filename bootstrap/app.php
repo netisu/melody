@@ -45,8 +45,8 @@ return Application::configure(basePath: dirname(__DIR__))
             $icons = [
                 500 => 'fa-solid fa-bomb fa-gradient text-danger',
                 503 => 'fa-solid fa-cloud-slash fa-gradient text-danger',
-                404 => 'fa-solid fa-exclamation fa-gradient text-warning',
-                403 => 'fa-solid fa-star-half-stroke fa-gradient text-danger',
+                404 => 'fa-solid fa-person-circle-question fa-gradient text-warning',
+                403 => 'fa-solid fa-person-circle-exclamation fa-gradient text-danger',
             ];
 
             $pendingItems = Item::where('status', 'pending')->with('creator')->get();

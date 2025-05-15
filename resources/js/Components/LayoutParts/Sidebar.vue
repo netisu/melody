@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import type { Ref } from "vue";
+import axios from 'axios';
 
 import SideLink from "../SideLink.vue";
 import FlashMessages from "@/Components/Messages/FlashMessages.vue";
@@ -42,11 +43,13 @@ const messages = ref([
 ]);
 async function detectAdBlock(adblock: Ref<boolean, boolean>) {
     try {
-        await fetch(new Request(googleAdUrl)).catch(
-            adblock.value = false
-        );
-    } catch (e) {
-        adblock.value = true;
+        await axios.get(googleAdUrl, {
+            timeout: 1000, // Update: Set a timeout for the request
+        });
+        adblock.value = false; // Request succeeded, so no adblock
+    } catch (error) {
+        adblock.value = true; // Request failed (due to adblocker)
+        console.error('Error checking for adblock:', error.message);
     }
 }
 

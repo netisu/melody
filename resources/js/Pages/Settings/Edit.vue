@@ -311,8 +311,8 @@ const isVerifiedEmail = computed(() => {
                     <div class="text-xs text-muted fw-semibold">
                         Changing your username costs
                         <span class="mx-1 text-success">
-                            <i class="fad fa-money-bill-1-wave"></i>
-                            {{ usePage<any>().props.site.price.username }} Bucks
+                            <i class="fad fa-stars"></i>
+                            {{ usePage<any>().props.site.price.username }} Stars
                         </span>
                     </div>
                 </div>
@@ -830,10 +830,10 @@ const isVerifiedEmail = computed(() => {
                   <div class="cell medium-4">
                     <div class="gap-2 align-middle flex-container text-warning">
                       <i
-                        class="text-xl text-center fad fa-coins"
+                        class="text-xl text-center fad fa-sparkles"
                         style="width: 30px"
                       ></i>
-                      <div class="fw-semibold">5000 Coins</div>
+                      <div class="fw-semibold">5000 sparkles</div>
                     </div>
                   </div>
                   <div class="cell medium-4">
@@ -853,10 +853,10 @@ const isVerifiedEmail = computed(() => {
                   <div class="cell medium-4">
                     <div class="gap-2 align-middle flex-container text-success">
                       <i
-                        class="text-xl text-center fad fa-money-bill-1-wave"
+                        class="text-xl text-center fad fa-stars"
                         style="width: 30px"
                       ></i>
-                      <div class="fw-semibold">1000 Bucks</div>
+                      <div class="fw-semibold">1000 Stars</div>
                     </div>
                   </div>
                   <div class="cell medium-4">
@@ -884,14 +884,14 @@ const isVerifiedEmail = computed(() => {
                   </div>
                   <div class="cell medium-4">
                     <div class="gap-2 align-middle flex-container text-success">
-                      <i class="text-center fad fa-money-bill-1-wave"></i>
-                      <div class="fw-semibold">500 Bucks</div>
+                      <i class="text-center fad fa-stars"></i>
+                      <div class="fw-semibold">500 Stars</div>
                     </div>
                   </div>
                   <div class="cell medium-4">
                     <div class="fw-semibold">
-                      <i class="fad fa-money-bill-1-wave text-muted me-2"></i
-                      >Bucks
+                      <i class="fad fa-stars text-muted me-2"></i
+                      >Stars
                     </div>
                   </div>
                 </div>

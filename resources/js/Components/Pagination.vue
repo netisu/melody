@@ -19,7 +19,7 @@ const filteredLinks = computed(() => {
 
 <template>
   <div class="section">
-    <ul class="props.pagedata flex-container align-center">
+    <ul class="pagination flex-container align-center">
       <Link as="button" :href="props.pagedata?.['prev_page_url'] || ''" :class="{
         'page-link': props.pagedata?.['prev_page_url'],
         'page-link page-disabled': !props.pagedata?.['prev_page_url'],

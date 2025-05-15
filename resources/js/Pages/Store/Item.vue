@@ -103,13 +103,13 @@ function onImgErrorSmall(id) {
         :cover="usePage<any>().props.item.thumbnail" />
     <Navbar />
     <Sidebar :JSONALERT="JSONDATA">
-        <div class="modal" id="purchase-with-bucks-modal">
+        <div class="modal" id="purchase-with-Stars-modal">
             <div class="modal-card modal-card-body modal-card-sm">
                 <div class="section-borderless">
                     <div class="gap-2 align-middle flex-container align-justify">
                         <div class="text-lg fw-semibold">Confirm Purchase</div>
-                        <button class="btn-circle" @click="showModal('purchase-with-bucks-modal')"
-                            data-toggle-modal="#purchase-with-bucks-modal" style="margin-right: -10px">
+                        <button class="btn-circle" @click="showModal('purchase-with-Stars-modal')"
+                            data-toggle-modal="#purchase-with-Stars-modal" style="margin-right: -10px">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -121,32 +121,32 @@ function onImgErrorSmall(id) {
                         <span class="text-body fw-semibold">{{ usePage<any>().props.item.name }}</span>
                         for
                         <span class="text-success">
-                            <i class="fas fa-money-bill-1-wave me-1"></i>
-                            {{ usePage<any>().props.item.cost_bucks }}
-                                Bucks
+                            <i class="fas fa-stars me-1"></i>
+                            {{ usePage<any>().props.item.cost_Stars }}
+                                Stars
                         </span>?
                     </div>
 
                 </div>
                 <div class="gap-2 flex-container align-right section-borderless">
-                    <form @submit.prevent="purchaseItem('bucks')">
+                    <form @submit.prevent="purchaseItem('Stars')">
                         <button type="submit" class="btn btn-success btn-sm">Buy Now</button>
                         <button type="button" class="btn btn-secondary btn-sm"
-                            @click="showModal('purchase-with-bucks-modal')"
-                            data-toggle-modal="#purchase-with-bucks-modal">
+                            @click="showModal('purchase-with-Stars-modal')"
+                            data-toggle-modal="#purchase-with-Stars-modal">
                             Cancel
                         </button>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="modal" id="purchase-with-coins-modal">
+        <div class="modal" id="purchase-with-sparkles-modal">
             <div class="modal-card modal-card-body modal-card-sm">
                 <div class="section-borderless">
                     <div class="gap-2 align-middle flex-container align-justify">
                         <div class="text-lg fw-semibold">Confirm Purchase</div>
-                        <button class="btn-circle" @click="showModal('purchase-with-coins-modal')"
-                            data-toggle-modal="#purchase-with-coins-modal" style="margin-right: -10px">
+                        <button class="btn-circle" @click="showModal('purchase-with-sparkles-modal')"
+                            data-toggle-modal="#purchase-with-sparkles-modal" style="margin-right: -10px">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -157,18 +157,18 @@ function onImgErrorSmall(id) {
                         <span class="text-body fw-semibold">{{ usePage<any>().props.item.name }}</span>
                         for
                         <span class="text-warning">
-                            <i class="fas fa-coins me-1"></i>
-                            {{ usePage<any>().props.item.cost_coins }}
-                                Coins
+                            <i class="fas fa-sparkles me-1"></i>
+                            {{ usePage<any>().props.item.cost_sparkles }}
+                                sparkles
                         </span>?
                     </div>
                 </div>
                 <div class="gap-2 flex-container align-right section-borderless">
-                    <form @submit.prevent="purchaseItem('coins')">
+                    <form @submit.prevent="purchaseItem('sparkles')">
                         <button type="submit" class="btn btn-warning btn-sm">Buy Now</button>
                         <button class="btn btn-secondary btn-sm" type="button"
-                            @click="showModal('purchase-with-coins-modal')"
-                            data-toggle-modal="#purchase-with-coins-modal">
+                            @click="showModal('purchase-with-sparkles-modal')"
+                            data-toggle-modal="#purchase-with-sparkles-modal">
                             Cancel
                         </button>
                     </form>
@@ -193,7 +193,7 @@ function onImgErrorSmall(id) {
                             ">
                                 <div v-if="usePage<any>().props.item.rare" class="mb-1">
                                     <span class="badge badge-witch fw-semibold">
-                                        <i class="fas fa-star" style="width: 18px"></i>Showpiece
+                                        <i class="fas  fa-stars" style="width: 18px"></i>Showpiece
                                     </span>
                                 </div>
                                 <div v-if="isNewItem(usePage<any>().props.item.created_at)" class="mb-1">
@@ -289,8 +289,8 @@ function onImgErrorSmall(id) {
                                     </div>
                                 </div>
                                 <button class="btn btn-success btn-xs w-100"
-                                    data-toggle-modal="#purchase-with-bucks-modal">
-                                    <i class="fas fa-money-bill-1-wave" style="width: 30px"></i>10 Bucks
+                                    data-toggle-modal="#purchase-with-Stars-modal">
+                                    <i class="fas fa-stars" style="width: 30px"></i>10 Stars
                                 </button>
                             </div>
                             <div class="gap-4 align-middle section flex-container">
@@ -306,8 +306,8 @@ function onImgErrorSmall(id) {
                                     </div>
                                 </div>
                                 <button class="btn btn-success btn-xs w-100"
-                                    data-toggle-modal="#purchase-with-bucks-modal">
-                                    <i class="fas fa-money-bill-1-wave" style="width: 30px"></i>10 Bucks
+                                    data-toggle-modal="#purchase-with-Stars-modal">
+                                    <i class="fas fa-stars" style="width: 30px"></i>10 Stars
                                 </button>
                             </div>
                             <div class="gap-4 align-middle section flex-container">
@@ -323,8 +323,8 @@ function onImgErrorSmall(id) {
                                     </div>
                                 </div>
                                 <button class="btn btn-success btn-xs w-100"
-                                    data-toggle-modal="#purchase-with-bucks-modal">
-                                    <i class="fas fa-money-bill-1-wave" style="width: 30px"></i>10 Bucks
+                                    data-toggle-modal="#purchase-with-Stars-modal">
+                                    <i class="fas fa-stars" style="width: 30px"></i>10 Stars
                                 </button>
                             </div>
                             <div class="gap-4 align-middle section flex-container">
@@ -340,8 +340,8 @@ function onImgErrorSmall(id) {
                                     </div>
                                 </div>
                                 <button class="btn btn-success btn-xs w-100"
-                                    data-toggle-modal="#purchase-with-bucks-modal">
-                                    <i class="fas fa-money-bill-1-wave" style="width: 30px"></i>10 Bucks
+                                    data-toggle-modal="#purchase-with-Stars-modal">
+                                    <i class="fas fa-stars" style="width: 30px"></i>10 Stars
                                 </button>
                             </div>
                             <ul class="section pagination flex-container align-center">
@@ -408,20 +408,20 @@ function onImgErrorSmall(id) {
                         <div class="gap-2 align-middle flex-container-lg"
                             v-if="usePage<any>().props.auth.user && itemOwnership != true && usePage<any>().props.item.onsale">
                             <button class="mb-2 btn btn-success btn-sm w-100"
-                                data-toggle-modal="#purchase-with-bucks-modal"
-                                @click="showModal('purchase-with-bucks-modal')">
-                                <i class="fas fa-money-bill-1-wave" style="width: 34px"></i>{{ usePage<any>
-                                    ().props.item.cost_bucks }} Bucks
+                                data-toggle-modal="#purchase-with-Stars-modal"
+                                @click="showModal('purchase-with-Stars-modal')">
+                                <i class="fas fa-stars" style="width: 34px"></i>{{ usePage<any>
+                                    ().props.item.cost_Stars }} Stars
                             </button>
                             <div class="mb-2 text-xs fw-bold text-uppercase text-muted">
                                 or
                             </div>
                             <button class="mb-2 btn btn-warning btn-sm w-100"
-                                data-toggle-modal="#purchase-with-coins-modal"
-                                @click="showModal('purchase-with-coins-modal')">
-                                <i class="fas fa-coins" style="width: 34px"></i>{{ usePage<any>().props.item.cost_coins
+                                data-toggle-modal="#purchase-with-sparkles-modal"
+                                @click="showModal('purchase-with-sparkles-modal')">
+                                <i class="fas fa-sparkles" style="width: 34px"></i>{{ usePage<any>().props.item.cost_sparkles
                                 }}
-                                    Coins
+                                    sparkles
                             </button>
                         </div>
                     </div>

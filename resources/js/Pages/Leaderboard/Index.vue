@@ -9,7 +9,7 @@ import { usePage } from "@inertiajs/vue3";
 
 defineProps({
     XP: { type: Array },
-    Bucks: { type: Array },
+    Stars: { type: Array },
 });
 
 const TopList = (indexKey: Number) => {
@@ -83,8 +83,8 @@ const TopList = (indexKey: Number) => {
             <div class="mb-2 text-xl fw-semibold">Top Cash Earners</div>
             <div class="card">
                 <div class="pb-0 card-body">
-                    <div class="gap-3 text-center mb-3 flex-container flex-dir-column" v-if="!Bucks?.['length']">
-                        <i class="text-5xl fad fa-coins text-muted"></i>
+                    <div class="gap-3 text-center mb-3 flex-container flex-dir-column" v-if="!Stars?.['length']">
+                        <i class="text-5xl fad fa-sparkles text-muted"></i>
                         <div style="line-height: 16px">
                             <div class="text-xs fw-bold text-muted text-uppercase">
                                 No Leaders
@@ -96,7 +96,7 @@ const TopList = (indexKey: Number) => {
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3 row thread" :key="index" v-for="(topBucks, index) in Bucks">
+                    <div class="mb-3 row thread" :key="index" v-for="(topStars, index) in Stars">
                         <div class="gap-3 align-middle flex-container">
                             <div class="text-2xl fw-semibold" :class="TopList(Number(index + 1))">
                                 {{ "#" + Number(index + 1) }}
@@ -105,14 +105,14 @@ const TopList = (indexKey: Number) => {
                                 style="flex-direction: column">
                                 <div class="text-start">
                                     <Link :href="route('user.profile', {
-                                        username: topBucks.username,
+                                        username: topStars.username,
                                     })
                                         " class="text-md">
-                                    {{ topBucks.username }}
+                                    {{ topStars.username }}
                                     </Link>
                                     <div></div>
                                     <div class="text-sm fw-semibold text-success">
-                                        <i class="fas fa-money-bill-1-wave">&nbsp;</i>{{ topBucks.bucks }}
+                                        <i class="fas fa-stars">&nbsp;</i>{{ topStars.Stars }}
                                     </div>
                                 </div>
                             </div>

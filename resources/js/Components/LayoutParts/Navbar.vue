@@ -473,10 +473,10 @@ const lang = computed<any>(() => props.locale);
             <a href="#" class="text-sm nav-link" style="line-height: 20px" v-tippy
                 :content="props.auth?.user?.next_currency_payout" data-tooltip-placement="bottom">
                 <div class="text-warning">
-                    <i class="fad fa-coins" style="width: 22px"></i>{{ props.auth?.user?.coins }}
+                    <i class="fad fa-sparkles" style="width: 22px"></i>{{ props.auth?.user?.coins }}
                 </div>
-                <div class="text-success">
-                    <i class="fad fa-money-bill-1-wave" style="width: 22px"></i>{{ props.auth?.user?.bucks }}
+                <div class="text-info">
+                    <i class="fad fa-stars" style="width: 22px"></i>{{ props.auth?.user?.bucks }}
                 </div>
             </a>
             </Link>

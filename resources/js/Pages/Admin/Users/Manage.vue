@@ -87,14 +87,14 @@ const purge = (type: string, id: number) => {
                 <nav class="level">
                     <div class="level-item has-text-centered">
                         <div>
-                            <p class="heading">Bucks</p>
-                            <p class="title">{{ usePage<any>().props.user.bucks }}</p>
+                            <p class="heading">Stars</p>
+                            <p class="title">{{ usePage<any>().props.user.Stars }}</p>
                         </div>
                     </div>
                     <div class="level-item has-text-centered">
                         <div>
-                            <p class="heading">Coins</p>
-                            <p class="title">{{ usePage<any>().props.user.coins }}</p>
+                            <p class="heading">sparkles</p>
+                            <p class="title">{{ usePage<any>().props.user.sparkles }}</p>
                         </div>
                     </div>
                     <div class="level-item has-text-centered">

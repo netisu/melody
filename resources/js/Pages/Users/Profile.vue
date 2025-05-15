@@ -522,7 +522,7 @@ watch(following, (newValue, oldValue) => {
                                                 <i class="fas fa-calendar-star"></i>
                                             </div>
                                             <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                                <i class="fas fa-star"></i>
+                                                <i class="fas  fa-stars"></i>
                                             </div>
                                         </div>
                                         <img :src="item.thumbnail" :id="item.thumbnail"
@@ -541,14 +541,6 @@ watch(following, (newValue, oldValue) => {
                                 </div>
                             </div>
                         </div>
-
-                        <div v-if="!ItemLoading && !CurentlyWearingItems.length"
-                            class="gap-3 text-start flex-container flex-dir-column">
-                            <div class="text-md text-muted fw-semibold">
-                                {{ usePage<any>().props.user.username }} isn't wearing anything.
-                            </div>
-                        </div>
-                    </div>
                     <div class="text-center cell large-12">
                         <div
                             class="flex-container align-center-sm text-start flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0">
@@ -570,6 +562,7 @@ watch(following, (newValue, oldValue) => {
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
                 <div class="divider mx-1 my-4" />
                 <div>
@@ -590,7 +583,7 @@ watch(following, (newValue, oldValue) => {
                                         <i class="fas fa-calendar-star" style="width: 18px"></i>Event
                                     </div>
                                     <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                        <i class="fas fa-star" style="width: 18px"></i>Rare
+                                        <i class="fas  fa-stars" style="width: 18px"></i>Rare
                                     </div>
                                     <div v-if="item.sale_ongoing" class="mb-1 badge badge-danger fw-semibold">
                                         <i class="fas fa-badge-percent" style="width: 18px"></i>{{

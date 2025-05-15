@@ -38,7 +38,7 @@ use App\Helpers\Event;
 use App\Models\UserSettings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Support\Facades\Redirect;
+use App\Jobs\SendVerificationEmail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ArgAssetsController;
@@ -53,7 +53,7 @@ use App\Http\Controllers\ArgAssetsController;
 | contains the "web" Middleware group. Now create something great!
 |
 */
-// Auth::loginUsingId(1);
+Auth::loginUsingId(1);
 Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->group(function () {
     $validSteps = implode('|', array_keys(app(ArgassetsController::class)->getAssetSteps()));
 

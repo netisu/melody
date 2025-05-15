@@ -31,7 +31,7 @@ class AdminController extends Controller
         $userId = Auth::check() ? Auth::user()->id() : null;
 
         $this->admin = Admin::where( 'user_id', $userId)->first();
-        
+
         $isProduction = app()->environment('production');
 
         if ($isProduction) {
@@ -89,6 +89,29 @@ class AdminController extends Controller
         $this->site->site_maintenance = 1;
         $this->site->save();
     }
+    public function approveBanner(Request $request, $userId)
+{
+    $user = User::findOrFail($userId);
+    $userSettings = $user->settings;
+
+    if ($userSettings->banner_status === 'pending' && $userSettings->pending_banner_path) {
+        // Determine the final storage path
+        $finalPath = 'public/banners/' . basename($userSettings->pending_banner_path);
+
+        // Copy the temporary image to the final location
+        Storage::move($userSettings->pending_banner_path, $finalPath);
+
+        // Update the settings
+        $userSettings->profile_banner_url = str_replace('public/', 'storage/', $finalPath);
+        $userSettings->banner_status = 'approved';
+        $userSettings->pending_banner_path = null; // Clean up
+        $userSettings->save();
+
+        return response()->json(['message' => 'Banner approved successfully for user ' . $userId]);
+    }
+
+    return response()->json(['error' => 'Invalid banner status or pending path not found.'], 400);
+}
 
     public function giftItem(int $itemId, int $userId)
     {

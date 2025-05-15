@@ -1,4 +1,7 @@
 <template>
+    <AppHead pageTitle="Confirm Your Identity" description="Before you can access this page, you must
+                            verify your identity by typing in your
+                            account password below." :url="route('password.confirm.form')" />
     <Navbar />
     <Sidebar>
         <div class="cell medium-6">
@@ -20,7 +23,7 @@
                                     <input type="password" class="form" placeholder="Password..."
                                         v-model="password" ref="passwordInput" />
                                     <button class="btn btn-success" :disabled="isSubmitting">
-                                        <i :class="[ isSubmitting ? 'fa-solid fa-loader fa-spin' : 'fa-solid fa-right-to-bracket' ]" class="fa-duotone"></i>
+                                        <i :class="[ isSubmitting ? 'fa-loader fa-spin' : 'fa-right-to-bracket' ]" class="fa-duotone"></i>
                                     </button>
                         </div>
                     </form>
@@ -31,7 +34,7 @@
                 </div>
             </div>
         </div>
-            
+
     </Sidebar>
     <Footer />
 </template>

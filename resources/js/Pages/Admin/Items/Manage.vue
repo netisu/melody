@@ -129,7 +129,7 @@ const purge = (type: string, id: number) => {
                         <div class="select title is-6 is-fullwidth">
                             <select>
                                 <option>Cash</option>
-                                <option>Coins</option>
+                                <option>sparkles</option>
                             </select>
                         </div>
                     </div>

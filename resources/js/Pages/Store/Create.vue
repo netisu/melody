@@ -17,8 +17,8 @@ const form = useForm({
     type: "",
     name: "",
     description: "",
-    coins: "",
-    bucks: "",
+    sparkles: "",
+    Stars: "",
     image: "",
 });
 
@@ -92,17 +92,17 @@ const AttemptUpload = () => {
                     </div>
                     <div class="gap-3 mb-2 text-sm flex-container align-center">
                         <div class="w-100">
-                            <div class="text-xs fw-bold text-muted text-uppercase">Price Coins</div>
-                            <input type="text" v-model="form.coins" class="form" placeholder="1" />
-                            <div v-if="form.errors.coins" class="text-xs text-danger fw-semibold">
-                                {{ form.errors.coins }}
+                            <div class="text-xs fw-bold text-muted text-uppercase">Price sparkles</div>
+                            <input type="text" v-model="form.sparkles" class="form" placeholder="1" />
+                            <div v-if="form.errors.sparkles" class="text-xs text-danger fw-semibold">
+                                {{ form.errors.sparkles }}
                             </div>
                         </div>
                         <div class="w-100">
-                            <div class="text-xs fw-bold text-muted text-uppercase">Price Bucks</div>
-                            <input type="text" v-model="form.bucks" class="form" placeholder="10" />
-                            <div v-if="form.errors.bucks" class="text-xs text-danger fw-semibold">
-                                {{ form.errors.bucks }}
+                            <div class="text-xs fw-bold text-muted text-uppercase">Price Stars</div>
+                            <input type="text" v-model="form.Stars" class="form" placeholder="10" />
+                            <div v-if="form.errors.Stars" class="text-xs text-danger fw-semibold">
+                                {{ form.errors.Stars }}
                             </div>
                         </div>
                     </div>

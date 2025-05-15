@@ -16,8 +16,8 @@ defineProps({
 const Welcome = [
     {
         en: {
-            message: `If you want to know how it is with meeeeeeee!`,
-            desc: `the purchase is necessary`,
+            message: `Welcome to ${usePage<any>().props.site.name}!`,
+            desc: `${usePage<any>().props.site.name} is a collaborative 3D sandbox community. Work together to build amazing things and have fun along the way!`,
         },
         es: {
             message: `Bienvenido a ${usePage<any>().props.site.name}!`,
@@ -34,6 +34,10 @@ const Welcome = [
             desc: `${usePage<any>().props.site.name
                 } は、協力的な 3D サンドボックス コミュニティです。協力して素晴らしいものを作り、その過程を楽しみましょう!`,
         },
+        he:{
+            message:`ברוך הבא ל${usePage<any>().props.site.name}!`,
+            desc:`${usePage<any>().props.site.name} זה קהילה ליצירת משחקים 3D. עבוד ביחד ותבנה דברים עם כיף`,
+        }
     },
 ];
 const lang = computed<any>(() => usePage<any>().props.locale);

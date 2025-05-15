@@ -39,21 +39,21 @@ class MoneyController extends Controller
     {
         $request->validate(rules: [
             'amount' => 'required|integer|min:0',
-            'type' => 'required|in:bucks,coins',
+            'type' => 'required|in:Stars,Sparkles',
         ]);
 
         $amount = abs($request->input('amount')); // Use the absolute value for conversion
         $type = $request->input(key: 'type');
 
-        if ($type === 'bucks') {
-            // Converting Bucks to Coins
+        if ($type === 'Stars') {
+            // Converting Stars to Sparkles
             if (is_int($amount)) {
             // Bucks should ALWAYS be whole numbers
                 if (Auth::user()->bucks >= $amount) {
                     $coinsToAdd = $amount * 10;
                     Auth::user()->bucks -= $amount;
                     Auth::user()->coins += $coinsToAdd;
-                    $message = "Successfully converted {$amount} Bucks to {$coinsToAdd} Coins.";
+                    $message = "Successfully converted {$amount} Stars to {$coinsToAdd} Sparkles.";
                 } else {
                     return response()->json(data: [
                         'type' => 'error',
@@ -66,14 +66,14 @@ class MoneyController extends Controller
                     'message' => 'Buck amount must be an integer.',
                 ], status: 400);
             }
-        } elseif ($type === 'coins') {
-            // Converting Coins to Bucks
+        } elseif ($type === 'Sparkles') {
+            // Converting Sparkles to Stars
             if ($amount % 10 == 0) {
                 $bucksToAdd = $amount / 10;
                 if (Auth::user()->coins >= $amount) {
                     Auth::user()->coins -= $amount;
                     Auth::user()->bucks += $bucksToAdd;
-                    $message = "Successfully converted {$amount} Coins to {$bucksToAdd} Bucks.";
+                    $message = "Successfully converted {$amount} Sparkles to {$bucksToAdd} Stars.";
                 } else {
                     return response()->json(data: [
                         'type' => 'error',
@@ -91,7 +91,7 @@ class MoneyController extends Controller
         }
 
         Auth::user()->save();
-        
+
         return response()->json(data: [
             'type' => 'success',
             'message' => $message ?? 'Balance updated successfully.',
