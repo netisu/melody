@@ -21,7 +21,6 @@ const JSONDATA = ref<{ message: string; type: string } | null>(null);
 const thumbnail = ref<HTMLImageElement>(null);
 
 let isPreview = ref(false);
-let is3d = ref(false);
 
 const itemOwnership = ref(usePage<any>().props.itemOwnership);
 
@@ -66,14 +65,6 @@ const reRender = throttle(() => {
             });
     });
 }, 5000);
-const set3D = () => {
-    if (is3d.value) {
-        is3d.value = false;
-    } else {
-        is3d.value = true;
-    }
-
-};
 
 const swap = () => {
     if (isPreview.value) {
@@ -227,12 +218,6 @@ function onImgErrorSmall(id) {
                                     </button>
                                 </div>
                                 <div class="ms-auto">
-                                    <button v-if="usePage<any>().props.site.threed_types.includes(usePage<any>().props.item.type)" class="btn btn-secondary btn-xs"
-                                        @click="set3D()">
-                                        {{ is3d ? 'Item Image' : '3D' }}
-                                    </button>
-                                </div>
-                                <div class="ms-auto">
                                     <button v-if="usePage<any>().props.item.preview" class="btn btn-secondary btn-xs"
                                         @click="swap()">
                                         <i class="fad fa-shirt"></i> {{ isPreview ? 'View Item' : 'View Preview' }}
@@ -245,8 +230,7 @@ function onImgErrorSmall(id) {
                                     </button>
                                 </div>
                             </div>
-                            <ItemPreviewer v-if="is3d" class="mx-auto d-block" width="512" height="512" :hash="usePage<any>().props.item.hash" />
-                            <img v-if="!is3d" :src="usePage<any>().props.item.thumbnail" @error="onImgErrorSmall('thumbnail')"
+                            <img :src="usePage<any>().props.item.thumbnail" @error="onImgErrorSmall('thumbnail')"
                                 class="mx-auto d-block" id="thumbnail" ref="thumbnail" width="512" height="512">
                         </div>
                         <div v-if="itemOwnership"

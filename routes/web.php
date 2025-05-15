@@ -20,7 +20,6 @@ use App\Http\Controllers\{
     Leaderboard\LeaderboardController,
     Promocodes\PromocodeController,
     Develop\DevelopController,
-    Endpoints\NotificationController,
     Notification,
     MembershipController,
 };
@@ -31,17 +30,12 @@ use App\Http\Middleware\{
 
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
-use App\Models\Item;
-use App\Models\Inventory;
-
-use App\Helpers\Event;
 use App\Models\UserSettings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Jobs\SendVerificationEmail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ArgAssetsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,10 +47,12 @@ use App\Http\Controllers\ArgAssetsController;
 | contains the "web" Middleware group. Now create something great!
 |
 */
-Auth::loginUsingId(1);
-Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->group(function () {
-    $validSteps = implode('|', array_keys(app(ArgassetsController::class)->getAssetSteps()));
 
+if (app()->environment('local')) {
+    Auth::loginUsingId(1);
+};
+
+Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->group(function () {
     Route::group(['as' => 'maintenance.', 'prefix' => 'maintenance'], function () {
         Route::get('/', [MaintenanceController::class, 'show'])->name('page');
         Route::post('/password', [MaintenanceController::class, 'authenticate'])->name('authenticate.password');
@@ -201,27 +197,8 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
         });
     });
 
-    Route::get('/romeo', function () {
-        if (config('Values.in_event') == true) {
-            $eventItem = Item::where('id', 194)->first();
-            $event = new Event;
-            $event->grantItem($eventItem, Auth::user(), 'gettrolled', false);
-        };
-        return redirect()->to(route('store.item', 194));
-    });
-
     Route::get('/confirm-identity', [AuthController::class, 'showConfirmForm'])->name('password.confirm.form');
     Route::post('/confirm-password', [AuthController::class, 'confirmPassword'])->name('password.confirm');
-
-    Route::get('/brokenegg', function () {
-        if (config('Values.in_event') == true && !Auth::user()->ownsItem(199)) {
-            $eventItem = Item::where('id', 199)->first();
-            $event = new Event;
-            $event->grantItem($eventItem, Auth::user(), 'crackingup', false);
-        };
-        return redirect()->to(route('store.item', 199));
-    });
-
 
     Route::get('/', [HomeController::class, 'WelcomeIndex'])->Middleware(['guest'])->name('Welcome');
 

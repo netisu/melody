@@ -12,23 +12,23 @@ use App\Models\User;
 
 class LeaderboardController extends Controller
 {
-    public function LeaderboardIndex(Request $request)
+    public function LeaderboardIndex()
     {
 
         $leaderboardService = new LeaderboardService();
         $leaderboard = $leaderboardService->generate()->take(10);
-        $bucksLeaderboard = User::orderBy('bucks', 'desc')->take(10)->get();
-        $bucksData = [];
+        $starsLeaderboard = User::orderBy('bucks', 'desc')->take(10)->get();
+        $starsData = [];
 
-        foreach ($bucksLeaderboard as $user) {
-            $bucksData[] = [
+        foreach ($starsLeaderboard as $user) {
+            $starsData[] = [
                 'username' => $user->username,
-                'bucks' => $user->bucks,
+                'stars' => $user->stars,
             ];
         }
         return inertia('Leaderboard/Index', [
             'XP' => $leaderboard,
-            'Bucks' => $bucksData, // soon
+            'Stars' => $starsData,
         ]);
     }
 }
