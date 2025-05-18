@@ -14,7 +14,6 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default {
     build: {
-    cacheDir: '.vite', // Make sure the cache is stored in a persistent location
     target: 'esnext', // Target modern JavaScript only
     minify: 'esbuild', // Enable esbuild for minification
     terserOptions: {
@@ -24,11 +23,11 @@ export default {
     },
   },
     server: {
-        host: '100.115.92.197',
+        host: 'localhost',
         cors: true,
         strictPort: true,
         hmr: {
-            host: '100.115.92.197',
+            host: 'localhost',
         },
         watch: {
             usePolling: true,
