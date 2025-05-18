@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('chat_enabled')->default(true)->index(); // Index added to inbox_enabled
             $table->boolean('notifications_enabled')->default(true)->index(); // Index added to notifications_enabled
             $table->boolean('profile_picture_enabled')->default(false)->index();
+            $table->boolean('profile_picture_pending')->default(false)->index();
             $table->string('profile_picture_url')->default('none');
             $table->boolean('headshot_enabled')->default(true)->index();
             $table->boolean('alert_enabled')->default(false)->index();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->boolean('calling_card_enabled')->default(false)->index();
             $table->string('calling_card_url')->default('none');
             $table->boolean('profile_banner_enabled')->default(false)->index();
+            $table->boolean('profile_banner_pending')->default(false)->index();
             $table->string('profile_banner_url')->default('none');
             $table->integer('primary_space')->nullable()->index();
             $table->integer('secondary_space')->nullable()->index();

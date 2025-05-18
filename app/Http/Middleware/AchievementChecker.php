@@ -25,7 +25,7 @@ class AchievementChecker
             // Administrator
             if ($user->isStaff() && !$user->AlreadyAchieved(1))
                 $user->grantAchievement(1);
-                
+
             else if (!$user->isStaff() && $user->AlreadyAchieved(1))
                 $user->removeAchievement(1);
 
@@ -40,7 +40,7 @@ class AchievementChecker
                 $user->grantAchievement(2);
 
             // Rich
-            if ($user->coins >= 500 && !$user->AlreadyAchieved(5))
+            if ($user->sparkles >= 500 && !$user->AlreadyAchieved(5))
                 $user->grantAchievement(5);
 
             // Stockpiler

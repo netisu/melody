@@ -231,6 +231,7 @@ declare module 'ziggy-js' {
         }
     ],
     "api.settings.": [],
+    "api.settings.uploadBanner": [],
     "api.settings.uploadProfilePicture": [],
     "api.settings.changeCountry": [
         {

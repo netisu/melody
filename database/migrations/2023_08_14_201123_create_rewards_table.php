@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rewards', function (Blueprint $table) {
             $table->id();
-            $table->string('reward_type')->default('bucks');
+            $table->string('reward_type')->default('stars');
             $table->integer('reward')->default('10');
             $table->unsignedBigInteger('level_required');
             $table->boolean('membership_required')->default(false);

@@ -95,8 +95,8 @@ class ItemApiController extends Controller
                     'name' => $item->name,
                     'onsale' => $item->onsale,
                     'rare' => $item->rare,
-                    'cost_coins' => $item->cost_coins,
-                    'cost_bucks' => $item->cost_bucks,
+                    'cost_sparkles' => $item->cost_sparkles,
+                    'cost_stars' => $item->cost_stars,
                     'creator' => [
                         'username' => $item->creator->username,
                         'staff' => $item->creator->isStaff(),
@@ -317,10 +317,10 @@ class ItemApiController extends Controller
             );
         }
 
-        if ($currencyType != 'bucks') {
+        if ($currencyType != 'stars') {
             return response()->json(
                 [
-                    "message" => "You can only buy resold items for bucks.",
+                    "message" => "You can only buy resold items for stars.",
                     "type" => "danger",
                 ],
                 500
@@ -365,7 +365,7 @@ class ItemApiController extends Controller
     private function handleDirectPurchase(Item $item, string $currencyType)
     {
         if (!$item->rare || $item->owners() != $item->initial_stock && $item->remaining_stock > 0) {
-            $price = ($currencyType === 'coins') ? $item->cost_coins : $item->cost_bucks;
+            $price = ($currencyType === 'sparkles') ? $item->cost_sparkles : $item->cost_stars;
             $seller = $item->creator;
 
             // Validate user currency

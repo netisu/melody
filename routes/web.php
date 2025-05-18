@@ -48,7 +48,7 @@ use Illuminate\Http\Request;
 |
 */
 
-if (app()->environment('local')) {
+if (app()->environment('local') && User::where('id', 1)->exists()) {
     Auth::loginUsingId(1);
 };
 

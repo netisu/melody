@@ -255,8 +255,8 @@ class AdminController extends Controller
             'item_type' => $request->type,
             'status' => 'approved',
             'public_view' => false,
-            'cost_coins' => $request->price_coins,
-            'cost_bucks' => $request->price_bucks,
+            'cost_sparkles' => $request->price_sparkles,
+            'cost_stars' => $request->price_stars,
             'avatar_preview' => $previewName,
             'onsale' => true,
         ]);
@@ -280,8 +280,8 @@ class AdminController extends Controller
         $itemUrl = route('store.item', $item->id);
 
         $formattedPrice = [
-            $request->price_coins . 'Coins',
-            $request->price_bucks . 'Stars',
+            $request->price_sparkles . 'Coins',
+            $request->price_stars . 'Stars',
         ];
 
         $sendWebhook = new SendItemWebhook;
@@ -349,8 +349,8 @@ class AdminController extends Controller
                 'email' => $user->email,
                 'about_me' => $user->about_me,
                 'thumbnail' => $user->thumbnail(),
-                'bucks' => $user->bucks,
-                'coins' => $user->coins,
+                'stars' => $user->stars,
+                'sparkles' => $user->sparkles,
                 'DateHum' => $user->date_hum,
                 'joined' => $joindate,
                 'past_usernames' => $uh,
@@ -387,8 +387,8 @@ class AdminController extends Controller
                 'name' => $item->name,
                 'description' => $item->description,
                 'thumbnail' => $item->thumbnail(),
-                'cost_bucks' => $item->cost_bucks,
-                'cost_coins' => $item->cost_coins,
+                'cost_stars' => $item->cost_stars,
+                'cost_sparkles' => $item->cost_sparkles,
                 'isRare' => $item->rare ?? false,
                 'isOnsale' => $item->onsale ?? false,
                 'initial_stock' => $item->initial_stock ?? 0,

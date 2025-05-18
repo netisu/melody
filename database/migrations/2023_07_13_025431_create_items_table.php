@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('item_type');
             $table->string('status')->default('review'); // review, moderated, accepted
             $table->boolean('public_view')->default(true);
-            $table->integer('cost_coins');
-            $table->integer('cost_bucks');
+            $table->integer('cost_sparkles');
+            $table->integer('cost_stars');
             $table->boolean('sale_ongoing')->default(false);
             $table->string('percent_off')->default(25);
             $table->string('avatar_preview')->nullable();

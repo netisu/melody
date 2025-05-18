@@ -46,7 +46,7 @@ class AchievementSeeder extends Seeder
                 'name' => 'Collect 1000 Coins',
                 'is_secret' => false,
                 'description' => 'Accumulate a fortune! (and please dont spend it all on a birkin bag)',
-                'image' => 'assets/img/achievements/1000-coins.png',
+                'image' => 'assets/img/achievements/1000-sparkles.png',
             ],
             [
                 'name' => 'enigmaticAcheivement',

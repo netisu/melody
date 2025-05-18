@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('promocodes', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->string('type')->nullable()->default('coins');
+            $table->string('type')->nullable()->default('sparkles');
             $table->integer('reward')->nullable()->default(12);
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();

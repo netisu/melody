@@ -383,7 +383,7 @@ body {
     /* Firefox */
     min-height: calc(100% - 100px);
     display: flex;
-    margin: 0;
     flex-direction: column;
+    margin: 0;
 }
 

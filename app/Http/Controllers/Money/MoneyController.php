@@ -49,11 +49,11 @@ class MoneyController extends Controller
             // Converting Stars to Sparkles
             if (is_int($amount)) {
             // Bucks should ALWAYS be whole numbers
-                if (Auth::user()->bucks >= $amount) {
-                    $coinsToAdd = $amount * 10;
-                    Auth::user()->bucks -= $amount;
-                    Auth::user()->coins += $coinsToAdd;
-                    $message = "Successfully converted {$amount} Stars to {$coinsToAdd} Sparkles.";
+                if (Auth::user()->stars >= $amount) {
+                    $sparklesToAdd = $amount * 10;
+                    Auth::user()->stars -= $amount;
+                    Auth::user()->sparkles += $sparklesToAdd;
+                    $message = "Successfully converted {$amount} Stars to {$sparklesToAdd} Sparkles.";
                 } else {
                     return response()->json(data: [
                         'type' => 'error',
@@ -69,11 +69,11 @@ class MoneyController extends Controller
         } elseif ($type === 'Sparkles') {
             // Converting Sparkles to Stars
             if ($amount % 10 == 0) {
-                $bucksToAdd = $amount / 10;
-                if (Auth::user()->coins >= $amount) {
-                    Auth::user()->coins -= $amount;
-                    Auth::user()->bucks += $bucksToAdd;
-                    $message = "Successfully converted {$amount} Sparkles to {$bucksToAdd} Stars.";
+                $starsToAdd = $amount / 10;
+                if (Auth::user()->sparkles >= $amount) {
+                    Auth::user()->sparkles -= $amount;
+                    Auth::user()->stars += $starsToAdd;
+                    $message = "Successfully converted {$amount} Sparkles to {$starsToAdd} Stars.";
                 } else {
                     return response()->json(data: [
                         'type' => 'error',

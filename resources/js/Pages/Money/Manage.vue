@@ -63,7 +63,7 @@ usePoll(10000, { only: ['purchases'] })
                             <div class="align-middle w-100 h-100 flex-container flex-dir-column align-center">
                                 <div class="text-3xl text-warning">
                                     <i class="text-3xl fad fa-sparkles "></i>
-                                    {{ usePage<any>().props.auth?.user?.coins }}
+                                    {{ usePage<any>().props.auth?.user?.sparkles }}
 
                                 </div>
                                 <div class="text-sm fw-semibold text-warning">
@@ -82,7 +82,7 @@ usePoll(10000, { only: ['purchases'] })
                                 <div class="text-3xl text-info">
                                     <i class="text-3xl fad fa-stars "></i>
 
-                                    {{ usePage<any>().props.auth.user.bucks }}
+                                    {{ usePage<any>().props.auth.user.stars }}
                                 </div>
                                 <div class="text-sm fw-semibold text-info">
                                     Stars
@@ -108,12 +108,12 @@ usePoll(10000, { only: ['purchases'] })
                                     </Link>
                                     <div></div>
                                     <p class="text-sm fw-semibold" :class="{
-                                        'text-warning': purchase.currency_used === 'coins',
-                                        ' text-success': purchase.currency_used === 'bucks'
+                                        'text-warning': purchase.currency_used === 'sparkles',
+                                        ' text-success': purchase.currency_used === 'stars'
                                     }">
                                         <i class="fad" :class="{
-                                            ' fa-sparkles': purchase.currency_used === 'coins',
-                                            '  fa-stars': purchase.currency_used === 'bucks'
+                                            ' fa-sparkles': purchase.currency_used === 'sparkles',
+                                            '  fa-stars': purchase.currency_used === 'stars'
                                         }"></i>
 
                                         {{ purchase.price + " " + purchase.currency_used }}

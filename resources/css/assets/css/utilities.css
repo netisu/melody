@@ -29,8 +29,8 @@
 }
 
 #app {
-    height: 100vh;
-    width: 100vw;
+    height: inherit;
+    width: inherit;
 }
 
 @media screen and (max-width: 63.99875em) {
@@ -422,7 +422,7 @@
     background: linear-gradient(to bottom, var(--info-600), var(--body-bg));
     opacity: 0.2;
     height: 300px;
-    z-index: -1;
+    z-index: 0;
 
 }
 .profile-banner.special .masoqi {

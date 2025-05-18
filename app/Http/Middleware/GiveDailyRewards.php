@@ -47,8 +47,8 @@ class GiveDailyRewards
             $pointsAmount = $user->settings->beta_tester ? 100 : 50;
 
             $user->update([
-                'coins' => $user->coins + $coinAmount,
-                'bucks' => $user->bucks + $buckAmount,
+                'sparkles' => $user->sparkles + $coinAmount,
+                'stars' => $user->stars + $buckAmount,
                 'next_reward_payout' => Carbon::now()->addHours(24)->toDateTimeString(),
             ]);
             $user->addPoints($pointsAmount);

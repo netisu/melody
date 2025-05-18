@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\{
     Database\Eloquent\Factories\HasFactory,
     Foundation\Auth\User as AeoAuthenticatable,
-    Notifications\Notifiable,     
+    Notifications\Notifiable,
     Support\Collection,
     Database\Eloquent\Relations\HasMany,
     Database\Eloquent\Relations\HasManyThrough,
@@ -72,8 +72,8 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
      * @var array<int, string>
      */
     protected $hidden = [
-        'coins',
-        'bucks',
+        'sparkles',
+        'stars',
         'about_me',
         'latest_status',
         'social_id',

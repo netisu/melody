@@ -23,8 +23,8 @@ return new class extends Migration
             $table->timestamp('next_reward_payout')->nullable();
             $table->string('password');
             $table->integer('event_currency')->default(10);
-            $table->integer('coins')->default(10);
-            $table->integer('bucks')->default(1);
+            $table->integer('sparkles')->default(10);
+            $table->integer('stars')->default(1);
             $table->string('status');
             $table->string('about_me');
             $table->string('social_id')->nullable();

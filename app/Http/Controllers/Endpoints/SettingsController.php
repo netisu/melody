@@ -42,11 +42,9 @@ class SettingsController extends Controller
      * Display the user's profile form.
      */
     public function changeCountry($country)
-    {        // Get the user
-        $user = Auth::user();
-
+    {   
         // Get the user's settings record
-        $settings = $user->settings;
+        $settings = UserSettings::where('id', Auth::id())->first();
 
         // Get the country code from the request
 
@@ -168,24 +166,32 @@ class SettingsController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = Auth::user();
+        $settings = UserSettings::where('id', Auth::id())->first();
 
         if ($request->hasFile('image')) {
             // Delete the old banner if it exists
-            if ($user->banner_path) {
-                Storage::delete($user->banner_path);
+            if ($settings->profile_banner_url) {
+                Storage::disk('spaces')->delete('uploads/pending' . $settings->profile_banner_url);
             }
+            $imgName = bin2hex(random_bytes(22));
+            $this->uploadTempImage($request->file('image'), $imgName);
 
-            $path = $request->file('image')->store('public/banners'); // Store in storage/app/public/banners
-            $user->banner_path = str_replace('public/', 'storage/', $path); // Store the public path in the database
-            $user->save();
+            $settings->profile_banner_enabled = false; 
+            $settings->profile_banner_pending = true;
+            $settings->profile_banner_url = env(key: 'STORAGE_URL') . '/uploads/pending' . $imgName . '.png'; // Store the public path in the database
+            $settings->save();
 
-            return response()->json(['message' => 'Banner uploaded successfully', 'path' => asset($user->banner_path)]);
+            return response()->json(['message' => 'Banner uploaded successfully', 'path' => asset($settings->profile_banner_url)]);
         }
 
         return response()->json(['error' => 'No image file provided'], 400);
     }
 
+    private function uploadTempImage(UploadedFile $file, string $name): string
+    {
+        $path = Storage::disk('spaces')->putFileAs('uploads/pending', $file, "{$name}.png", 'public');
+        return $path;
+    }
     /**
      * "Delete" the user's account.
      */

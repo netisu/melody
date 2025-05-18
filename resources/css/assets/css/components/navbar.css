@@ -5,7 +5,7 @@
     left: 0;
     right: 0;
     background: var(--section-bg);
-    border-bottom: 2px solid var(--section-border-color);
+    border-bottom: 1px dashed var(--section-border-color);
     padding: 10px 15px;
     box-shadow: 1px 1px 5px rgb(var(--section-shadow), 0.1);
 }
@@ -25,7 +25,7 @@
     min-height: 1.25rem;
     left: 0;
     right: 0;
-    background: linear-gradient(to bottom, var(--info-600), var(--info-400));
+    background: linear-gradient(to bottom, var(--gray-800), var(--gray-800), var(--info-600));
     border: none;
     padding: 0px 10px;
     box-shadow: 1px 1px 5px rgb(var(--section-shadow), 0.1);

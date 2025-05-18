@@ -50,17 +50,17 @@ class PromocodeController extends Controller
                 'user_id' => $user->id,
                 'item_id' => $promocode->reward,
             ]);
-        } elseif ($promocode->type == 'bucks') {
-            $newCurrencyValue = $user->bucks + $promocode->reward;
+        } elseif ($promocode->type == 'stars') {
+            $newCurrencyValue = $user->stars + $promocode->reward;
 
             $user->update([
-                'bucks' => $newCurrencyValue
+                'stars' => $newCurrencyValue
             ]);
-        } elseif ($promocode->type == 'coins') {
-            $newCurrencyValue = $user->coins + $promocode->reward;
+        } elseif ($promocode->type == 'sparkles') {
+            $newCurrencyValue = $user->sparkles + $promocode->reward;
 
             $user->update([
-                'coins' => $newCurrencyValue
+                'sparkles' => $newCurrencyValue
             ]);
         }
 

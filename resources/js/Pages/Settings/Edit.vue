@@ -34,7 +34,6 @@ const locales = usePage().props?.['locales'];
 
 const bannerVisibilityEnabled = ref(usePage<any>().props.auth.user.settings.profile_banner_enabled);
 const isBannerUploading = ref(false);
-const isBannerUploading = ref(false);
 const uploadProgress = ref(0);
 const uploadError = ref('');
 const bannerImageFile = ref(null);

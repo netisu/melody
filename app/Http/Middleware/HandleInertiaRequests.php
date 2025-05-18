@@ -73,8 +73,8 @@ class HandleInertiaRequests extends Middleware
                         'username' => $request->user()->username,
                         'display_name' => $request->user()->display_name,
                         'next_currency_payout' => Carbon::parse($request->user()->next_reward_payout)->diffForHumans(),
-                        'coins' => shortNum($request->user()->coins),
-                        'bucks' => shortNum($request->user()->bucks),
+                        'sparkles' => shortNum($request->user()->sparkles),
+                        'stars' => shortNum($request->user()->stars),
                         'staff' => $request->user()->isStaff() ?? false,
                         'headshot' => $request->user()->headshot(),
                         'thumbnail' => $request->user()->thumbnail(),
@@ -103,7 +103,7 @@ class HandleInertiaRequests extends Middleware
                          $response['user']['birthdate'] = $request->user()->birthdate;
                          $response['user']['email_verified_at'] = $request->user()->email_verified_at;
                 };
-                
+
                 return $response;
             },
         ]);

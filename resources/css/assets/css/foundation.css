@@ -2,6 +2,8 @@
 html {
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    
 }
 
 body {
@@ -97,8 +99,9 @@ button,
 [type='button'],
 [type='reset'],
 [type='submit'] {
-    appearance: button;
     -webkit-appearance: button;
+    appearance: button;
+
 }
 
 button::-moz-focus-inner,
@@ -151,8 +154,9 @@ textarea {
 }
 
 [type='search'] {
-    appearance: textfield;
     -webkit-appearance: textfield;
+    appearance: textfield;
+
     outline-offset: -2px;
 }
 

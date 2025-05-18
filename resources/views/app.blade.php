@@ -1,14 +1,26 @@
-<!--
-Copyright © 2025 Netisu All Rights Reserved.
-Unauthorized use of this code (Not Mendcore) is strictly prohibited.
--->
-
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ App::isLocale('he') ? 'rtl' : 'ltr' }}" prefix="og: https://ogp.me/ns#">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ App::isLocale('he') ? 'rtl' : 'ltr' }}"
+    prefix="og: https://ogp.me/ns#">
 
 <head>
-    <meta charset="utf-8">
+    <!--
+    Copyright © 2025 Netisu All Rights Reserved.
+    Unauthorized use of this code (Not Mendcore) is strictly prohibited.
+    -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#03a9f4" />
+    <meta http-equiv="Content-Type" content="application/x-html+html; charset=UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="msapplication-TileColor" content="#03a9f4" />
+    <meta name="robots" content="index,follow" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ config('Values.icon') }}" />
+    <meta name="msapplication-config" content="{{ asset('browserconfig.ae3u4gn3.xml') }}" />
+    <link rel="manifest" href="{{ asset('Aeow2mf3.webmanifest') }}" crossorigin="use-credentials" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v6.1.2/css/pro.min.css" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title inertia>{{ config('Values.name') }}</title>
     <link id="theme-style" rel="stylesheet" defer>
@@ -19,7 +31,8 @@ Unauthorized use of this code (Not Mendcore) is strictly prohibited.
 
 <body style="margin:0;padding:0">
     <noscript>
-        <strong>We're sorry but {{ config(key: 'Values.name') }} doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+        <strong>We're sorry but {{ config(key: 'Values.name') }} doesn't work properly without JavaScript enabled.
+            Please enable it to continue.</strong>
     </noscript>
     @inertia
 </body>
@@ -95,4 +108,5 @@ Unauthorized use of this code (Not Mendcore) is strictly prohibited.
     // Call initializeTheme
     initializeTheme();
 </script>
+
 </html>

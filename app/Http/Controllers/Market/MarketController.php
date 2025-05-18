@@ -88,8 +88,8 @@ class MarketController extends Controller
                 'public_view' => $item->public_view,
                 'status' => $item->status,
                 'onsale' => $item->onsale,
-                'cost_bucks' => $item->cost_bucks,
-                'cost_coins' => $item->cost_coins,
+                'cost_stars' => $item->cost_stars,
+                'cost_sparkles' => $item->cost_sparkles,
                 'DateHum' => $item->DateHum,
                 'UpdateHum' => $item->UpdateHum,
                 'created_at' => $item->created_at,
@@ -144,8 +144,8 @@ class MarketController extends Controller
             'item_type' => $request->type,
             'status' => 'pending',
             'public_view' => false,
-            'cost_coins' => $request->coins,
-            'cost_bucks' => $request->bucks,
+            'cost_sparkles' => $request->sparkles,
+            'cost_stars' => $request->stars,
             'avatar_preview' => $previewName,
             'onsale' => true,
         ]);
@@ -179,8 +179,8 @@ class MarketController extends Controller
             'description' => 'required|string|max:255',
             'type' => 'required|string|in:shirt,tshirt,pants', // Allowed item types
             'image' => 'required|image|mimes:png', // Validate PNG image
-            'coins' => 'required|integer|max:50000',
-            'bucks' => 'required|integer|max:10000',
+            'sparkles' => 'required|integer|max:50000',
+            'stars' => 'required|integer|max:10000',
         ]);
 
         if ($validator->fails()) { // Use Validator object's fails method on $validator
@@ -224,8 +224,8 @@ class MarketController extends Controller
         $item->update([
             'name' => $request->name ??  $item->name,
             'description' => $request->description ??  $item->description,
-            'cost_coins' => $request->cost_coins ??  $item->cost_coins,
-            'cost_bucks' => $request->cost_bucks ??  $item->cost_bucks,
+            'cost_sparkles' => $request->cost_sparkles ??  $item->cost_sparkles,
+            'cost_stars' => $request->cost_stars ??  $item->cost_stars,
             'onsale' => $request->isOnsale ??  $item->onsale,
         ]);
 

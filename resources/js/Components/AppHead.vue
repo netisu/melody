@@ -26,28 +26,13 @@ const getFormattedDate = (timeStamp: number) => {
     <Head>
         <title>{{ pageTitle }}</title>
 
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="theme-color" content="#03a9f4" />
-        <meta http-equiv="Content-Type" content="application/x-html+html; charset=UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-
-        <meta name="robots" content="index,follow" />
-        <link rel="shortcut icon" type="image/x-icon" :href="usePage<any>().props.site.icon" />
-        <meta name="msapplication-TileColor" content="#03a9f4" />
-        <meta name="robots" content="index,follow" />
-
-        <!-- Scripts -->
-        <meta name="msapplication-config" content="/browserconfig.ae3u4gn3.xml" />
-        <link rel="manifest" href="/Aeow2mf3.webmanifest" crossorigin="use-credentials" />
-
-        <!-- Fonts -->
-        <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v6.1.2/css/pro.min.css" />
         <meta :content="pageTitle" name="title" />
         <meta :content="description || 'A page on ' + usePage<any>().props.site.name + '.'" name="description" />
 
         <meta :content="url" property="og:url" />
         <meta content="website" property="og:type" />
+
+        <meta :content="usePage<any>().props.site.name" property="og:site_name" />
         <meta :content="pageTitle" property="og:title" />
         <meta :content="description || 'A page on ' + usePage<any>().props.site.name + '.'" property="og:description" />
         <meta :content="cover || usePage<any>().props.site.icon" property="og:image" />
