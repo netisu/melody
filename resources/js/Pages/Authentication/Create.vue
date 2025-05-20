@@ -81,12 +81,12 @@ const generateRandomNumber = (min: number, max: number): number => {
 
 const placeholderUsername = usePage<any>().props.site.name + generateRandomNumber(1, 999);
 
-const { handleSubmit, values, errors, setErrors } = useForm({
+const { handleSubmit, setFieldValue, values, errors, setErrors } = useForm({
     validationSchema: registerFormSchema,
     initialValues: {
         username: placeholderUsername,
         displayName: placeholderUsername,
-        country: 'jp', // fetch this dynamically later.
+        country: 'JP', // fetch this dynamically later.
         bio: 'Greetings! im new to ' + usePage<any>().props.site.name,
         email: '',
         password: '',
@@ -96,9 +96,13 @@ const { handleSubmit, values, errors, setErrors } = useForm({
             day: generateRandomNumber(1, 25),
             year: generateRandomNumber(1925, 2025),
         },
-        starter_item: '', // not used atm used in the form?
+        starter_item: '', // not used atm in the form?
     },
 });
+
+   const handleCountryChange = (event) => {
+        setFieldValue('country', event.target.value);
+    }
 
 const submit = handleSubmit(async (formValues) => {
     try {
@@ -117,7 +121,7 @@ const submit = handleSubmit(async (formValues) => {
 
 defineProps<{
     themes?: Object;
-    items?: Object;
+    countries?: Object;
     errors?: Record<string, string>;
 }>();
 
@@ -130,7 +134,7 @@ watch(() => usePage<any>().props.errors, (newErrors) => {
 const currentTheme = localStorage.getItem("theme") || null;
 const currentStep = ref(1);
 const isStepOk = ref(false);
-const totalSteps = 6;
+const totalSteps = 7;
 
 const nextStep = () => {
     if (currentStep.value < totalSteps) {
@@ -156,10 +160,12 @@ const getStepText = () => {
     } else if (currentStep.value === 3) {
         return "Choose your password.";
     } else if (currentStep.value === 4) {
-        return "When were you born?";
+        return "Tell us where you're from!";
     } else if (currentStep.value === 5) {
-        return "Choose a website theme.";
+        return "When were you born?";
     } else if (currentStep.value === 6) {
+        return "Choose a website theme.";
+    } else if (currentStep.value === 7) {
         return 'By clicking the "Sign Me Up!" button below, you agree to our Terms of Service and Privacy Policy.';
     }
 };
@@ -171,9 +177,9 @@ const getStepDesc = () => {
         return `Your username is how ${usePage<any>().props.site.name} players will be able to identify you.`;
     } else if (currentStep.value === 3) {
         return "Your password is the way you will be able to access your account and change your settings, please use a password you do not use anywhere else.";
-    } else if (currentStep.value === 5) {
-        return "Choose a theme that is comfortable for your viewing experience, this can be changed anytime later from your account settings.";
     } else if (currentStep.value === 6) {
+        return "Choose a theme that is comfortable for your viewing experience, this can be changed anytime later from your account settings.";
+    } else if (currentStep.value === 7) {
         return "You can review our Terms of Service and/or Privacy Policy below.";
     }
 };
@@ -182,6 +188,8 @@ const getStepSdesc = () => {
     if (currentStep.value === 3) {
         return "Do not share your password with anybody.";
     } else if (currentStep.value === 4) {
+        return "This helps us tailor your experience.";
+    } else if (currentStep.value === 5) {
         return "We need this piece of information to ensure your privacy and safety on our platform.";
     }
 };
@@ -332,6 +340,26 @@ if (values.birthdate.month) {
                                     </div>
                                 </div>
                                 <div v-show="currentStep === 4">
+                                <Field
+      as="select"
+      id="country"
+      name="country"
+      v-model="values.country"  class="form form-select"
+      @change="handleCountryChange"
+    >
+      <option value="" disabled>Select a country</option>
+      <option
+        v-for="countryItem in countries"
+        :key="countryItem.code"
+        :value="countryItem.code"
+      >
+        {{ countryItem.name }}
+      </option>
+    </Field>
+                                     <ErrorMessage name="values.country"
+                                                class="text-xs text-danger fw-semibold" />
+                                </div>
+                                <div v-show="currentStep === 5">
                                     <!-- Fourth section content -->
                                     <div class="grid-x grid-margin-x grid-padding-y">
                                         <div class="cell medium-4">
@@ -387,7 +415,7 @@ if (values.birthdate.month) {
 
                                     </div>
                                 </div>
-                                <div v-show="currentStep === 5">
+                                <div v-show="currentStep === 6">
                                     <!-- Fifth section content -->
                                     <div class="grid-x grid-margin-x grid-padding-y">
                                         <div class="cell large-6" v-for="(
@@ -427,7 +455,7 @@ theme, index
                                     </div>
                                 </div>
 
-                                <div v-show="currentStep === 6">
+                                <div v-show="currentStep === 7">
                                     <!-- Seventh section content -->
                                     <div class="gap-2 flex-container-lg">
                                         <button class="mb-2 btn btn-gray btn-block mb-lg-0">

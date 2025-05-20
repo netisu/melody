@@ -1,63 +1,69 @@
-<script setup lang="ts">
-import { ref, onMounted } from "vue";
-import type { Ref } from "vue";
+<script lang="ts" setup>
+import { ref, defineProps, defineEmits, onMounted } from 'vue';
+import type { Ref } from 'vue';
+
+interface SubCategory {
+  name: string;
+  internal: string; // Add the 'internal' property
+  icon: string;
+  // Add other subcategory properties as needed
+}
 
 interface Category {
-    name: string;
-    icon: string;
+  icon: string;
+  [key: number]: SubCategory; // Define the array part of the category
 }
 
 interface Props {
-    categories: Record<string, any>; // Adjusted type to handle mixed structure
-    selectCategory: Function; // or specify the expected type if it's not a function
+  categories: Record<string, Category>;
+  selectCategory: (category: SubCategory) => void;
 }
 
-const isOpen = ref<boolean>(false);
-const { categories } = defineProps<Props>();
-const selectedCategory = ref<Category | null>(null);
-const selectedSubCategory: Ref<string> = ref("Accessories");
-const emit = defineEmits(["categorySelected"]); // Define the emit function to emit custom events
+const emit = defineEmits<{
+  'categorySelected': [category: SubCategory];
+}>();
 
-// Function to handle category selection
-function selectCategory(category: Category) {
-    selectedCategory.value = category;
-    // Emit the 'category-selected' event with the selected category
-    emit("categorySelected", category);
+const props = defineProps<Props>();
+const selectedCategory: Ref<SubCategory | null> = ref(null);
+const openCategories: Ref<string[]> = ref([]);
+
+function handleCategorySelect(category: SubCategory) {
+  selectedCategory.value = category;
+  emit('categorySelected', category);
 }
 
-function openCategory(categoryName: string): void {
-    selectedSubCategory.value = categoryName;
-    console.log(categoryName);
-    // Select the element with the matching ID
-    const element = document.getElementById(categoryName);
-    console.log(element);
-    isOpen.value == !isOpen.value;
-    if (element) {
-        if (isOpen) {
-            // Add the active class only when `isOpen1 is false
-            element.classList.add("active");
-        } else if (!isOpen) {
-            // Remove when `isOpen` is true
-            element.classList.remove("active");
-        }
-    } else {
-        console.warn(`Element with ID '${categoryName}' not found.`);
-    }
+function toggleCategory(categoryName: string) {
+  if (openCategories.value.includes(categoryName)) {
+    // Remove if open
+    openCategories.value = openCategories.value.filter(
+      (name) => name !== categoryName
+    );
+  } else {
+    // Add if closed
+    openCategories.value.push(categoryName);
+  }
 }
+
 onMounted(() => {
-    if (categories?.["length"] > 0) {
-        selectCategory(categories[1].name);
-    }
+  // Select the first subcategory of the first category on mount, if categories exist
+  const firstCategoryName = Object.keys(props.categories)[0];
+  if (
+    firstCategoryName &&
+    props.categories[firstCategoryName] &&
+    props.categories[firstCategoryName][0] // Access the first subcategory
+  ) {
+    handleCategorySelect(props.categories[firstCategoryName][0])
+  }
 });
 </script>
 <template>
     <div
         class="collapsible"
         v-for="(category, categoryName) in categories"
-        @click="openCategory(categoryName)"
-        :id="categoryName"
+        :class="{ active: openCategories.value === categoryName }"
+        :key="categoryName"
     >
-        <button class="d-block w-100 market-section-item">
+        <button @click="toggleCategory(categoryName)" class="d-block w-100 market-section-item">
             <div class="align-middle flex-container align-justify">
                 <div class="text-sm">
                     <i
@@ -70,28 +76,17 @@ onMounted(() => {
             </div>
         </button>
         <div
-            v-if="selectedSubCategory === categoryName"
-            :id="categoryName + '_List'"
             class="mt-1 mb-1 collapsible-menu"
         >
             <button
-                v-for="(item, index) in category"
-                @click="() => selectCategory(item)"
-                :class="{ active: selectedCategory === item }"
+                v-for="(subCategory, index) in category"
+                @click="handleCategorySelect(subCategory)"
+                :class="{ active: selectedCategory === subCategory }"
                 :key="index"
                 class="text-xs market-section-item"
             >
-                {{ item.name }}
+                {{ subCategory.name }}
             </button>
         </div>
     </div>
 </template>
-<script lang="ts">
-import { directive } from "vue-tippy";
-
-export default {
-    directives: {
-        tippy: directive,
-    },
-};
-</script>

@@ -7,6 +7,7 @@ yarn-error.log
 /public/cdn/*
 /css-obfuscator/
 /bootstrap/ssr/*
+lang/php_*.json
 
 # Laravel 4 specific
 bootstrap/compiled.php

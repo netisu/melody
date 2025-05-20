@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\Event;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Storage;
 
 class ArgAssetsController extends Controller
 {
@@ -56,7 +54,7 @@ class ArgAssetsController extends Controller
                 $event = new Event;
                 $event->grantItem($eventItem, Auth::user(), 'enigmaticEgg', false);
                 return redirect()->to(route('store.item', 209));
-            } 
+            }
             return response()->json(['message' => 'No item granted at this time.']);
         }
 

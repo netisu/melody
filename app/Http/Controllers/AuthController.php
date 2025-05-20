@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
-use App\Models\Avatar;
 use App\Models\UserSettings;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
+use App\Models\Country;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\ValidationException;
@@ -97,6 +96,8 @@ class AuthController extends Controller
 
     public function RegisterIndex()
     {
+        $countries = Country::all();
+
         $tester = Cache::remember('tester', 60, function () {
             return User::whereHas('settings', function ($query) {
                 $query->where('beta_tester', 1);
@@ -110,7 +111,9 @@ class AuthController extends Controller
             'tester' => [
                 'username' => $tester->username ?? "Aeo",
                 'avatar' => $tester ? $tester->thumbnail() : "/assets/img/earl_placeholder.png",
-            ]
+            ],
+            'countries' => $countries,
+
         ]);
     }
     private function getItemData(array $itemIds): array
@@ -133,6 +136,7 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|alpha_num|min:3|max:25|profane|unique:' . User::class,
             'displayName' => 'required|alpha_num|min:3|max:25|profane',
+            'country' => 'alpha|max:2',
             'birthdate.day' => 'required|numeric|min:1|max:31',
             'birthdate.month' => 'required|numeric|min:1|max:12',
             'birthdate.year' => 'required|numeric|min:1900|max:' . date('Y'),
@@ -161,14 +165,15 @@ class AuthController extends Controller
 
         UserSettings::create([
             'user_id' => $user->id,
+            'country_code' => $request->country,
         ]);
 
 
         if ($user->id === 1) {
-            $admin = new Admin;
-            $admin->user_id = $user->id;
-            $admin->role_id = 1;
-            $admin->save();
+            UserSettings::create([
+                'user_id' => $user->id,
+                'role_id' => 1,
+            ]);
         }
 
         event(new Registered($user));

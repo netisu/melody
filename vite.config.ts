@@ -1,33 +1,47 @@
-import type { UserConfig } from 'vite'
-import laravel from 'laravel-vite-plugin';
-import vue from '@vitejs/plugin-vue';
+import type { UserConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import vue from "@vitejs/plugin-vue";
 import autoprefixer from "autoprefixer";
 import postcssNested from "postcss-nested";
 import { watch } from "vite-plugin-watch";
 import { VitePWA } from "vite-plugin-pwa";
-import { templateCompilerOptions } from '@tresjs/core'
+import { templateCompilerOptions } from "@tresjs/core";
 import path from "path";
-import basicSsl from '@vitejs/plugin-basic-ssl'
-import viteImagemin from 'vite-plugin-imagemin'
-import compression from 'vite-plugin-compression2'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import basicSsl from "@vitejs/plugin-basic-ssl";
+import viteImagemin from "vite-plugin-imagemin";
+import compression from "vite-plugin-compression2";
+import vueDevTools from "vite-plugin-vue-devtools";
+import i18n from 'laravel-vue-i18n/vite';
 
 export default {
     build: {
-    target: 'esnext', // Target modern JavaScript only
-    minify: 'esbuild', // Enable esbuild for minification
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console logs for production
-      },
+        target: "esnext", // Target modern JavaScript only
+        minify: "esbuild", // Enable esbuild for minification'
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes("node_modules")) {
+                        return id
+                            .toString()
+                            .split("node_modules/")[1]
+                            .split("/")[0]
+                            .toString();
+                    }
+                },
+            },
+        },
+        terserOptions: {
+            compress: {
+                drop_console: true, // Remove console logs for production
+            },
+        },
     },
-  },
     server: {
-        host: 'localhost',
+        host: "localhost",
         cors: true,
         strictPort: true,
         hmr: {
-            host: 'localhost',
+            host: "localhost",
         },
         watch: {
             usePolling: true,
@@ -38,12 +52,8 @@ export default {
             generateScopedName: "[hash:base64:5]",
         },
         postcss: {
-            plugins: [
-                 autoprefixer(),
-                 postcssNested(),
-            ],
+            plugins: [autoprefixer(), postcssNested()],
         },
-
     },
     plugins: [
         vueDevTools(),
@@ -55,7 +65,7 @@ export default {
         }),
         watch({
             pattern: "routes/*.php",
-            command: "php artisan ziggy:generate --types",
+            command: "php artisan ziggy:generate",
         }),
         laravel({
             input: ["resources/js/app.ts"],
@@ -78,15 +88,17 @@ export default {
                 },
             },
         }),
+        i18n(),
         basicSsl(),
         viteImagemin({}),
-        compression()
+        compression(),
     ],
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
             "@": path.resolve(__dirname, "resources/js"),
-            'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
+            "vue": 'vue/dist/vue.esm-bundler.js',
+            "ziggy-js": path.resolve("vendor/tightenco/ziggy"),
         },
     },
     optimizeDeps: {

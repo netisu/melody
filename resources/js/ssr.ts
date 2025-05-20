@@ -5,10 +5,10 @@ import "../css/NProgress.css";
 import "../css/style.css";
 
 // アプリの作成
-import { createSSRApp, h } from "vue";
-import type { DefineComponent } from "vue";
-
+import { createSSRApp, type DefineComponent, h } from "vue";
+import { i18nVue } from "laravel-vue-i18n";
 import { ZiggyVue } from 'ziggy-js';
+import { Ziggy } from './ziggy.js';
 import { Skeletor } from "vue-skeletor";
 import AppHead from "./Components/AppHead.vue";
 import createServer from "@inertiajs/vue3/server";
@@ -35,17 +35,28 @@ createServer((page) =>
         render: renderToString,
         progress: { includeCSS: true, showSpinner: false },
         title: (title) => `${title} - ${appName}`,
-        resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob<DefineComponent>('./Pages/**/*.vue')),
+        resolve: (name) =>
+            resolvePageComponent(
+                `./Pages/${name}.vue`,
+                import.meta.glob<DefineComponent>("./Pages/**/*.vue"),
+            ),
         setup({ App, props, plugin }) {
             return createSSRApp({ render: () => h(App, props) })
-                .use(ZiggyVue)
+                .use(ZiggyVue, Ziggy)
                 .use(plugin)
                 .use(VueTippy)
                 .component("Skeletor", Skeletor)
                 .component("Pagination", Pagination)
                 .component("AppHead", AppHead)
                 .component("Head", Head)
-                .component("Link", Link);
+                .component("Link", Link)
+                .use(i18nVue, {
+					lang: page.props.locale, /* use correct language server-side */
+					resolve: lang => {
+						const langs = import.meta.glob('../../lang/*.json', { eager: true });
+						return langs[`../../lang/${lang}.json`].default;
+					},
+				});
         },
     }),
 );

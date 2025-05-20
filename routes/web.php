@@ -49,7 +49,7 @@ use Illuminate\Http\Request;
 */
 
 if (app()->environment('local') && User::where('id', 1)->exists()) {
-    Auth::loginUsingId(1);
+    //Auth::loginUsingId(1);
 };
 
 Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->group(function () {

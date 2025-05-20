@@ -7,6 +7,7 @@
     Copyright © 2025 Netisu All Rights Reserved.
     Unauthorized use of this code (Not Mendcore) is strictly prohibited.
     -->
+    <title inertia>{{ config('Values.name') }}</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="theme-color" content="#03a9f4" />
@@ -17,12 +18,11 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ config('Values.icon') }}" />
     <meta name="msapplication-config" content="{{ asset('browserconfig.ae3u4gn3.xml') }}" />
     <link rel="manifest" href="{{ asset('Aeow2mf3.webmanifest') }}" crossorigin="use-credentials" />
+    <meta name="google-adsense-account" content="ca-pub-2113156566128044">
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v6.1.2/css/pro.min.css" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title inertia>{{ config('Values.name') }}</title>
     <link id="theme-style" rel="stylesheet" defer>
     @routes()
     @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])

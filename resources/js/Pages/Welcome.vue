@@ -64,8 +64,8 @@ const lang = computed<any>(() => usePage<any>().props.locale);
                         <div class="text-white">
                             <!-- Page heading-->
                             <div class="text-5xl fw-semibold">
-                                <span v-for="messages in Welcome">
-                                    {{ messages[lang].message }}
+                                <span>
+                                    {{ $t('welcome.message') }}
                                 </span>
                             </div>
                             <h3 class="p-2 mt-3 text-wrap fw-semibold" v-for="desc in Welcome">
@@ -86,15 +86,6 @@ const lang = computed<any>(() => usePage<any>().props.locale);
                 </div>
             </div>
         </header>
-        <nav v-if="usePage<any>().props.site_config.announcement" class="alert alert-danger alert-landing">
-            <div class="py-1 text-center fw-semibold">
-                <div class="gap-2 text-center align-middle flex-container align-center">
-                    <div>
-                        {{ usePage<any>().props.site_config.announcement_message }}
-                    </div>
-                </div>
-            </div>
-        </nav>
         <main class="container container-landing">
             <div class="justify-center grid-x grid-margin-x align-center grid-padding-y">
                 <div v-if="LandingItems?.['data'] || LandingItems?.['data'].length < 5" class="cell large-12">

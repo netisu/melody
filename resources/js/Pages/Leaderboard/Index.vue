@@ -4,7 +4,6 @@ import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import AppHead from "@/Components/AppHead.vue";
 import { route } from 'ziggy-js';
-// If you're using the 'route' function from 'momentum-trail'
 import { usePage } from "@inertiajs/vue3";
 
 defineProps({
@@ -111,8 +110,8 @@ const TopList = (indexKey: Number) => {
                                     {{ topStars.username }}
                                     </Link>
                                     <div></div>
-                                    <div class="text-sm fw-semibold text-success">
-                                        <i class="fas fa-stars">&nbsp;</i>{{ topStars.Stars }}
+                                    <div class="text-sm fw-semibold text-info">
+                                        <i class="fas fa-stars">&nbsp;</i>{{ topStars.stars }}
                                     </div>
                                 </div>
                             </div>

@@ -5,11 +5,10 @@ import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import { ref } from "vue";
-import { usePage, useForm } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { route } from 'ziggy-js';
 
 import axios from "axios";
-
 
 const Uploading = ref(false);
 

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Endpoints;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Item;
-use Illuminate\Support\Facades\Hash;
 
 class ThumbnailController extends Controller
 {

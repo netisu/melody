@@ -22,10 +22,10 @@
 .navbar.bottom_nav {
     z-index: 2;
     position: sticky;
-    min-height: 1.25rem;
+    min-height: 1.05rem;
     left: 0;
     right: 0;
-    background: linear-gradient(to bottom, var(--gray-800), var(--gray-800), var(--info-600));
+    background: var(--gray-800);
     border: none;
     padding: 0px 10px;
     box-shadow: 1px 1px 5px rgb(var(--section-shadow), 0.1);
@@ -93,8 +93,13 @@
 }
 
 .navbar .nav-link.active {
+    color: var(--gray-100);
+    background: var(--info-600);
+}
+
+.navbar .bottom_nav .nav-link.active {
     color: #fff;
-    background: var(--info-500);
+    background: transparent;
 }
 
 .navbar .nav-link.active::before {

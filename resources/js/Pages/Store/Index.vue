@@ -168,11 +168,11 @@ provide("selectedSubCategory", selectedSubCategory);
                         <i class="text-5xl fad fa-cart-xmark text-muted"></i>
                         <div style="line-height: 16px">
                             <div class="text-xs fw-bold text-muted text-uppercase">
-                                No Items
+                                No {{ selectedSubCategory }}
                             </div>
                             <div class="text-muted fw-semibold">
                                 <p class="text-xs">
-                                    There are currently no items in {{ selectedCategory }}.
+                                    There are currently no {{ selectedSubCategory }}.
                                 </p>
                             </div>
                         </div>

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import Sidebar from '@/Components/LayoutParts/Sidebar.vue';
 import Navbar from '@/Components/LayoutParts/Navbar.vue';
-import ItemPreviewer from '@/Components/ItemPreviewer.vue';
-
 import Footer from '@/Components/LayoutParts/Footer.vue';
 import AppHead from '@/Components/AppHead.vue';
 import { usePage } from '@inertiajs/vue3';
