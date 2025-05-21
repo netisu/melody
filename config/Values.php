@@ -39,8 +39,8 @@ return [
     ],
 
     'socials' => [
-        'discord' => 'https://discord.gg/netisu',
-        'twitter' => '',
+        'discord' => 'https://discord.gg/Zec49GD6ps',
+        'twitter' => 'https://x.com/PlayNetisu',
         'twitch' => '',
         'tiktok' => '',
         'facebook' => ''

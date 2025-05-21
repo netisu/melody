@@ -63,12 +63,10 @@ const lang = computed<any>(() => usePage<any>().props.locale);
                     <div class="row-landing">
                         <div class="text-white">
                             <!-- Page heading-->
-                            <div class="text-5xl fw-semibold">
-                                <span>
-                                    {{ $t('welcome.message') }}
-                                </span>
+                            <div class="text-5xl fw-semibold"  v-for="message in Welcome">
+                                      {{ message[lang].message }}
                             </div>
-                            <h3 class="p-2 mt-3 text-wrap fw-semibold" v-for="desc in Welcome">
+                            <h3 class="mt-4 text-wrap fw-semibold" v-for="desc in Welcome">
                                 {{ desc[lang].desc }}
                             </h3>
                             <div class="min-w-0 gap-2 mt-3 flex-container">

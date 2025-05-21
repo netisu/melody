@@ -127,7 +127,9 @@ const left = [
         he: { title: "משתמשים" },
 
     },
-    {
+];
+if (usePage<any>().props.auth.user) {
+    left.push({
         url: profileUrl,
         ActiveLink: profileUrl,
         icon: "fad fa-user-crown",
@@ -136,10 +138,13 @@ const left = [
         ru: { title: "Игроки" },
         ja: { title: "発展" },
         he: { title: "משתמשים" },
+    });
+}
 
-    },
-    {
-        url: route(`admin.page`),
+// Conditionally push the "Admin" link
+if (usePage<any>().props.auth.user && usePage<any>().props.auth.user.staff) {
+    left.push({
+        url: route(`admin.page`), // Assuming route() is available
         ActiveLink: 'admin.*',
         icon: "fad fa-gavel",
         en: { title: "Admin" },
@@ -147,9 +152,8 @@ const left = [
         ru: { title: "Игроки" },
         ja: { title: "発展" },
         he: { title: "משתמשים" },
-
-    },
-];
+    });
+}
 const right = [
     {
         url: route(`promocodes.page`),

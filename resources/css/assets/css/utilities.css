@@ -29,8 +29,8 @@
 }
 
 #app {
-    height: inherit;
-    width: inherit;
+  height: inherit;
+  width: inherit;
 }
 
 @media screen and (max-width: 63.99875em) {
