@@ -55,7 +55,7 @@ RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
 RUN php artisan config:cache
-RUN php artisan optimize --force
+RUN php artisan optimize
 
 # Regenerate Application Key
 RUN php artisan key:generate
