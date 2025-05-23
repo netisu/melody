@@ -97,7 +97,6 @@ export default {
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
             "@": path.resolve(__dirname, "resources/js"),
-            "vue": 'vue/dist/vue.esm-bundler.js',
             "ziggy-js": path.resolve("vendor/tightenco/ziggy"),
         },
     },
