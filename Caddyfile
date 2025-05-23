@@ -10,7 +10,7 @@
 
 {$SERVER_NAME:localhost}
 
-tls /etc/app/certs/localhost.pem /etc/app/certs/localhost-key.pem
+tls /etc/ssl/cert.pem /etc/ssl/key.pem
 
 log
 route {
