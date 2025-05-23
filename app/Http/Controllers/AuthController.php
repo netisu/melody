@@ -213,16 +213,11 @@ class AuthController extends Controller
 
     public function UserExit(): RedirectResponse
     {
-        if (Auth::check() && Auth::user()->isStaff()) {
-            Auth::guard('admin')->logout();
-            Auth::guard('web')->logout();
-        } else {
-            Auth::guard('web')->logout();
-        }
+        Auth::guard('web')->logout();
 
         Inertia::clearHistory();
 
-        return redirect()->intended(route("auth.login.page"))->with([
+        return redirect()->intended(route("Welcome"))->with([
             'type' => 'success',
             'message' => 'You have logged out.'
         ]);

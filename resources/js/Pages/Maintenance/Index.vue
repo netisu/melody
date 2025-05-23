@@ -3,14 +3,13 @@ import axios from "axios"; // Import Axios
 import { route } from 'ziggy-js';
 
 import AppHead from "@/Components/AppHead.vue";
-import { usePage } from "@inertiajs/vue3";
-import "../../../css/style.css";
+import { router, usePage } from '@inertiajs/vue3';
 
 const { props } = usePage<any>();
 </script>
 <style>
 body {
-  background-image: url('/assets/img/site-banners/netisuxTyphoon.png') !important; 
+  background-image: url('/assets/img/site-banners/netisuxTyphoon.png') !important;
   background-repeat: no-repeat;
 }
 .fa-gradient.text-success {
@@ -161,6 +160,7 @@ export default {
       axios
         .post(route(`maintenance.authenticate.password`), { password: this.password })
         .then((response) => {
+            router.visit(route('Welcome'));
           if (response.data.error) {
             this.errorMsg = response.data.error;
             this.showError = true;

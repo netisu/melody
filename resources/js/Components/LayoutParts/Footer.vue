@@ -10,27 +10,14 @@ defineProps({
 
 <template>
     <!-- ======= Footer ======= -->
-    <footer class="footer footer-fixed">
+    <footer class="footer">
         <main
-        :class="{
-            'container-navbar': !props.site.frontend.sidebar_menu || isLanding,
-            'container': props.site.frontend.sidebar_menu
-        }"
-        class="py-3 mb-5">
+        class="container py-3">
             <div class="align-middle grid-x grid-margin-x">
-                <div class="mx-auto cell show-for-small-only">
-                    <div class="gap-3 flex-container align-right align-center-sm">
-                        <img :src="props.site.icon" width="50" height="50" />
-                    </div>
-                </div>
-                <div class="mx-auto cell small-1 show-for-medium">
-                    <div class="gap-3 flex-container align-right align-center-sm">
-                        <img :src="props.site.icon" width="50" height="50" />
-                    </div>
-                </div>
                 <div class="cell large-6">
                     <div class="mb-1 text-lg fw-semibold mb-lg-0">
                         Copyright &copy; {{ new Date().getFullYear() }}
+                        <img :src="props.site.icon" width="24" style="margin-top: -2px"  />
                         {{ props.site.name }}. All rights reserved.
                     </div>
                     <div class="mb-2 flex-container-lg mb-lg-0">
@@ -43,29 +30,25 @@ defineProps({
                         <div class="text-xs text-muted fw-semibold">{{ usePage<any>().props.site.version }}</div>
                     </div>
                 </div>
-                <div class="cell large-5">
+                <div class="cell large-6">
                     <div class="gap-3 flex-container align-right align-center-sm">
-                        <button href="#" class="text-2xl footer-media text-muted" content="Language"
-                            @click="showModal('LanguageSettings')" v-tippy>
-                            <i class="fad fa-language"></i>
-                        </button>
-                        <a v-if="props.site.socials.discord" :href="props.site.socials.discord" class="text-2xl footer-media text-muted"
+                        <a v-show="props.site.socials.discord" :href="props.site.socials.discord" class="text-2xl footer-media text-muted"
                             content="Join us on Discord" v-tippy>
                             <i class="fab fa-discord"></i>
                         </a>
-                        <a v-if="props.site.socials.twitter" :href="props.site.socials.twitter" class="text-2xl footer-media text-muted"
+                        <a v-show="props.site.socials.twitter" :href="props.site.socials.twitter" class="text-2xl footer-media text-muted"
                             content="Follow us on Twitter" v-tippy>
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a v-if="props.site.socials.twitch" :href="props.site.socials.twitch" class="text-2xl footer-media text-muted"
+                        <a v-show="props.site.socials.twitch" :href="props.site.socials.twitch" class="text-2xl footer-media text-muted"
                             content="Follow us on Twitch" v-tippy>
                             <i class="fab fa-twitch"></i>
                         </a>
-                        <a v-if="props.site.socials.tiktok" :href="props.site.socials.tiktok" class="text-2xl footer-media text-muted"
+                        <a v-show="props.site.socials.tiktok" :href="props.site.socials.tiktok" class="text-2xl footer-media text-muted"
                             content="Follow us on TikTok" v-tippy>
                             <i class="fab fa-tiktok"></i>
                         </a>
-                        <a v-if="props.site.socials.facebook" :href="props.site.socials.facebook" class="text-2xl footer-media text-muted"
+                        <a v-show="props.site.socials.facebook" :href="props.site.socials.facebook" class="text-2xl footer-media text-muted"
                             content="Follow us on Facebook" v-tippy>
                             <i class="fab fa-facebook"></i>
                         </a>

@@ -1,14 +1,9 @@
 .card {
     background: var(--section-bg);
-    border: 2px dashed var(--section-border-color);
-    box-shadow:
-        0 0.5em 1em -0.125em rgb(var(--section-shadow), 0.1),
-        0 0px 0 1px,
-        rgb(var(--section-shadow), 0.02);
+    border: 1px solid var(--section-border-color);
+    box-shadow: 0 1px 2px rgb(var(--section-shadow), 0.1);
     border-radius: var(--rounded-lg);
-    position: relative;
 }
-
 .card-body {
     padding: 18px;
 }
@@ -55,6 +50,5 @@
     border-bottom-width: 4px;
 }
 .card-status.online {
-    border-bottom-style: solid;
     border-bottom-color: var(--success-500);
 }

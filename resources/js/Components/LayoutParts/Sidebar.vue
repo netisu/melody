@@ -179,81 +179,7 @@ watch(
 );
 </script>
 <template>
-    <nav v-if="props.site.frontend.sidebar_menu" class="sidebar show-for-large" id="sidebar">
-        <ul class="sidebar-nav">
-            <div class="hide-for-large" v-if="!props.auth.user">
-                <li class="side-item side-title">Account</li>
-                <SideLink :link="route('auth.register.page')" :ActiveLink="route('auth.register.page')">
-                    <i class="fad fa-user-plus side-icon"></i>
-                    <span>Get Started</span>
-                </SideLink>
-                <SideLink :link="route('auth.login.page')" :ActiveLink="route('auth.login.page')">
-                    <i class="fad fa-sign-in side-icon"></i>
-                    <span>Log In</span>
-                </SideLink>
-            </div>
-            <SideLink :link="route('Welcome')" :ActiveLink="props.auth.user ? 'my.dashboard.page' : 'Welcome'">
-                <i class="fad fa-home side-icon"></i>
-                <span> {{ props.auth.user ? "Dashboard" : "Welcome" }} </span>
-            </SideLink>
-            <template v-for="sidesections in sidebarsections" class="hide-for-large">
-                <li class="side-item side-title">
-                    {{ sidesections[lang].name }}
-                </li>
-                <!-- Iterate over links within the current section -->
-                <SideLink class="side-item" v-for="sidelink in sidebar.filter(
-                    (link) => link.section === sidesections.en.name
-                )" :link="sidelink.url" :ActiveLink="sidelink.ActiveLink">
-                    <i class="side-icon" :class="sidelink.icon"></i><span>{{ sidelink[lang].title }}</span>
-                </SideLink>
-            </template>
-            <div v-if="usePage<any>().props.auth.user">
-                <div v-if="usePage<any>().props.auth.user.mainSpaces">
-                <li class="side-item side-title">
-                    Main Spaces
-                </li>
-                <li v-if="usePage<any>().props.auth.user.mainSpaces"
-                    v-for="(space, index) in usePage<any>().props.auth.user.mainSpaces" :key="index" class="side-item">
-                    <Link :href="route(`spaces.view`, { id: space.id, slug: space.slug })"
-                        class="side-link side-link-has-img">
-                    <span class="side-img">
-                        <v-lazy-image class="headshot" :src="space.thumbnail" />
-                    </span>
-                    <span>{{ space.name }}</span>
-                    </Link>
-                </li>
-                </div>
-                <li class="side-item side-title">
-                    Joined Spaces
-                </li>
-                <li v-if="usePage<any>().props.auth.user.navSpaces.length"
-                    v-for="(space, index) in usePage<any>().props.auth.user.navSpaces" :key="index" class="side-item">
-                    <Link :href="route(`spaces.view`, { id: space.id, slug: space.slug })"
-                        class="side-link side-link-has-img">
-                    <span class="side-img">
-                        <v-lazy-image class="headshot" :src="space.thumbnail" />
-                    </span>
-                    <span>{{ space.name }}</span>
-                    </Link>
-                </li>
-                <li v-else class="side-item">
-                    <Link :href="route('spaces.page')" class="side-link side-link-has-img">
-                    <button class="gap-2 align-middle flex-container squish" style="outline: none;">
-                        <span class="side-img">
-                            <i class="fad fa-square-xmark" />
-                        </span>
-
-                        <div class="text-start">
-                            <div class="text-sm fw-semibold text-body">No spaces found</div>
-                            <div class="mb-1 text-xs text-muted fw-semibold"> Join a space here </div>
-                        </div>
-                    </button>
-                    </Link>
-                </li>
-            </div>
-        </ul>
-    </nav>
-    <div v-if="image" class="profile-banner" :class="{ special: OfficialImageBackground }">
+    <div v-show="image" class="profile-banner" :class="{ special: OfficialImageBackground }">
         <img class="masoqi" :style="{
             backgroundImage: `url(${image})`,
             backgroundRepeat: OfficialImageBackground ? 'repeat' : 'no-repeat',
@@ -263,13 +189,12 @@ watch(
     </div>
     <FlashMessages :flash="JSONALERT" />
     <slot name="SuperBanner" v-if="superBanActive" />
-    <main :class="{
-        'container-alert': props.site_config.announcement,
-        'container-navbar': !props.site.frontend.sidebar_menu,
-        'container': props.site.frontend.sidebar_menu && props.site_config.announcement,
-    }">
-        <div v-if="alertsEnabled">
-            <div v-if="adblock" class="py-2 mb-4 text-center alert alert-danger fw-semibold">
+    <main class="container">
+        <div v-show="alertsEnabled" style="
+    z-index: 2;
+    position: relative;
+">
+            <div v-show="adblock" class="py-2 mb-4 text-center alert alert-danger fw-semibold">
                 <div class="gap-2 align-middle flex-container align-justify">
                     <i class="text-lg far fa-triangle-exclamation pe-2"></i>
                     <div>
@@ -280,7 +205,7 @@ watch(
                     <i class="text-lg far fa-triangle-exclamation pe-2"></i>
                 </div>
             </div>
-            <div v-if="props.site_config.in_maintenance" class="py-2 mb-4 text-center text-white alert alert-maintenance">
+            <div v-show="props.site_config.in_maintenance" class="py-2 mb-4 text-center text-white alert alert-maintenance">
                 <div class="gap-2 align-middle flex-container align-justify">
                     <i class="text-lg fad fa-hammer pe-2"></i>
                     <div>
@@ -311,42 +236,6 @@ watch(
         </div>
         <div class="grid-x grid-margin-x align-center">
             <slot />
-            <div id="chat-container" class="chat-container chat-vis focused" style="right: 66px; z-index: 1060"
-                v-if="chatToggle">
-                <div class="chat-windows-header chat-header bg-info hover" @click="chatToggle = !chatToggle">
-                    <div class="chat-header-action">
-                        <i class="chat-icon fad fa-message-xmark chat-link-icon"></i>
-                        <i class="chat-icon fad fa-cog chat-link-icon"></i>
-                        <i class="chat-icon fad fa-gamepad-modern chat-link-icon"></i>
-                    </div>
-                    <div class="chat-header-label">
-                        <span class="chat-caption-header text-overflow chat-header-title">
-                            Aeo
-                        </span>
-                    </div>
-                </div>
-                <div class="chat-main">
-                    <div class="chat-body card-chat card-chat-body no-corners">
-                        <div v-for="message in messages"
-                            class="gap-2 p-2 mb-2 align-middle squish flex-container align-justify">
-                            <div class="gap-2 align-middle flex-container">
-                                <img src="/assets/img/dummy_headshot.png" class="headshot" width="50" />
-                                <div class="w-100">
-                                    <div class="fw-semibold">
-                                        {{ message.displayname }}
-                                    </div>
-                                    <div class="text-sm fw-semibold text-muted">
-                                        @{{ message.username }}
-                                    </div>
-                                    <div class="text-xs fw-semibold text-muted">
-                                        {{ message.DateHum }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
     <!-- End #main -->

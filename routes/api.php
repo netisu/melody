@@ -113,6 +113,7 @@ Route::group(['as' => 'api.'], function () {
             return redirect()->to(config('Values.production.domains.main'));
         });
         Route::post('/banner/upload', [SettingsController::class, 'uploadBanner'])->name('uploadBanner');
+        Route::post('/banner/visible', [SettingsController::class, 'bannerVisibility'])->name('bannerVisibility');
 
         Route::post('/profile-picture/upload', [SettingsController::class, 'uploadProfilePicture'])->name('uploadProfilePicture');
         Route::post('/change-country/{country}', [SettingsController::class, 'changeCountry'])->name('changeCountry');

@@ -112,18 +112,18 @@ const uploadBannerImage = () => {
     });
 };
 
-const enableBannerVisibility = (visible) => {
-    axios.post(route('api.settings.bannerVisibility'), { value: visible })
+const enableBannerVisibility = () => {
+    axios.post(route('api.settings.bannerVisibility'), { value: !bannerVisibilityEnabled.value })
         .then(response => {
-            bannerVisibilityEnabled.value = visible;
+            bannerVisibilityEnabled.value = !bannerVisibilityEnabled.value;
             console.log('Banner visibility updated:', response);
         })
         .catch(error => {
             console.error('Error changing banner visibility:', error);
             // Revert the toggle state on error
-            bannerVisibilityEnabled.value = !visible;
+            bannerVisibilityEnabled.value = !bannerVisibilityEnabled.value;
         });
-    console.log('Banner visibility:', visible);
+    console.log('Banner visibility:', bannerVisibilityEnabled.value);
 };
 
 const currentTheme = localStorage.getItem('theme');
@@ -238,7 +238,7 @@ const isVerifiedEmail = computed(() => {
                         <div class="text-xs fw-bold text-muted text-uppercase">
                             Visibility
                         </div>
-                        <button @change="enableBannerVisibility($event.target.checked)" class="btn btn-success btn-sm w-100"
+                        <button @click="enableBannerVisibility()" class="btn btn-success btn-sm w-100"
                         :disabled="isBannerUploading">
                         {{ bannerVisibilityEnabled ? 'Disable Banner' : 'Enable Banner' }}
                     </button>
@@ -254,13 +254,13 @@ const isVerifiedEmail = computed(() => {
                             @change="handleBannerImageChange">
                         <button type="submit" class="btn btn-primary btn-sm w-100 mt-2"
                             :disabled="isBannerUploading">
-                            <span v-if="isBannerUploading">Uploading...</span>
-                            <span v-else>Upload Banner</span>
+                            <span v-show="isBannerUploading">Uploading...</span>
+                            <span v-show="!isBannerUploading">Upload Banner</span>
                         </button>
-                        <div v-if="uploadProgress > 0 && uploadProgress < 100" class="mt-2">
+                        <div v-show="uploadProgress > 0 && uploadProgress < 100" class="mt-2">
                             Uploading: {{ uploadProgress }}%
                         </div>
-                        <div v-if="uploadError" class="text-xs text-danger mt-2">
+                        <div v-show="uploadError" class="text-xs text-danger mt-2">
                             {{ uploadError }}
                         </div>
                     </form>
@@ -357,9 +357,9 @@ const isVerifiedEmail = computed(() => {
                 </div>
             </div>
         </div>
-        <div class="cell medium-12">
+        <div class="cell medium-12 pb-2">
 
-            <div class="pb-4">
+            <div class="pb-2">
                 <h3 class="text-lg font-medium">
                     <div class=" text-xl fw-semibold">Settings</div>
                 </h3>
@@ -383,8 +383,8 @@ const isVerifiedEmail = computed(() => {
         </div>
         <div class="cell medium-9">
             <template v-for="(categoryData, categoryName) in categories" :key="categoryName">
-                <div v-if="categoryName === ActiveCategory">
-                    <div class="pb-4">
+                <div v-show="categoryName === ActiveCategory">
+                    <div class="pb-2">
                         <h3 class="text-lg fw-semibold">
                             <i :class="categoryData.icon"></i>
 
@@ -419,10 +419,10 @@ const isVerifiedEmail = computed(() => {
                         <div class="text-xl" style="line-height: 16px">
                             <div class="mb-1 flex-container align-middle gap-1 fw-semibold">
                                 {{ usePage<any>().props.auth.user.display_name }}
-                                    <i v-if="usePage<any>().props.auth.user.staff"
+                                    <i v-show="usePage<any>().props.auth.user.staff"
                                         :content="usePage<any>().props.auth.user.staff.Position"
                                         v-tippy="{ placement: 'bottom' }" class="fad fa-gavel text-danger"></i>
-                                    <i v-else-if="usePage<any>().props.auth.user.settings.beta_tester"
+                                    <i v-show="usePage<any>().props.auth.user.settings.beta_tester"
                                         class="fad fa-hard-hat text-success"></i>
                                     <v-lazy-image
                                         :src="'/assets/img/flags/' + usePage<any>().props.auth.user.settings.country_code + '.svg'"
@@ -744,7 +744,7 @@ const isVerifiedEmail = computed(() => {
 
                         <div id="theme-switcher-container" class="grid-x grid-margin-x grid-padding-y">
                             <div v-for="(theme, index) in themes" class="cell large-6" :key="index">
-                                <!-- Move v-if inside the loop -->
+                                <!-- Move v-show inside the loop -->
                                 <div :class="{ active: currentTheme === theme.lowercase }"
                                     class="mb-2 theme-selection squish card card-body card-inner mb-lg-0"
                                     :id="theme.lowercase + '-theme-btn'" @click="setTheme(theme.lowercase)">

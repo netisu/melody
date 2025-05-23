@@ -42,12 +42,12 @@ const AttemptUpload = () => {
         <div class="cell medium-5 px-4">
             <div class="mb-2">
                 <div class="text-2xl fw-semibold">Create Item</div>
-                <div class="text-sm text-danger fw-semibold" v-if="usePage<any>().props.auth.user.staff">
+                <div class="text-sm text-danger fw-semibold" v-show="usePage<any>().props.auth.user.staff">
                     <i class="fad fa-exclamation-triangle"></i> Staff can create content here, but for privileged items,
                     use the admin portal.
                 </div>
 
-                <div class="text-sm text-muted fw-semibold" v-else>
+                <div class="text-sm text-muted fw-semibold" v-show="!usePage<any>().props.auth.user.staff">
                     Need the template? Download it
                     <a href="#" class="d-inline-block squish">here</a>
                 </div>

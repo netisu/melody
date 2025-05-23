@@ -11,6 +11,17 @@ use App\{
     Models\UserSettings,
     Rules\MatchOldPassword,
 };
+use App\Models\Avatar;
+use App\Models\Followers;
+use App\Models\ForumReply;
+use App\Models\ForumThread;
+use App\Models\Item;
+use App\Models\ItemPurchase;
+use App\Models\Message;
+use App\Models\Space;
+use App\Models\SpaceMembers;
+use App\Models\Status;
+use App\Models\UsernameHistory;
 use Illuminate\{
     Contracts\Auth\MustVerifyEmail,
     Validation\ValidationException,
@@ -42,7 +53,7 @@ class SettingsController extends Controller
      * Display the user's profile form.
      */
     public function changeCountry($country)
-    {   
+    {
         // Get the user's settings record
         $settings = UserSettings::where('id', Auth::id())->first();
 
@@ -114,7 +125,7 @@ class SettingsController extends Controller
         // Get the user
 
         // Get the user's settings record
-        $settings = UserSettings::where('id', Auth::id());
+        $settings = UserSettings::where('id', Auth::id())->first();
 
         // Get the image from the request
         $image = $request->image;
@@ -143,15 +154,17 @@ class SettingsController extends Controller
 
         return redirect()->back();
     }
+
     public function bannerVisibility(Request $request)
     {
+
         $request->validate([
             'value' => 'required|boolean',
         ]);
 
-        $user = Auth::user();
-        $user->banner_visibility = $request->value;
-        $user->save();
+        $settings = UserSettings::where('id', Auth::id())->first();
+        $settings->profile_banner_enabled = $request->value;
+        $settings->save();
 
         return response()->json(['message' => 'Banner visibility updated successfully']);
     }
@@ -176,7 +189,7 @@ class SettingsController extends Controller
             $imgName = bin2hex(random_bytes(22));
             $this->uploadTempImage($request->file('image'), $imgName);
 
-            $settings->profile_banner_enabled = false; 
+            $settings->profile_banner_enabled = false;
             $settings->profile_banner_pending = true;
             $settings->profile_banner_url = env(key: 'STORAGE_URL') . '/uploads/pending' . $imgName . '.png'; // Store the public path in the database
             $settings->save();
@@ -201,21 +214,45 @@ class SettingsController extends Controller
             'password' => ['required', 'current-password'],
         ]);
 
-        $user = $request->user();
-
-        $ban = new UserBan;
-        $ban->user_id = $user->id;
-        $ban->banner_id = config("Values.system_account_id");
-        $ban->type = "self-deletion";
-        $ban->active = true;
-        $ban->note = "You have requested deletion of your account. To restore in a timely manner, Please contact support.";
-        $ban->length = Carbon::createFromTimestamp(time() + 31536000)->format('Y-m-d H:i:s');
-        $ban->save();
-
-        Auth::guard('web')->logout();
-
+        $user = User::where('id', Auth::id())->first();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        Auth::guard('web')->logout();
+        // Forum Related Deletion
+        ForumReply::where('creator_id', $user->id)->delete();
+        ForumThread::whereIn('post_id', $user->id)->delete();
+
+        // Item Related Deletion
+        Item::where('creator_id', $user->id)->delete();
+        ItemPurchase::where('buyer_id', $user->id)->delete();
+
+        // Follower Related Deletion
+        Followers::where('follower_id', $user->id)->delete();
+        Followers::where('following_id', $user->id)->delete();
+
+        // Message Related Deletion
+        Message::where('sent_from', $user->id)->delete();
+        Message::where('sent_to', $user->id)->delete();
+
+        // Space Related Deletion
+        Space::where('owner_id', $user->id)->delete();
+        SpaceMembers::where('user_id', $user->id)->delete();
+
+        // Status Related Deletion
+        Status::where('creator_id', $user->id)->delete();
+
+        // Avatar Related Deletion
+        Avatar::where('user_id', $user->id)->delete();
+
+        // Clear User Bans
+        UserBan::where('user_id', $user->id)->delete();
+
+        // Setting Related Deletion
+        UserSettings::where('user_id', $user->id)->delete();
+        UsernameHistory::where('user_id', $user->id)->delete();
+
+        $user->delete();
 
         return back()->with('message', 'Account Deleted Successfully');
     }

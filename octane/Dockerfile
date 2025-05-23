@@ -21,13 +21,13 @@ RUN install-php-extensions \
     pdo \
     pdo_mysql \
     redis
-    
+
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN groupadd --system --gid 1000 $WWWGROUP || true && \
     useradd --system --uid 1000 --gid $WWWGROUP --home /var/www/html --shell /bin/bash $WWWUSER || true
-        
+
 # Copy Application and Configuration
 COPY . /app
 COPY ./octane/start-container /usr/local/bin/start-container
@@ -54,6 +54,8 @@ RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBU
 RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
+RUN php artisan config:cache
+RUN php artisan optimize --force
 
 # Regenerate Application Key
 RUN php artisan key:generate

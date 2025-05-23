@@ -194,14 +194,14 @@ watch(following, (newValue, oldValue) => {
                     <div class="text-xl" style="line-height: 16px">
                         <div class="mb-1 flex-container align-middle gap-1 fw-semibold">
                             {{ usePage<any>().props.user.display_name }}
-                                <i v-if="usePage<any>().props.user.staff" class="fad fa-gavel text-danger"></i>
-                                <i v-if="usePage<any>().props.user.settings.beta_tester"
+                                <i v-show="usePage<any>().props.user.staff" class="fad fa-gavel text-danger"></i>
+                                <i v-show="usePage<any>().props.user.settings.beta_tester"
                                     class="fad fa-hard-hat text-success"></i>
                                 <v-lazy-image class="headshot"
                                     :src="'/assets/img/flags/' + usePage<any>().props.user.settings.country_code + '.svg'"
                                     alt="Country Flag" style="width: auto;height: 20px;"
                                     src-placeholder="/assets/img/flags/other/pirate.svg" />
-                                <Link v-if="usePage<any>().props.user.settings.primarySpace"
+                                <Link v-show="usePage<any>().props.user.settings.primarySpace"
                                     :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.primarySpace.id, slug: usePage<any>().props.user.settings.primarySpace.slug })">
                                 <v-lazy-image class="headshot"
                                     :src="usePage<any>().props.user.settings.primarySpace.thumbnail" alt="Country Flag"
@@ -237,7 +237,7 @@ watch(following, (newValue, oldValue) => {
                         <i class="fad fa-message"></i>
                         </Link>
 
-                        <a v-if="usePage<any>().props.auth.user.staff" as="button"
+                        <a v-show="usePage<any>().props.auth.user.staff" as="button"
                             :href="route(`admin.users.manage-user`, { id: usePage<any>().props.user.id })"
                             class="text-xl text-danger squish" content="View in Panel"
                             v-tippy="{ placement: 'bottom' }">
@@ -284,7 +284,7 @@ watch(following, (newValue, oldValue) => {
                     </div>
                 </div>
             </div>
-            <Link v-if="usePage<any>().props.user.settings.secondarySpace"
+            <Link v-show="usePage<any>().props.user.settings.secondarySpace"
                 :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.secondarySpace.id, slug: usePage<any>().props.user.settings.secondarySpace.slug })"
                 class="gap-2 p-2 mt-1 mb-2 align-middle card card-inner flex-container">
             <img :src="usePage<any>().props.user.settings.secondarySpace.thumbnail" class="headshot" width="40" />

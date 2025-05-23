@@ -446,7 +446,7 @@ function onImgErrorSmall(id) {
                 Description
             </div>
             <div class="divider mx-1 my-2" />
-            <div class="mb-3 text-md">
+            <div class="mb-3 text-md" style="margin:0px;white-space: pre-wrap;">
                 {{ usePage<any>().props.item.description ? usePage<any>().props.item.description : 'This item does not have a description.' }}
             </div>
             <div class="mb-1 text-xl fw-semibold">

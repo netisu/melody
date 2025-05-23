@@ -37,10 +37,6 @@
         display: inline-block;
     }
 }
-.footer-media:hover .fad.fa-language {
-    transition: all 0.2s;
-    color: var(--warning-800);
-}
 
 .footer-media:hover .fab.fa-discord {
     transition: all 0.2s;

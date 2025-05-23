@@ -6,7 +6,7 @@ import { route } from "ziggy-js";
 </script>
 
 <template>
-    <AppHead pageTitle="Purchase Cancelled" description="Your purchase has been cancelled" :url="route('Welcome')" />
+    <AppHead pageTitle="Purchase Cancelled" description="You have not been charged." :url="route('Welcome')" />
     <Navbar :landing="false" />
     <Sidebar>
         <div class="cell medium-7">

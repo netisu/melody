@@ -130,11 +130,16 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
             ->trialDays(5)
             ->allowPromotionCodes()
             ->checkout([
-                'success_url' => route('your-success-route'),
-                'cancel_url' => route('your-cancel-route'),
+                'success_url' => route('purchase.success'),
+                'cancel_url' => route('purchase.cancelled'),
             ]);
 
         return inertia()->location($checkout->url);
+    });
+    
+    Route::group(['as' => 'purchase.', 'prefix' => 'purchase'], function () {
+            Route::get('/success', [MembershipController::class, 'success'])->name('success');
+            Route::get('/cancelled', [MembershipController::class, 'cancelled'])->name('cancelled');
     });
 
     Route::get('/achievements', [AchievementController::class, 'AchievementList'])->name('acheivements');
@@ -147,7 +152,7 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
 
     Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
 
-        Route::post('logout', [AuthController::class, 'UserExit'])->name('logout');
+        Route::get('logout', [AuthController::class, 'UserExit'])->name('logout');
         Route::get('/set-language/{language}', function ($language) {
             Session::put('locale', $language);
             return redirect()->back();

@@ -17,6 +17,15 @@ class MembershipController extends Controller
         return inertia('Memberships/Index', []);
     }
 
+    public function success()
+    {
+        return inertia('App/PurchaseSuccessful', []);
+    }
+    
+    public function cancelled()
+    {
+        return inertia('App/PurchaseCancelled', []);
+    }
     /**
      * Show the form for creating a new resource.
      *
