@@ -136,7 +136,7 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
 
         return inertia()->location($checkout->url);
     });
-    
+
     Route::group(['as' => 'purchase.', 'prefix' => 'purchase'], function () {
             Route::get('/success', [MembershipController::class, 'success'])->name('success');
             Route::get('/cancelled', [MembershipController::class, 'cancelled'])->name('cancelled');
@@ -162,7 +162,7 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
         Route::group(['middleware' => 'guest'], function () {
             Route::group(['as' => 'login.', 'prefix' => 'login'], function () {
                 // Google login
-                Route::get('/google/v1', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('google');
+                Route::get('/google/v2', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('google');
                 Route::get('callback/google', [GoogleSocialiteController::class, 'handleCallback'])->name('google.validation');
 
                 //  remove (//) If you want Facebook login

@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Country;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
@@ -170,7 +171,7 @@ class AuthController extends Controller
 
 
         if ($user->id === 1) {
-            UserSettings::create([
+            Admin::create([
                 'user_id' => $user->id,
                 'role_id' => 1,
             ]);
@@ -179,6 +180,8 @@ class AuthController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+        return redirect(to: '/my/dashboard');
+
     }
     /**
      * Ensure the login request is not rate limited.
