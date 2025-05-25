@@ -12,7 +12,6 @@ import { createInertiaApp, Head, Link } from "@inertiajs/vue3";
 import Pagination from "./Components/Pagination.vue";
 import AppHead from "./Components/AppHead.vue";
 import { ZiggyVue } from "ziggy-js";
-import { Ziggy } from "./ziggy.js";
 
 if (import.meta.hot) {
     import.meta.hot.accept();
@@ -43,7 +42,7 @@ createInertiaApp({
        setup({ el, App, props, plugin }) {
         createSSRApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue, Ziggy)
+            .use(ZiggyVue)
             .use(VueTippy)
             .use(i18nVue, {
                 resolve: async (lang) => {
