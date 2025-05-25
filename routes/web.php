@@ -52,7 +52,7 @@ if (app()->environment('local') && User::where('id', 1)->exists()) {
     //Auth::loginUsingId(1);
 };
 
-Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->group(function () {
+Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->middleware(['cacheable'])->group(function () {
     Route::group(['as' => 'maintenance.', 'prefix' => 'maintenance'], function () {
         Route::get('/', [MaintenanceController::class, 'show'])->name('page');
         Route::post('/password', [MaintenanceController::class, 'authenticate'])->name('authenticate.password');
