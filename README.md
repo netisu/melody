@@ -1,5 +1,5 @@
 <br>
-<p align="center"><a href="https://netisu.com" target="_blank"><img src="/public/assets/img/logo-theta.svg" width="400" alt="Netisu Logo"></a></p>
+<p align="center"><a href="https://netisu.com" target="_blank"><img src="/public/assets/img/netisu-logo.svg" width="400" alt="Netisu Logo"></a></p>
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 <p align="center"><a href="https://vuejs.org/guide/quick-start.html" target="_blank"><img src="https://raw.githubusercontent.com/vuejs/art/a1c78b74569b70a25300925b4eacfefcc143b8f6/logo.svg" width="100" alt="Vuejs Logo">&nbsp;&nbsp;</a><a href="https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/512px-Typescript_logo_2020.svg.png?20221110153201" width="100" alt="Typescript Logo"></a></p>
 <p align="center">
