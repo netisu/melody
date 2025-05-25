@@ -175,7 +175,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 // AWS ELB Configuration
                 $middleware->trustProxies(
                     at: '*',
-                    headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_TRAEFIK |
+                    headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_TRAEFIK |
                         \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_AWS_ELB
                 );
                 break;
