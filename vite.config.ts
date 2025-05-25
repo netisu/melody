@@ -14,9 +14,9 @@ import vueDevTools from "vite-plugin-vue-devtools";
 import i18n from "laravel-vue-i18n/vite";
 
 export default {
-    build: {
-        target: "esnext", // Target modern JavaScript only
-        minify: "esbuild", // Enable esbuild for minification'
+        build: {
+    target: 'esnext', // Target modern JavaScript only
+    minify: 'esbuild', // Enable esbuild for minification
         rollupOptions: {
             output: {
                 manualChunks(id) {
@@ -26,9 +26,6 @@ export default {
                             .split("node_modules/")[1]
                             .split("/")[0]
                             .toString();
-                    }
-                    if (id.includes("vue") || id.includes("pinia")) {
-                        return "vue";
                     }
                 },
             },
