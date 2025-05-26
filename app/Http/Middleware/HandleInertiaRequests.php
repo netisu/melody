@@ -50,21 +50,9 @@ class HandleInertiaRequests extends Middleware
         }) : null;
 
         return array_merge( parent::share(request: $request), [
-            'ziggy' => fn () => [
-                ...(new Ziggy())->toArray(),
-                'location' => $request->url(),
-            ],
             'site' => config(key: 'Values'),
-            'locale' => function (): string {
-                return app()->getLocale();
-            },
             'locales' => function (): mixed {
                 return config('ActiveLocales');
-            },
-            'language' => function (): mixed {
-                return translations(
-                    resource_path('lang/' . app()->getLocale() . '.json')
-                );
             },
             'auth' => function () use ($request,  $pendingItemsAndSpaces, $notifications): array {
                 $response = [

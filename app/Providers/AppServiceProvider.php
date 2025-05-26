@@ -64,20 +64,6 @@ class AppServiceProvider extends ServiceProvider
                 return app()->getLocale();
             },
             'csrf_token' => csrf_token(),
-            'language' => function () {
-                if (!file_exists(resource_path('lang/' . app()->getLocale()
-                    . '/' . app()->getLocale() . '.json'))) {
-                    return [];
-                }
-                return json_decode(
-                    file_get_contents(
-                        resource_path('lang/' . app()->getLocale() . '/'
-                            . app()->getLocale() . '.json')
-                    ),
-                    true
-                );
-            },
-
         ]);
     }
     public function bootRoute(): void
