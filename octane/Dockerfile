@@ -54,7 +54,7 @@ RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBU
 RUN php artisan event:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
-RUN php artisan optimize
+
 
 # Regenerate Application Key
 RUN php artisan key:generate
