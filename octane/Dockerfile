@@ -109,6 +109,10 @@ RUN install-php-extensions \
     pdo_mysql \
     redis
 
+# Copy Bun executable into the final image
+COPY --from=bun_build /usr/bin/bun /usr/local/bin/bun
+RUN chmod +x /usr/local/bin/bun
+
 # Copy core application files
 COPY . /app
 
