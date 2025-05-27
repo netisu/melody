@@ -10,9 +10,9 @@ WORKDIR /app
 # Copy only composer files to leverage Docker caching
 COPY composer.json composer.lock ./
 
-RUN mkdir storage bootstrap bootstrap/cache bootstrap/ssr storage/framework storage/logs \
-    && cd storage/framework && mkdir sessions views cache && cd ../.. \
-    && chown -R www-data:www-data storage
+RUN mkdir -p storage bootstrap/cache bootstrap/ssr storage/framework/sessions \
+           storage/framework/views storage/framework/cache storage/logs
+
 # Install Composer dependencies for production
 RUN composer install \
     --verbose \
@@ -23,8 +23,7 @@ RUN composer install \
     --no-scripts \
     --no-dev \
     --optimize-autoloader
-COPY . .
-RUN composer dump-autoload -o
+
 # === STAGE 1.5: Generate Laravel Application Assets (including Ziggy) ===
 FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_asset_generation
 
@@ -91,6 +90,9 @@ COPY --from=bun_build /app/public/build /app/public/build
 
 COPY . /app
 
+RUN mkdir -p storage bootstrap/cache bootstrap/ssr storage/framework/sessions \
+           storage/framework/views storage/framework/cache storage/logs
+           
 # Remove build-time artifacts and dev-only files to keep the final image lean
 RUN rm -rf /app/node_modules \
     /app/composer.lock \
