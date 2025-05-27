@@ -12,7 +12,9 @@ COPY composer.json composer.lock ./
 
 # Install Composer dependencies for production
 RUN composer install \
+    --verbose \
     --no-interaction \
+    --ignore-platform-reqs \
     --prefer-dist \
     --no-plugins \
     --no-scripts \
