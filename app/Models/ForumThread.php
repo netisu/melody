@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Models\ForumReply;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\Auth;
+use Laravel\Scout\Searchable;
 
 class ForumThread extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        Searchable;
 
     protected $table = 'forum_threads';
 
@@ -21,6 +22,7 @@ class ForumThread extends Model
     ];
 
     protected $appends = ['DateHum'];
+
     public function searchableAs(): string
     {
         return 'forum_threads_index'; // MeiliSearch index name for threads
