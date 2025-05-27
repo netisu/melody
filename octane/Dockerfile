@@ -121,7 +121,7 @@ RUN install-php-extensions \
 
 # Copy core application files
 COPY . /app
-COPY .env /.env
+COPY .env .env
 
 # Remove build-time artifacts and dev-only files from the final app directory
 RUN rm -rf /app/node_modules \
