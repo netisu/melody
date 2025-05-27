@@ -15,7 +15,6 @@ import i18n from "laravel-vue-i18n/vite";
 
 export default {
     build: {
-        ssr: true,
         target: "esnext", // Target modern JavaScript only
         minify: "esbuild", // Enable esbuild for minification
         rollupOptions: {
