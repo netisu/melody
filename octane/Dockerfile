@@ -9,7 +9,9 @@ WORKDIR /app
 
 # Copy only composer files to leverage Docker caching
 COPY composer.json composer.lock ./
-
+RUN mkdir storage storage/framework storage/logs \
+    && cd storage/framework && mkdir sessions views cache && cd ../.. \
+    && chown -R www-data:www-data storage
 # Install Composer dependencies for production
 RUN composer install \
     --verbose \
@@ -27,9 +29,9 @@ FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_asset_generation
 WORKDIR /app
 COPY . .
 COPY --from=composer_dependencies /app/vendor /app/vendor
-RUN chown -R frankenphp:frankenphp vendor \
-    && chmod -R ug+rwx vendor
+
 RUN php artisan ziggy:generate --path=resources/js/ziggy.js
+
 RUN php artisan event:cache \
     && php artisan route:cache \
     && php artisan view:cache \
@@ -113,6 +115,7 @@ RUN php artisan key:generate
 
 # Make entrypoint script executable
 RUN chmod +x /usr/local/bin/start-container
+
 
 # Set permissions for Laravel storage, cache, and vendor directories.
 RUN chown -R frankenphp:frankenphp storage bootstrap/cache vendor \
