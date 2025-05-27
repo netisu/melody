@@ -8,7 +8,6 @@ import "../css/style.css";
 import { createSSRApp, type DefineComponent, h } from "vue";
 import { i18nVue } from "laravel-vue-i18n";
 import { ZiggyVue } from 'ziggy-js';
-import { Ziggy } from './ziggy.js';
 import { Skeletor } from "vue-skeletor";
 import AppHead from "./Components/AppHead.vue";
 import createServer from "@inertiajs/vue3/server";
@@ -42,7 +41,7 @@ createServer((page) =>
             ),
         setup({ App, props, plugin }) {
             return createSSRApp({ render: () => h(App, props) })
-                .use(ZiggyVue, Ziggy)
+                .use(ZiggyVue)
                 .use(plugin)
                 .use(VueTippy)
                 .component("Skeletor", Skeletor)

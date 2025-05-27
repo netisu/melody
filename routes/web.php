@@ -52,7 +52,7 @@ if (app()->environment('local') && User::where('id', 1)->exists()) {
     //Auth::loginUsingId(1);
 };
 
-Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->group(function () {
+Route::domain(app()->environment('production') ? config('Values.production.domains.main') : null)->middleware(['cacheable'])->group(function () {
     Route::group(['as' => 'maintenance.', 'prefix' => 'maintenance'], function () {
         Route::get('/', [MaintenanceController::class, 'show'])->name('page');
         Route::post('/password', [MaintenanceController::class, 'authenticate'])->name('authenticate.password');
@@ -162,7 +162,7 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
         Route::group(['middleware' => 'guest'], function () {
             Route::group(['as' => 'login.', 'prefix' => 'login'], function () {
                 // Google login
-                Route::get('/google/v1', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('google');
+                Route::get('/google/v2', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('google');
                 Route::get('callback/google', [GoogleSocialiteController::class, 'handleCallback'])->name('google.validation');
 
                 //  remove (//) If you want Facebook login

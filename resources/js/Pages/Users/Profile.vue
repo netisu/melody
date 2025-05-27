@@ -201,7 +201,7 @@ watch(following, (newValue, oldValue) => {
                                     :src="'/assets/img/flags/' + usePage<any>().props.user.settings.country_code + '.svg'"
                                     alt="Country Flag" style="width: auto;height: 20px;"
                                     src-placeholder="/assets/img/flags/other/pirate.svg" />
-                                <Link v-show="usePage<any>().props.user.settings.primarySpace"
+                                <Link v-if="usePage<any>().props.user.settings.primarySpace"
                                     :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.primarySpace.id, slug: usePage<any>().props.user.settings.primarySpace.slug })">
                                 <v-lazy-image class="headshot"
                                     :src="usePage<any>().props.user.settings.primarySpace.thumbnail" alt="Country Flag"
@@ -284,7 +284,7 @@ watch(following, (newValue, oldValue) => {
                     </div>
                 </div>
             </div>
-            <Link v-show="usePage<any>().props.user.settings.secondarySpace"
+            <Link v-if="usePage<any>().props.user.settings.secondarySpace"
                 :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.secondarySpace.id, slug: usePage<any>().props.user.settings.secondarySpace.slug })"
                 class="gap-2 p-2 mt-1 mb-2 align-middle card card-inner flex-container">
             <img :src="usePage<any>().props.user.settings.secondarySpace.thumbnail" class="headshot" width="40" />
@@ -359,7 +359,7 @@ watch(following, (newValue, oldValue) => {
             </div>
         </div>
         <div class="cell medium-6">
-            <div v-if="ActiveCategory === 'Posts'">
+            <div v-show="ActiveCategory === 'Posts'">
                 <div class="mb-1 text-xl fw-semibold">Posts</div>
                 <div class="mb-3 card card-body">
                     <div v-if="!statuses?.['data']?.['length']" class="section">
@@ -447,7 +447,7 @@ watch(following, (newValue, oldValue) => {
                 <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
             </div>
 
-            <div v-if="ActiveCategory === 'Inventory'">
+            <div v-show="ActiveCategory === 'Inventory'">
                 <span class="text-xl fw-semibold">Current Outfit</span>
                 <div class="grid-x grid-margin-x">
                     <div class="text-center cell medium-3 align-left">
@@ -625,7 +625,7 @@ watch(following, (newValue, oldValue) => {
                     </div>
                 </div>
             </div>
-            <div v-if="ActiveCategory === 'Spaces'">
+            <div v-show="ActiveCategory === 'Spaces'">
                 <div class="mb-1 text-xl fw-semibold">Spaces</div>
                 <div class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
@@ -654,7 +654,7 @@ watch(following, (newValue, oldValue) => {
                     </div>
                 </div>
             </div>
-            <div v-if="ActiveCategory === 'Followers'" class="my-2">
+            <div v-show="ActiveCategory === 'Followers'" class="my-2">
                 <div class="mb-1 text-xl fw-semibold">Followers</div>
                 <div v-if="!usePage<any>().props.user.followers?.['data']?.['length']" class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
@@ -701,12 +701,12 @@ watch(following, (newValue, oldValue) => {
                         </div>
                     </div>
                 </div>
-                <div v-if="usePage<any>().props.user.followers?.['data']?.['length']" class="mx-3 my-3 divider"></div>
-                <Pagination v-if="usePage<any>().props.user.followers?.['data']?.['length']"
+                <div v-show="usePage<any>().props.user.followers?.['data']?.['length']" class="mx-3 my-3 divider"></div>
+                <Pagination v-show="usePage<any>().props.user.followers?.['data']?.['length']"
                     v-bind:pagedata="usePage<any>().props.user.followers">
                 </Pagination>
             </div>
-            <div v-if="ActiveCategory === 'Following'" class="my-2">
+            <div v-show="ActiveCategory === 'Following'" class="my-2">
                 <div class="mb-1 text-xl fw-semibold">Following</div>
                 <div v-if="!usePage<any>().props.user.following?.['data']?.['length']" class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
@@ -765,7 +765,7 @@ watch(following, (newValue, oldValue) => {
             <ul class="tabs flex-dir-column">
                 <li v-for="(sectionItems, sectionName) in categorizedItems" class="tab-item" :key="sectionName">
                     <span class="text-xs fw-semibold text-muted text-uppercase">{{ sectionName }}</span>
-                    <a href="#" v-for="category in sectionItems" @click="setActiveCategory(category)"
+                    <a  v-for="category in sectionItems" @click="setActiveCategory(category)"
                         class="tab-link squish" :class="{ active: category === ActiveCategory }" :key="category"> {{
                             capitalized(category) }}</a>
                 </li>

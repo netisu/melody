@@ -8,16 +8,22 @@ use Exception;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Models\UserSettings;
 use Illuminate\Http\Response;
+use Inertia\Inertia;
+use Throwable;
+use Illuminate\Auth\Events\Registered;
+use App\Models\Admin;
 
 class GoogleSocialiteController extends Controller
 {
-    public function redirectToGoogle(): Response
+    public function redirectToGoogle()
     {
-        $redirectUrl = Socialite::driver(driver: 'google')->stateless()->redirect();
-        return response(content: '', status: 409)->header(key: 'X-Inertia-Location', values: $redirectUrl);
+        $socialiteRedirectResponse = Socialite::driver('google')->redirect();
+        $redirectUrl = $socialiteRedirectResponse->getTargetUrl();
+        return Inertia::location($redirectUrl);
     }
 
     /**
@@ -25,35 +31,57 @@ class GoogleSocialiteController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
      */
-    public function handleCallback(): RedirectResponse
+    public function handleCallback(): JsonResponse|RedirectResponse
     {
         try {
+            // Get the user information from Google
             $googleUser = Socialite::driver(driver: 'google')->user();
-            $user = User::where(column: 'email', operator: $googleUser->email)->first();
+        } catch (Throwable $e) {
+            return response()->json([
+                'type' => 'danger',
+                'message' => 'Google authentication failed.'
+            ]);
+        }
 
-            if (!$user) {
-                Abort(code: 404);
-            };
+        $existingUser  = User::where(column: 'email', operator: $googleUser->email)->first();
+
+        if ($existingUser) {
+            return response()->json([
+                'type' => 'danger',
+                'message' => 'You already have an account under your google email.'
+            ]);
+        } else {
             $newUser = User::create(attributes: [
-                'display_name' => $user->username,
-                'username' => $user->username,
-                'email' => $user->email,
-                'social_id' => $user->id,
-                'social_type' => 'google',
+                'username' => $googleUser->username,
+                'display_name' => $googleUser->username,
+                'email' => $googleUser->email,
+                'email_verified_at' => now(),
                 'password' => Hash::make(value: Str::random(length: 10)),
+                'birthdate' => $googleUser->birthdate,
+                'status' => 'Hey, Im new to ' . config('Values.name'),
+                'about_me' => 'Greetings! Im new to ' . config('Values.name'),
+                'social_id' => $googleUser->id,
+                'social_type' => 'google',
             ]);
 
             $newUser->createDefaultAvatar();
 
             UserSettings::create([
-                'user_id' => $user->id,
+                'user_id' => $newUser->id,
             ]);
+
+            if ($newUser->id === 1) {
+                Admin::create([
+                    'user_id' => $newUser->id,
+                    'role_id' => 1,
+                ]);
+            }
+
+            event(new Registered($newUser));
 
             Auth::login(user: $newUser);
 
             return redirect(to: '/my/dashboard');
-        } catch (Exception $e) {
-            dd(vars: $e->getMessage());
         }
     }
 }

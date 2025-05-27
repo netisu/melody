@@ -11,12 +11,12 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import viteImagemin from "vite-plugin-imagemin";
 import compression from "vite-plugin-compression2";
 import vueDevTools from "vite-plugin-vue-devtools";
-import i18n from 'laravel-vue-i18n/vite';
+import i18n from "laravel-vue-i18n/vite";
 
 export default {
-    build: {
-        target: "esnext", // Target modern JavaScript only
-        minify: "esbuild", // Enable esbuild for minification'
+        build: {
+    target: 'esnext', // Target modern JavaScript only
+    minify: 'esbuild', // Enable esbuild for minification
         rollupOptions: {
             output: {
                 manualChunks(id) {
@@ -97,7 +97,6 @@ export default {
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
             "@": path.resolve(__dirname, "resources/js"),
-            "vue": 'vue/dist/vue.esm-bundler.js',
             "ziggy-js": path.resolve("vendor/tightenco/ziggy"),
         },
     },

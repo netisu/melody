@@ -56,9 +56,9 @@ return Application::configure(basePath: dirname(__DIR__))
             $pendingItemsAndSpaces = $pendingItems->merge($pendingSpaces);
 
             $notifications =  $request->user() ? $request->user()->unreadNotifications()->limit(value: 5)->get()
-            ->each(callback: function ($notification): void {
-                $notification->DateHum = $notification->created_at->diffForHumans();
-            }) : null;
+                ->each(callback: function ($notification): void {
+                    $notification->DateHum = $notification->created_at->diffForHumans();
+                }) : null;
 
             if (app()->environment(['local', 'testing'])) {
                 return $response;
@@ -175,7 +175,12 @@ return Application::configure(basePath: dirname(__DIR__))
                 // AWS ELB Configuration
                 $middleware->trustProxies(
                     at: '*',
-                    headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_TRAEFIK | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_AWS_ELB
+                    headers: \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_TRAEFIK |
+                        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_AWS_ELB
                 );
                 break;
 
@@ -241,6 +246,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => \App\Http\Middleware\Admin::class,
+            'cacheable' => \Spatie\Varnish\Middleware\CacheWithVarnish::class,
+
         ]);
         $middleware->redirectGuestsTo(fn(Request $request) => route('auth.login.page'));
     })->create();

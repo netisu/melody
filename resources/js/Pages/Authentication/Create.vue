@@ -478,7 +478,7 @@ theme, index
                                         </div>
                                     </div>
                                     <div class="gap-2 mb-3 flex-container-lg">
-                                        <button class="mb-2 btn btn-gray btn-block mb-lg-0">
+                                        <Link  as="button" :href="route(`auth.login.google`)" class="mb-2 btn btn-gray btn-block mb-lg-0">
                                             <img src="/assets/img/google.png" width="20" alt="google_logo" class="me-1"
                                                 style="
                                                     margin-top: -3px;
@@ -488,11 +488,11 @@ theme, index
                                                     );
                                                 " />
                                             Google Sign Up
-                                        </button>
-                                        <button class="btn btn-discord btn-block">
+                                        </Link>
+                                        <Link as="button" :href="route(`auth.login.google`)" class="btn btn-discord btn-block">
                                             <i class="fab fa-discord me-1"></i>
                                             Discord Sign Up
-                                        </button>
+                                        </Link>
                                     </div>
                                 </div>
                                 <div class="mx-1 my-3 divider"></div>

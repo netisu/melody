@@ -1,9 +1,9 @@
 <?php
 return [
     'name' => 'Netisu',
-    'logo' => '/assets/img/logo-theta.svg',
+    'logo' => '/assets/img/netisu-logo.svg',
     'icon' => '/assets/img/logo.svg',
-    'marketLogo' => '/assets/img/site-banners/market-title.png',
+    'marketLogo' => '/assets/img/netisu-logo.svg',
 
     'in_event' => true,
 

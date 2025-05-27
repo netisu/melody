@@ -607,8 +607,8 @@ const lang = computed<any>(() => props.locale);
                             {{ "Lvl. " + props.auth?.user?.level }}
                         </div>
                     </div>
-                    <i
-                        class="text-sm fad fa-chevron-down text-muted show-for-large"
+                    <i  :class="[isOpen ? 'fa-chevron-up' : 'fa-chevron-down']"
+                        class="text-sm fad text-muted show-for-large"
                     ></i>
                 </button>
             </li>

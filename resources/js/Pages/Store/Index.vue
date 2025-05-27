@@ -73,7 +73,7 @@ provide("selectedSubCategory", selectedSubCategory);
 <template>
     <AppHead pageTitle="Market" description="Level up your style." :url="route(`store.page`)" />
     <Navbar :landing="false" />
-    <Sidebar image="/assets/img/site-banners/market-background.svg" :superBanActive="true"
+    <Sidebar image="null" :superBanActive="true"
         :OfficialImageBackground="true">
         <template #SuperBanner>
             <SuperBanner>
