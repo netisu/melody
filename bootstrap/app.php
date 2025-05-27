@@ -168,7 +168,7 @@ return Application::configure(basePath: dirname(__DIR__))
             replace: \Monicahq\Cloudflare\Http\Middleware\TrustProxies::class
         );
 
-        $environment = env('APP_ENV');
+        $environment = config('app.env');
 
         switch ($environment) {
             case 'production':

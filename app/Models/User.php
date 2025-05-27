@@ -438,10 +438,10 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function thumbnail(): string
     {
-        if (env('APP_ENV') != 'local') {
+        if (config('app.env') != 'local') {
 
-            $url = env(key: 'STORAGE_URL');
-            $image = ($this->avatar()?->image === 'default') ? env('DEFAULT_AVATAR_FILE') : $this->avatar()?->image;
+            $url = config('app.storage.url');
+            $image = ($this->avatar()?->image === 'default') ? config('app.default_avatar_file') : $this->avatar()?->image;
             if ($this->avatar()?->image === 'default') {
                 return "{$image}.png";
             } else {
@@ -458,9 +458,9 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function headshot(): mixed
     {
-        if (env(key: 'APP_ENV') != 'local') {
-            $url = env(key: 'STORAGE_URL');
-            if ($this->settings && $this->settings->profile_picture_enabled != false) {
+        if (config('app.env') != 'local') {
+            $url = config('app.storage.url');
+            if ($this->settings && $this->settings->profile_picture_pending != false && $this->settings->profile_picture_enabled != false) {
                 $imageUrl = $this->settings->profile_picture_url;
 
                 // Check if profile_picture_url doesn't contain an external domain
@@ -471,7 +471,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
                     return $imageUrl;
                 }
             } else {
-                $image = ($this->avatar()?->image === 'default') ? env(key: 'DEFAULT_AVATAR_FILE') : $this->avatar()?->image;
+                $image = ($this->avatar()?->image === 'default') ? config('app.default_avatar_file') : $this->avatar()?->image;
                 if ($this->avatar()?->image === 'default') {
                     return "{$image}_headshot.png";
                 } else {

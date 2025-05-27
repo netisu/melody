@@ -30,14 +30,14 @@ class Roles
                 'ip' => $request->ip(),
             ]);
         };
-        
+
         if (Auth::check() && !UserSettings::where(['user_id' => Auth::id()])->exists()) {
             $user = UserSettings::create([
                 'user_id' => Auth::id(),
             ]);
         };
 
-        if (env('APP_ENV') != 'local') {
+        if (config('app.env') != 'local') {
             if (Auth::check() && config('Values.in_testing_phase') && $user->settings->beta_tester !== true) {
                 $user = UserSettings::where('id', Auth::id())->update(['beta_tester' => true]);
             };

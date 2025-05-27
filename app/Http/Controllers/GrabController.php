@@ -61,7 +61,7 @@ class GrabController extends Controller
                 'color_left_leg' => $user->avatar()->color_left_leg,
                 'color_right_leg' => $user->avatar()->color_right_leg,
                 'thumbnail' => $user->thumbnail(),
-                'current_face' => env('STORAGE_URL') . (
+                'current_face' => config('app.storage.url') . (
                     $user->avatar()->face ? '/uploads/' . getItemHash($user->avatar()->face) . ".png" : '/assets/default.png'
                 ),
             ],
@@ -163,7 +163,7 @@ class GrabController extends Controller
                 $avatar->{"color_{$request->body_part}"} = $request->color;
                 $avatar->save();
                 Log::info('Saving Color for:' . $avatar->user_id);
-            
+
                 Log::info('About to call $this->regenerate() for user ID: ' . $avatar->user_id);
                 $this->regeneratewithID($avatar->user_id);
                 \Log::info('$this->regenerate() called for user ID: ' . $avatar->user_id);

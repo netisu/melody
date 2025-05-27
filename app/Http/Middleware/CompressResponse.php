@@ -15,7 +15,7 @@ class CompressResponse
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (env('APP_ENV' !== 'local')) {
+        if (config('app.env' !== 'local')) {
             $gzipresponse = $next($request);
             $gzipresponse->headers->set('Content-Encoding', 'gzip'); // You can also use 'deflate' or 'br' (Brotli) as alternatives
             $gzipresponse->headers->set('Vary', 'Accept-Encoding');

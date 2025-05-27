@@ -241,7 +241,7 @@ class UserController extends Controller
                     'color_right_arm' => $user->avatar()->color_right_arm ?? 'ffffff',
                     'color_left_leg' => $user->avatar()->color_left_leg ?? 'ffffff',
                     'color_right_leg' => $user->avatar()->color_right_leg ?? 'ffffff',
-                    'current_face' => env('STORAGE_URL') . (
+                    'current_face' => config('app.storage.url') . (
                         $user->avatar()->face ? '/uploads/' . getItemHash($user->avatar()->face) . ".png" : '/assets/default.png'
                     ),
                 ],

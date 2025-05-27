@@ -136,7 +136,7 @@ Route::domain(app()->environment('production') ? config('Values.production.domai
 
         return inertia()->location($checkout->url);
     });
-    
+
     Route::group(['as' => 'purchase.', 'prefix' => 'purchase'], function () {
             Route::get('/success', [MembershipController::class, 'success'])->name('success');
             Route::get('/cancelled', [MembershipController::class, 'cancelled'])->name('cancelled');
@@ -276,7 +276,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
-    if (env('APP_ENV') === 'production') {
+    if (config('app.env') === 'production') {
         UserSettings::where('id', Auth::id())->update(['verified_email' => true]);
         if (!$request->user()->hasVerifiedEmail()) {
             // Dispatch the SendVerificationEmail job to the queue

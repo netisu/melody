@@ -93,16 +93,16 @@ class RenderController extends Controller
     {
         $avatar = $this->getAvatarRecord($id);
 
-        return env('STORAGE_URL') . '/thumbnails/' . $avatar->image . '.png';
+        return config('app.storage.url') . '/thumbnails/' . $avatar->image . '.png';
     }
 
     public function getItemThumb($id, bool $isPreview = false)
     {
         $item = Item::findOrFail($id);
         if ($isPreview) {
-            return env('STORAGE_URL') . '/uploads/' . $item->hash . '_preview.png';
+            return config('app.storage.url') . '/uploads/' . $item->hash . '_preview.png';
         } else {
-            return env('STORAGE_URL') . '/uploads/' . $item->hash . '.png';
+            return config('app.storage.url') . '/uploads/' . $item->hash . '.png';
         }
     }
 
@@ -215,8 +215,8 @@ class RenderController extends Controller
 
     private function makeRenderRequest($requestData)
     {
-        $host = env('RENDERER_HOST');
-        $port = env('RENDERER_PORT');
+        $host = config('app.render.host');
+        $port = config('app.render.port');
 
         if ($port) {
             $url = $host . ":" . $port;
@@ -225,7 +225,7 @@ class RenderController extends Controller
         }
 
         return Http::withBody($requestData, 'application/json')->withOptions([
-            'headers' => ['Aeo-Access-Key' => env("RENDERER_KEY")]
+            'headers' => ['Aeo-Access-Key' => config('app.renderer.key')]
         ])->post($url);
     }
 }

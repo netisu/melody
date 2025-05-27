@@ -44,7 +44,7 @@ class DiscordController extends Controller
     {
         // Checking if the authorization code is present in the request.
         if ($request->missing('code')) {
-            if (env('local')) {
+            if (config('app.local')) {
                 return response()->json([
                     'discord_message' => config('discord.error_messages.missing_code', 'The authorization code is missing.'),
                     'code' => 400
@@ -58,7 +58,7 @@ class DiscordController extends Controller
         try {
             $accessToken = $this->getDiscordAccessToken($request->get('code'));
         } catch (\Exception $e) {
-            if (env('local')) {
+            if (config('app.local')) {
                 return response()->json([
                     'discord_message' => config('discord.error_messages.invalid_code', 'The authorization code is invalid.'),
                     'message' => $e->getMessage(),
@@ -73,7 +73,7 @@ class DiscordController extends Controller
         try {
             $user = $this->getDiscordUser($accessToken->access_token);
         } catch (\Exception $e) {
-            if (env('local')) {
+            if (config('app.local')) {
                 return response()->json([
                     'discord_message' => config('discord.error_messages.authorization_failed', 'The authorization failed.'),
                     'message' => $e->getMessage(),
@@ -98,7 +98,7 @@ class DiscordController extends Controller
         try {
             $user = $this->createOrUpdateUser($user, $accessToken->refresh_token);
         } catch (\Exception $e) {
-            if (env('local')) {
+            if (config('app.local')) {
                 return response()->json([
                     'discord_message' => config('discord.error_messages.database_error', 'There was an error while trying to create or update the Discord user.'),
                     'message' => $e->getMessage(),

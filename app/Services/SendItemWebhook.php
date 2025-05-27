@@ -8,7 +8,7 @@ class SendItemWebhook
 {
 public function sendDiscordNotification(string $itemType, string $name, string $description, array $formattedPrice, string $thumbnail, string $link)
     {
-        $webhookUrl = env('DISCORD_ALERT_WEBHOOK');
+        $webhookUrl = config('app.DISCORD_ALERT_WEBHOOK');
 
         $timestamp = date("c", strtotime("now"));
         $priceString = implode(' | ', array_filter($formattedPrice)); // Remove empty elements

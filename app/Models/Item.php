@@ -95,13 +95,13 @@ class Item extends Model
 
     public function thumbnail()
     {
-        $url = env('STORAGE_URL');
+        $url = config('app.storage.url');
         return "{$url}/thumbnails/{$this->hash}.png";
     }
 
     public function preview()
     {
-        $url = env('STORAGE_URL');
+        $url = config('app.storage.url');
         $PreviewTypes = config('Values.shop.preview_types');
 
         if (in_array($this->item_type, $PreviewTypes ?? [])) {

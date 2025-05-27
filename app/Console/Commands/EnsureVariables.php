@@ -45,7 +45,7 @@ class EnsureVariables extends Command
                     }
 
                     // Beta Tester Update (if applicable)
-                    if (env('APP_ENV') !== 'local' && config('Values.in_testing_phase')) {
+                    if (config('app.env') !== 'local' && config('Values.in_testing_phase')) {
                         $userSettings = UserSettings::where('user_id', $user->id)->first(); // Get the settings
 
                         if ($userSettings && $userSettings->beta_tester !== true) {

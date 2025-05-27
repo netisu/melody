@@ -1,5 +1,7 @@
 <?php
 
+use function Termwind\render;
+
 return [
 
     /*
@@ -104,6 +106,23 @@ return [
             explode(',', env('APP_PREVIOUS_KEYS', ''))
         ),
     ],
+    'admin' => [
+        'domain' => env('ADMIN_DOMAIN'),
+        'api' => env('ADMIN_API_DOMAIN'),
+    ],
+    'storage' => [
+        'root' => env('STORAGE_ROOT'),
+        'url' => env('STORAGE_URL'),
+    ],
+
+    'renderer' => [
+        'host' => env('RENDERER_HOST'),
+        'port' => env('RENDERER_PORT'),
+        'key' => env('RENDERER_KEY'),
+    ],
+    'default_avatar_file' => env('DEFAULT_AVATAR_FILE'),
+    'maintenance_password' => env('MAINTENANCE_PASSWORD'),
+    'ghost_blog_url' => env('GHOST_BLOG_URL'),
 
     /*
     |--------------------------------------------------------------------------

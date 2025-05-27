@@ -10,7 +10,7 @@ class RssController extends Controller
 {
     public function index()
     {
-        $url = env('GHOST_BLOG_URL') . '/rss/';
+        $url = config('app.ghost_blog_url') . '/rss/';
         $response = Http::get($url);
         $i = 0;
 

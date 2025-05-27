@@ -267,7 +267,7 @@ class ItemApiController extends Controller
     private function getItemAndValidateAccess(int $itemId)
     {
         $item = Item::where('id', $itemId)->firstOrFail();
-        if (env('APP_ENV') != 'local') {
+        if (config('app.env') != 'local') {
             if (!Auth::user()->isStaff() && !$item->public_view) {
                 abort(403);
             }

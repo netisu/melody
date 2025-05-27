@@ -20,13 +20,13 @@ class MaintenanceController extends Controller
         }
 
         return inertia('Maintenance/Index', [
-            'disclaimer' => app()->environment() === 'local' ? "The Maintenance Password is " . env('MAINTENANCE_PASSWORD') : "Contact a developer for access.",
+            'disclaimer' => app()->environment() === 'local' ? "The Maintenance Password is " . config('app.maintenance_password') : "Contact a developer for access.",
         ]);
     }
 
     public function authenticate(Request $request)
     {
-        $maintenancePassword = env('MAINTENANCE_PASSWORD');
+        $maintenancePassword = config('app.maintenance_password');
 
         if (Session::has('maintenance_password')) {
             return response()->json(['error' => 'Already authenticated.']);
