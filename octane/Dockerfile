@@ -26,6 +26,8 @@ RUN composer install \
     --no-scripts \
     --no-dev \
     --optimize-autoloader
+COPY . .
+RUN composer dump-autoload -o
 
 # === STAGE 2: PHP Asset Generation (Laravel Caching & Ziggy) ===
 # Runs PHP Artisan commands that generate files for the frontend or runtime.
@@ -36,8 +38,7 @@ WORKDIR /app
 # Copy the entire application source code
 COPY . .
 
-# *** DIRECT .ENV COPY (as requested) ***
-# This copies your local .env file directly into the image layer for this stage.
+# Copy .env file directly into the image layer for this stage.
 # It will be used by `config:cache`.
 COPY .env .env
 
@@ -45,8 +46,7 @@ COPY .env .env
 COPY --from=composer_dependencies /app/vendor ./vendor
 
 # Ensure vendor directory has correct permissions for Artisan commands
-RUN chown -R frankenphp:frankenphp vendor \
-    && chmod -R ug+rwx vendor
+RUN chmod -R ug+rwx vendor
 
 # Generate Ziggy's JavaScript routes file
 RUN php artisan ziggy:generate --path=resources/js/ziggy.js
@@ -111,7 +111,12 @@ RUN install-php-extensions \
 
 # Copy core application files
 COPY . /app
+
+RUN rm -Rf tests/
+
 COPY .env .env
+
+RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
 
 # Remove build-time artifacts and dev-only files from the final app directory
 RUN rm -rf /app/node_modules \
@@ -147,7 +152,7 @@ RUN php artisan key:generate
 RUN chmod +x /usr/local/bin/start-container
 
 # Set permissions for Laravel storage, cache, bootstrap, and vendor directories.
-RUN chown -R frankenphp:frankenphp storage bootstrap/cache bootstrap/ssr vendor \
+RUN chown -R www-data:www-data storage bootstrap/cache bootstrap/ssr vendor \
     && chmod -R ug+rwx storage bootstrap/cache bootstrap/ssr vendor
 
 EXPOSE 8000
