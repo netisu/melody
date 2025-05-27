@@ -25,7 +25,7 @@ FROM oven/bun:${BUN_VERSION} AS bun_build
 WORKDIR /app
 
 # Copy only frontend-related files for caching
-COPY package.json bun.lockb tsconfig.json vite.config.js ./
+COPY package.json bun.lockb tsconfig.json vite.config.ts ./
 COPY resources/js resources/css ./resources/ 
 
 # Install Bun dependencies
