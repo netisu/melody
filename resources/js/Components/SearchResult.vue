@@ -28,13 +28,9 @@ defineProps<{
                         class="text-4xl text-body"
                         :class="icon"
                     ></i>
-                    <VLazyImage
-                        class="headshot flex-child-grow"
-                        alt="headshot"
-                        width="40"
-                        :src="image"
-                        src-placeholder="/assets/img/dummy_headshot.png"
-                    />
+                    <span v-else class="text-lg text-gray-500"
+                        ><i class="fa-duotone fa-solid fa-seal-question"></i
+                    ></span>
                     <div>{{ name }}</div>
                 </div>
                 <i class="px-1 fas fa-chevron-right text-muted"></i>
