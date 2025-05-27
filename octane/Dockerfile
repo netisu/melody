@@ -49,7 +49,7 @@ RUN apt-get update \
     librabbitmq-dev \
     libpq-dev \
     supervisor \
-    && rm -rf /var/lib/apt/lists/* # Clean up apt cache
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions using FrankenPHP's helper and pecl
 RUN install-php-extensions \
@@ -62,7 +62,7 @@ RUN install-php-extensions \
     intl \
     exif \
     sockets \
-    zip # Common extensions
+    zip
 
 # === STAGE 4: Final Production Image ===
 # This is the leanest stage, containing only what's needed at runtime.
@@ -95,7 +95,6 @@ COPY --from=composer_dependencies /app/vendor /app/vendor
 COPY --from=bun_build /app/public/build /app/public/build
 
 # Copy application code (excluding dev-only files and already copied artifacts)
-# Using a .dockerignore file is highly recommended to exclude node_modules, .git, etc.
 COPY . /app
 
 # Clean up source files that are not needed at runtime or were copied from other stages
@@ -107,7 +106,7 @@ RUN rm -rf /app/node_modules \
            /app/tsconfig.json \
            /app/resources/js \
            /app/resources/css \
-           /app/.env.example # Remove example env
+           /app/.env.example
 
 # Copy FrankenPHP/Octane specific configs and scripts
 COPY ./octane/start-container /usr/local/bin/start-container
