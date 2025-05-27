@@ -10,7 +10,7 @@ WORKDIR /app
 # Copy only composer files to leverage Docker caching
 COPY composer.json composer.lock ./
 
-RUN mkdir storage bootstrap/cache bootstrap/ssr storage/framework storage/logs \
+RUN mkdir storage bootstrap bootstrap/cache bootstrap/ssr storage/framework storage/logs \
     && cd storage/framework && mkdir sessions views cache && cd ../.. \
     && chown -R www-data:www-data storage
 # Install Composer dependencies for production
