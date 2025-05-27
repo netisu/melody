@@ -30,6 +30,8 @@ FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_asset_generation
 WORKDIR /app
 COPY . .
 COPY --from=composer_dependencies /app/vendor ./vendor
+RUN mkdir -p storage bootstrap/cache bootstrap/ssr storage/framework/sessions \
+           storage/framework/views storage/framework/cache storage/logs
 
 
 RUN php artisan event:cache \
@@ -92,7 +94,7 @@ COPY . /app
 
 RUN mkdir -p storage bootstrap/cache bootstrap/ssr storage/framework/sessions \
            storage/framework/views storage/framework/cache storage/logs
-           
+
 # Remove build-time artifacts and dev-only files to keep the final image lean
 RUN rm -rf /app/node_modules \
     /app/composer.lock \
