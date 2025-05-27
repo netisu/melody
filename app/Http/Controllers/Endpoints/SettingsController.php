@@ -191,11 +191,7 @@ class SettingsController extends Controller
 
             $settings->profile_banner_enabled = false;
             $settings->profile_banner_pending = true;
-<<<<<<< HEAD
-            $settings->profile_banner_url = config('app.storage.url') . '/uploads/pending' . $imgName . '.png'; // Store the public path in the database
-=======
-            $settings->profile_banner_url = env(key: 'STORAGE_URL') . '/uploads/pending/' . $imgName . '.png'; // Store the public path in the database
->>>>>>> 11dcd0dd40958f9a863b797e64849c569812a19f
+            $settings->profile_banner_url = $imgName; // Store the public path in the database
             $settings->save();
 
             return response()->json(['message' => 'Banner uploaded successfully', 'path' => env(key: 'STORAGE_URL') . '/uploads/pending/' . $imgName . '.png']);
