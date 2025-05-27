@@ -8,7 +8,7 @@ import { route } from "ziggy-js";
 
 <template>
     <AppHead pageTitle="Terms Of Service" :description="'Review our Terms of Service (TOS) for' +  usePage<any>().props.site.production.domains.main + 'here.'"
-        :url="route('Welcome')" />
+        :url="route('welcome.page')" />
     <Navbar :landing="false" />
     <Sidebar>
         <div class="cell medium-7">
@@ -32,7 +32,7 @@ import { route } from "ziggy-js";
                     Eligibility: You must be at least [Insert Age, e.g., 13] years old to create an account. If you are
                     under [Insert Age], you must have parental or guardian consent.
                     Account Responsibility: You are responsible for maintaining the confidentiality of your account
-                    credentials and for all activities that occur under your account.  
+                    credentials and for all activities that occur under your account.
                     Accurate Information: You agree to provide accurate and complete information when creating your
                     account.
                     Account Termination: We reserve the right to suspend or terminate your account for violations of
@@ -42,7 +42,7 @@ import { route } from "ziggy-js";
                     Ownership: You retain ownership of the content you create and upload to the Site ("User Content").
                     License to {{ usePage<any>().props.site.production.domains.main }}: By uploading User Content, you grant {{ usePage<any>().props.site.production.domains.main }} a non-exclusive, worldwide,
                     royalty-free license to use, reproduce, modify, distribute, and display your User Content for the
-                    purpose of operating and promoting the Site.  
+                    purpose of operating and promoting the Site.
                     Responsibility: You are solely responsible for your User Content and the consequences of posting or
                     publishing it.
                     Prohibited Content: You agree not to upload or share content that is:

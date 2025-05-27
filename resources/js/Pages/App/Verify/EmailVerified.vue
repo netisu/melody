@@ -7,7 +7,7 @@ import { route } from "ziggy-js";
 </script>
 
 <template>
-    <AppHead pageTitle="Email Verified" description="Thank you for verifying your email" :url="route('Welcome')" />
+    <AppHead pageTitle="Email Verified" description="Thank you for verifying your email" :url="route('welcome.page')" />
     <Navbar :landing="false" />
     <Sidebar>
         <div class="cell medium-7">

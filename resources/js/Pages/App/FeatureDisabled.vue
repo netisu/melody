@@ -1,6 +1,6 @@
 <template>
   <AppHead pageTitle="Feature Disabled" :description="props.title + ' are currently disabled'"
-    :url="route('Welcome')" />
+    :url="route('welcome.page')" />
   <Navbar />
   <Sidebar>
     <div class="cell medium-7">

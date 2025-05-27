@@ -31,7 +31,7 @@ defineProps<{
 }
 </style>
 <template>
-<AppHead :pageTitle="status" :description="message" :url="route('Welcome')" />
+<AppHead :pageTitle="status" :description="message" :url="route('welcome.page')" />
     <Navbar :landing="false" />
     <Sidebar>
         <div class="cell medium-7">

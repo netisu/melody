@@ -26,17 +26,14 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public const HOME = '/my/dashboard';
-
     public function register(): void
     {
         Model::unguard();
-        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
+        if (app()->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            app()->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            app()->register(TelescopeServiceProvider::class);
         }
-        $this->app->bind(Gateway::class, InertiaHttpGateway::class);
-
+        app()->bind(Gateway::class, InertiaHttpGateway::class);
     }
 
     /**
@@ -45,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(UrlGenerator $url): void
     {
         $this->bootRoute();
-        if (!$this->app->environment('local')) {
+        if (!app()->environment('local')) {
             $url->forceScheme('https');
         }
 
@@ -68,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
     }
     public function bootRoute(): void
     {
-        RateLimiter::for('api', function ($request) {
+        RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }

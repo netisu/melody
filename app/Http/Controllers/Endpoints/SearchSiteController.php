@@ -17,94 +17,94 @@ class SearchSiteController extends Controller
     {
         $search = $request->input('search');
 
-        if (Str::startsWith($search, '%')) {
-            $search = '';
-        }
-
-        $users = User::search($search)->get();
-        $items = Item::search($search)->get();
-        $spaces = Space::search($search)->get();
-        $forumPosts = ForumThread::search($search)->get();
-
-        $results = $users->merge($items)->merge($spaces)->merge($forumPosts);
-
-        $formattedResults = [];
+        $results = collect();
 
         if ($search) {
-            $client = new Client(config('scout.meilisearch.host'), config('scout.meilisearch.key'));
+            // Fetch Users
+            $users = User::search($search)->get()->map(function ($user) {
+                return [
+                    'name' => $user->username,
+                    'image' => $user->headshot() ?? null,
+                    'url' => route('user.profile', $user->username),
+                    'type' => 'user',
+                    'icon' => 'fas fa-user-circle',
+                    'description' => $user->about_me,
+                ];
+            });
+            $results = $results->merge($users);
+
+            // Fetch Items
+            $items = Item::search($search)->get()->map(function ($item) {
+                return [
+                    'name' => $item->name,
+                    'image' => $item->thumbnail() ?? null,
+                    'url' => route('store.item', $item->id),
+                    'type' => 'item',
+                    'icon' => 'fas fa-box',
+                    'description' => Str::limit($item->description ?? '', 100),
+                ];
+            });
+            $results = $results->merge($items);
+
+            // Fetch Spaces
+            $spaces = Space::search($search)->get()->map(function ($space) {
+                return [
+                    'name' => $space->name,
+                    'image' => $space->thumbnail() ?? null,
+                    'url' => route('spaces.view', [$space->id, $space->slug()]),
+                    'type' => 'space',
+                    'icon' => 'fas fa-map-marked-alt',
+                    'description' => Str::limit($space->description ?? '', 100), // limit space description
+                ];
+            });
+            $results = $results->merge($spaces);
+
+            // Fetch Forum Posts
+            $forumPosts = ForumThread::search($search)->get()->map(function ($post) {
+                return [
+                    'name' => $post->title,
+                    'image' => $post->creator->headshot() ?? null,
+                    'url' => route('forum.post.show', [$post->id, $post->slug()]),
+                    'type' => 'forum_post',
+                    'icon' => 'fas fa-newspaper',
+                    'description' => Str::limit($post->content ?? '', 100),
+                ];
+            });
+            $results = $results->merge($forumPosts);
+
+
+            // Fetch Routes (from Meilisearch directly)
+            $meilisearchHost = config('scout.meilisearch.host');
+            $meilisearchKey = config('scout.meilisearch.key');
+            $client = new Client($meilisearchHost, $meilisearchKey);
+
             try {
                 $routeSearchResults = $client->getIndex('routes')->search($search)->getHits();
-
-                foreach ($routeSearchResults as $routeResult) {
-                    $formattedResults[] = [
+                $routes = collect($routeSearchResults)->map(function ($routeResult) {
+                    return [
+                        'id' => $routeResult['id'],
                         'name' => $routeResult['name'],
                         'image' => null,
                         'url' => $routeResult['url'],
                         'type' => 'route',
                         'description' => $routeResult['description'] ?? null,
-                        'icon' => $routeResult['icon'] ?? null, // <-- Pass the icon class
+                        'icon' => $routeResult['icon'] ?? null,
                     ];
-                }
+                });
+                $results = $results->merge($routes);
             } catch (\MeiliSearch\Exceptions\ApiException $e) {
-                \Log::error("Meilisearch API Error searching routes: " . $e->getMessage() . " Code: " . $e->getCode());
+                \Log::error("Meilisearch API Error searching routes for full page: " . $e->getMessage() . " Code: " . $e->getCode());
             } catch (\Exception $e) {
-                \Log::error("General error searching routes: " . $e->getMessage());
-            }
-        }
-
-        if ($results->count() === 0 && !$search && empty($formattedResults)) {
-            return response()->json([]);
-        }
-
-        foreach ($results as $result) {
-            switch ($result->getTable()) {
-                case 'users':
-                    $name = $result->username;
-                    $image = $result->headshot();
-                    $url = route('user.profile', $result->username);
-                    $icon = 'fas fa-user-circle';
-                    break;
-
-                case 'items':
-                    $name = $result->name;
-                    $image = $result->thumbnail();
-                    $url = route('store.item', $result->id);
-                    $icon = 'fas fa-box';
-                    break;
-
-                case 'spaces':
-                    $name = $result->name;
-                    $image = $result->thumbnail();
-                    $url = route('spaces.view', [$result->id, $result->slug()]);
-                    $icon = 'fas fa-map-marked-alt';
-                    break;
-
-                case 'forum_posts':
-                    $name = $result->title;
-                    $image = $result->creator->headshot();
-                    $url = route('forum.post', [$result->id, $result->slug()]);
-                    $icon = 'fas fa-newspaper'; // Default icon for forum posts
-
-                    break;
-
-                default:
-                    continue 2;
+                \Log::error("General error searching routes for full page: " . $e->getMessage());
             }
 
-            $formattedResults[] = [
-                'name' => $name,
-                'image' => $image,
-                'url' => $url,
-                'type' => $result->getTable(),
-                'icon' => $icon,
-            ];
+            // Sort results
+            $results = $results->sortBy(function ($item) {
+                $order = ['route' => 1, 'user' => 2, 'forum_post' => 3, 'item' => 4, 'space' => 5];
+                return $order[$item['type']] ?? 99;
+            })->values(); // Re-index the collection
+
+            return response()->json($results);
         }
-
-        usort($formattedResults, function ($a, $b) {
-            $order = ['route' => 1, 'users' => 2, 'forum_posts' => 3, 'items' => 4, 'spaces' => 5];
-            return ($order[$a['type']] ?? 99) <=> ($order[$b['type']] ?? 99);
-        });
-
-        return response()->json($formattedResults);
     }
 }

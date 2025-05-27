@@ -3,7 +3,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { route } from 'ziggy-js';
 
-import { useForm, usePage } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import AppHead from "@/Components/AppHead.vue";
@@ -16,8 +16,8 @@ const form = useForm({
     type: "",
     name: "",
     description: "",
-    price_sparkles: "",
-    price_Stars: "",
+    sparkles: "",
+    stars: "",
     image: null,
     modal: null,
 });
@@ -31,9 +31,6 @@ const submit = () => {
 
 const AttemptUpload = () => {
     Uploading.value = true;
-};
-const handleImageUpload = (event) => {
-    form.image = event.target.files[0];
 };
 const handleModalUpload = (event) => {
     form.modal = event.target.files[0];
@@ -94,7 +91,7 @@ const handleModalUpload = (event) => {
                         </div>
                         <div class="gap-3 mb-2 text-sm flex-container align-center">
                             <div class="w-100">
-                                <div class="text-xs fw-bold text-muted text-uppercase">Price sparkles</div>
+                                <div class="text-xs fw-bold text-muted text-uppercase">Price Sparkles</div>
                                 <input type="text" v-model="form.sparkles" class="form" placeholder="1" />
                                 <div v-if="form.errors.sparkles" class="text-xs text-danger fw-semibold">
                                     {{ form.errors.sparkles }}
@@ -102,9 +99,9 @@ const handleModalUpload = (event) => {
                             </div>
                             <div class="w-100">
                                 <div class="text-xs fw-bold text-muted text-uppercase">Price Stars</div>
-                                <input type="text" v-model="form.Stars" class="form" placeholder="10" />
-                                <div v-if="form.errors.Stars" class="text-xs text-danger fw-semibold">
-                                    {{ form.errors.Stars }}
+                                <input type="text" v-model="form.stars" class="form" placeholder="10" />
+                                <div v-if="form.errors.stars" class="text-xs text-danger fw-semibold">
+                                    {{ form.errors.stars }}
                                 </div>
                             </div>
                         </div>

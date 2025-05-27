@@ -21,7 +21,36 @@ class ForumThread extends Model
     ];
 
     protected $appends = ['DateHum'];
+    public function searchableAs(): string
+    {
+        return 'forum_threads_index'; // MeiliSearch index name for threads
+    }
 
+    /**
+     * Get the indexable data array for the model.
+     * This defines what data from the ForumThread will be sent to the search index.
+     *
+     * @return array
+     */
+    public function toSearchableArray(): array
+    {
+        $array = $this->toArray();
+
+        $array['id'] = (int) $this->id;
+        $array['title'] = $this->title;
+        $array['body'] = $this->body;
+        $array['created_at'] = $this->created_at->timestamp;
+        $array['creator_name'] = $this->creator()->username ?? null; 
+        $array['topic_name'] = $this->topic()->name ?? null;
+
+        unset(
+            $array['updated_at'],
+            $array['creator_id'],
+            $array['topic_id'],  
+        );
+
+        return $array;
+    }
     public function getDateHumAttribute()
     {
         return $this->created_at->diffForHumans();

@@ -16,7 +16,7 @@ defineProps({
 <template>
     <AppHead pageTitle="Welcome"
         description="Join in on the action today. Buy &amp; sell items, participate in spaces, make friends, and more."
-        :url="route(`Welcome`)" />
+        :url="route(`welcome.page`)" />
     <Navbar />
     <Sidebar>
         Terms of Service

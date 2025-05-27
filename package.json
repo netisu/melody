@@ -45,7 +45,7 @@
     "@types/node": "^22.15.21",
     "@vee-validate/zod": "^4.15.0",
     "@vitejs/plugin-vue": "^5.2.4",
-    "@vue/server-renderer": "^3.5.14",
+    "@vue/server-renderer": "^3.5.15",
     "dayjs": "^1.11.13",
     "eslint-plugin-vue": "^10.1.0",
     "fsevents": "^2.3.3",
@@ -62,14 +62,14 @@
     "vite-plugin-compression2": "^1.4.0",
     "vite-plugin-vue-devtools": "^7.7.6",
     "vite-plugin-watch": "^0.3.1",
-    "vue": "^3.5.14",
+    "vue": "^3.5.15",
     "vue-skeletor": "^1.0.6",
     "vue-tippy": "^6.7.1",
     "ziggy-js": "^2.5.3",
-    "zod": "^3.25.28"
+    "zod": "^3.25.30"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.41.0"
+    "@rollup/rollup-linux-x64-gnu": "4.41.1"
   },
   "trustedDependencies": [
     "@parcel/watcher",

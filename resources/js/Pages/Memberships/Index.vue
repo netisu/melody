@@ -60,7 +60,7 @@ function onImgErrorSmall(id) {
 <template>
     <AppHead pageTitle="Welcome"
         description="Join in on the action today. Buy &amp; sell items, participate in spaces, make friends, and more."
-        :url="route(`Welcome`)" :landing="true"  />
+        :url="route(`welcome.page`)" :landing="true"  />
     <Navbar :landing="true" />
         <Sidebar>
         <header class="masthead-landing p-4 pt-4">

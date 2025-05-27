@@ -3,8 +3,6 @@ import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
 import { route } from "ziggy-js";
-
-import LanguageModal from "../Modal/LanguageModal.vue";
 import SearchResult from "../SearchResult.vue";
 import NavLink from "../NavLink.vue";
 import Button from "../Button.vue";
@@ -16,6 +14,7 @@ import throttle from "lodash/throttle";
 // Define the SearchResult interface
 interface SearchResult {
     url: string;
+    icon: string;
     image: string;
     name: string;
     // Add other properties if needed
@@ -234,7 +233,7 @@ const lang = computed<any>(() => props.locale);
                 as="li"
                 class="nav-item cell shrink show-for-small-only me-1"
                 style="cursor: pointer"
-                :href="route(`Welcome`)"
+                :href="route(`welcome.page`)"
             >
                 <v-lazy-image :src="props.site.icon" width="30" />
             </Link>
@@ -242,7 +241,7 @@ const lang = computed<any>(() => props.locale);
                 as="li"
                 class="nav-item cell shrink"
                 style="cursor: pointer"
-                :href="route(`Welcome`)"
+                :href="route(`welcome.page`)"
             >
                 <v-lazy-image
                     :src="props.site.logo"
@@ -284,6 +283,7 @@ const lang = computed<any>(() => props.locale);
                         :link="result.url"
                         :name="result.name"
                         :image="result.image"
+                        :icon="result.icon"
                     />
                     <SearchResultSkeleton v-show="SearchLoading" />
                     <li
@@ -309,7 +309,7 @@ const lang = computed<any>(() => props.locale);
                     </li>
                     <li class="divider"></li>
                     <li class="dropdown-item">
-                        <Link href="#" class="dropdown-link">
+                        <Link :href="route(`search.page`)" class="dropdown-link">
                             <div
                                 class="align-middle flex-container align-justify"
                             >

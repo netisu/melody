@@ -54,7 +54,7 @@ const lang = computed<any>(() => usePage<any>().props.locale);
 <template>
     <AppHead pageTitle="Welcome"
         description="Join in on the action today. Buy &amp; sell items, participate in spaces, make friends, and more."
-        :url="route(`Welcome`)" />
+        :url="route(`welcome.page`)" />
     <Navbar :landing="true">
         <header class="masthead-landing p-4 pt-4">
             <img src="/assets/img/site-banners/stars-bg.png" style="z-index: 1" alt="background" />

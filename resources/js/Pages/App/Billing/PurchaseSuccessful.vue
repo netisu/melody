@@ -2,12 +2,11 @@
 import Navbar from '@/Components/LayoutParts/Navbar.vue';
 import Sidebar from '@/Components/LayoutParts/Sidebar.vue';
 import Footer from '@/Components/LayoutParts/Footer.vue';
-import { usePage } from '@inertiajs/vue3';
 import { route } from "ziggy-js";
 </script>
 
 <template>
-    <AppHead pageTitle="Purchase Successful" description="You will receive your items within 5-10 minutes." :url="route('Welcome')" />
+    <AppHead pageTitle="Purchase Successful" description="You will receive your items within 5-10 minutes." :url="route('welcome.page')" />
     <Navbar :landing="false" />
     <Sidebar>
         <div class="cell medium-7">

@@ -8,7 +8,7 @@ import { route } from "ziggy-js";
 
 <template>
     <AppHead pageTitle="Email Sent" description="Email Sent"
-        :url="route('Welcome')" />
+        :url="route('welcome.page')" />
     <Navbar :landing="false" />
     <Sidebar>
         <div class="cell medium-7">

@@ -13,10 +13,10 @@ class MaintenanceController extends Controller
         $siteFlags = SiteSettings::find(1);
 
         if (Session::has('maintenance_password')) {
-            return redirect()->route('Welcome')->with(['success' => 'Already authenticated.']);
+            return redirect()->route('welcome.page')->with(['success' => 'Already authenticated.']);
         }
         if ($siteFlags->site_maintenance != true) {
-            return redirect()->route('Welcome');
+            return redirect()->route('welcome.page');
         }
 
         return inertia('Maintenance/Index', [
@@ -44,7 +44,7 @@ class MaintenanceController extends Controller
 
         Session::put('maintenance_password', $password);
 
-        return inertia()->location(route('Welcome'));
+        return inertia()->location(route('welcome.page'));
     }
 
     public function Exit()

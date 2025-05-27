@@ -255,8 +255,8 @@ class AdminController extends Controller
             'item_type' => $request->type,
             'status' => 'approved',
             'public_view' => false,
-            'cost_sparkles' => $request->price_sparkles,
-            'cost_stars' => $request->price_stars,
+            'cost_sparkles' => $request->sparkles,
+            'cost_stars' => $request->stars,
             'avatar_preview' => $previewName,
             'onsale' => true,
         ]);
