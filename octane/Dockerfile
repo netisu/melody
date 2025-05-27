@@ -30,7 +30,6 @@ WORKDIR /app
 COPY . .
 COPY --from=composer_dependencies /app/vendor ./vendor
 
-RUN php artisan ziggy:generate --path=resources/js/ziggy.js
 
 RUN php artisan event:cache \
     && php artisan route:cache \
