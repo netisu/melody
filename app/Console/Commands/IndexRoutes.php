@@ -25,7 +25,7 @@ class IndexRoutes extends Command
 
             // Test Meilisearch connection
             $health = $client->health();
-            if ($health['status'] !== 'healthy') {
+            if ($health['status'] !== 'available') {
                 $this->error("Meilisearch is not healthy. Status: " . $health['status']);
                 return 1;
             }
