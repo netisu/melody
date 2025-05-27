@@ -330,7 +330,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 // --- Admin Routes ---
 Route::domain(config('app.admin.domain'))
     ->middleware(['cacheable'])->group(function () {
-        Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => [Admin::class, EnsurePasswordIsConfirmed::class,  'verified']], function () {
+        Route::group(['as' => 'admin.',  'middleware' => [Admin::class, EnsurePasswordIsConfirmed::class,  'verified']], function () {
 
             Route::get('/', [AdminController::class, 'AdminIndex'])->name('page');
             Route::group(['as' => 'users.', 'prefix' => 'users'], function () {
