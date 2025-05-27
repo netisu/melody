@@ -49,7 +49,7 @@ COPY --from=composer_dependencies /app/vendor ./vendor
 RUN chmod -R ug+rwx vendor
 
 # Generate Ziggy's JavaScript routes file
-RUN php artisan ziggy:generate --path=resources/js/ziggy.js
+RUN php artisan ziggy:generate
 
 # Cache Laravel application artifacts for production speed
 # These commands will now use the values from the copied .env file.
