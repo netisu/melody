@@ -33,7 +33,7 @@ const profileUrl = props.auth?.user?.username
     ? route("user.profile", { username: props.auth.user.username })
     : route(`auth.login.page`);
 
-const SearchLoading = ref(false);
+const SearchLoading = ref(true);
 const isOpen = ref(false);
 const search = ref("");
 
@@ -47,12 +47,12 @@ const performSearch = throttle(async () => {
             .get(route("api.search", { search: search.value }))
             .then((response) => {
                 // Assuming the response.data is an array of SearchResult
-                results.value = response.data.results;
+                results.value = response.data;
                 SearchLoading.value = false;
             })
             .catch((err) => console.log(err));
     } else {
-        SearchLoading.value = true;
+        SearchLoading.value = false;
         results.value = [];
     }
 }, 1000);
@@ -276,20 +276,18 @@ const lang = computed<any>(() => props.locale);
                     id="global-search-results"
                 >
                     <li class="dropdown-title">Quick Results</li>
-                    <SearchResult
-                        href="#"
-                        v-show="!SearchLoading"
-                        v-for="result in results"
-                        :link="result.url"
-                        :name="result.name"
-                        :image="result.image"
-                        :icon="result.icon"
-                    />
-                    <SearchResultSkeleton v-show="SearchLoading" />
-                    <li
-                        class="px-2 py-2 text-center dropdown-item"
-                        v-show="!SearchLoading && !results"
-                    >
+                    <SearchResultSkeleton v-if="SearchLoading" />
+                    <div v-if="results.length > 0">
+                        <SearchResult
+                            v-show="!SearchLoading"
+                            v-for="result in results"
+                            :link="result.url"
+                            :name="result.name"
+                            :image="result.image"
+                            :icon="result.icon"
+                        />
+                    </div>
+                    <li class="px-2 py-2 text-center dropdown-item" v-else-if="!SearchLoading && !results.length">
                         <div class="gap-3 flex-container flex-dir-column">
                             <i
                                 class="text-5xl fa-solid fa-folder-magnifying-glass text-muted"
@@ -309,7 +307,10 @@ const lang = computed<any>(() => props.locale);
                     </li>
                     <li class="divider"></li>
                     <li class="dropdown-item">
-                        <Link :href="route(`search.page`)" class="dropdown-link">
+                        <Link
+                            :href="route(`search.page`, { search: search })"
+                            class="dropdown-link"
+                        >
                             <div
                                 class="align-middle flex-container align-justify"
                             >
@@ -602,12 +603,20 @@ const lang = computed<any>(() => props.locale);
                             Beta Tester
                         </div>
 
-                        <div v-show="props.auth.user && !props.auth.user.staff && !props.auth.user.settings.beta_tester" class="text-xs text-muted fw-semibold">
+                        <div
+                            v-show="
+                                props.auth.user &&
+                                !props.auth.user.staff &&
+                                !props.auth.user.settings.beta_tester
+                            "
+                            class="text-xs text-muted fw-semibold"
+                        >
                             {{ "@" + props.auth?.user?.username }} •
                             {{ "Lvl. " + props.auth?.user?.level }}
                         </div>
                     </div>
-                    <i  :class="[isOpen ? 'fa-chevron-up' : 'fa-chevron-down']"
+                    <i
+                        :class="[isOpen ? 'fa-chevron-up' : 'fa-chevron-down']"
                         class="text-sm fad text-muted show-for-large"
                     ></i>
                 </button>
