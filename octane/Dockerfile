@@ -110,8 +110,7 @@ RUN install-php-extensions \
     redis
 
 # Copy Bun executable into the final image
-COPY --from=bun_build /usr/local/bin/bun /usr/local/bin/
-RUN chmod +x /usr/local/bin/bun
+RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 
 # Copy core application files
 COPY . /app
