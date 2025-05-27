@@ -50,7 +50,11 @@ class HandleInertiaRequests extends Middleware
         }) : null;
 
         return array_merge( parent::share(request: $request), [
+            'csrf_token' => csrf_token(),
             'site' => config(key: 'Values'),
+            'locale' => function () {
+                return app()->getLocale();
+            },
             'locales' => function (): mixed {
                 return config('ActiveLocales');
             },
