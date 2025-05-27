@@ -22,6 +22,7 @@ RUN composer install \
     --no-scripts \
     --no-dev \
     --optimize-autoloader
+COPY . .
 RUN composer dump-autoload -o
 # === STAGE 1.5: Generate Laravel Application Assets (including Ziggy) ===
 FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_asset_generation
