@@ -42,25 +42,13 @@ FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_extensions_build
 WORKDIR /app
 
 # Install system dependencies required for PHP extensions and runtime
-# `procps` for `ps` command (useful for debugging)
-# `libicu-dev` for `intl` extension (localization)
-# `libexif-dev` for `exif` extension (image metadata)
-# `libpng-dev`, `libjpeg-turbo-dev`, `libwebp-dev` for `gd` extension
-# `librabbitmq-dev` for AMQP extension
-# `libpq-dev` for PostgreSQL PDO
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     git \
     unzip \
-    supervisor \
-    procps \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    libwebp-dev \
     librabbitmq-dev \
     libpq-dev \
-    libicu-dev \
-    libzip-dev \
+    supervisor \
     && rm -rf /var/lib/apt/lists/* # Clean up apt cache
 
 # Install PHP extensions using FrankenPHP's helper and pecl
