@@ -12,7 +12,7 @@ return [
     [
         'name' => 'Discuss',
         'keywords' => ['forum', 'discussions', 'community', 'posts', 'questions', 'answers'],
-        'url' => 'route("forum.page")',
+        'url' => 'route("forum.page", ["id" => 1])',
         'description' => 'Engage with the community, ask questions, and share insights.',
         'type' => 'route',
         'icon' => 'fas fa-comments',

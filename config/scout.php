@@ -1,7 +1,9 @@
 <?php
+
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Space;
+use App\Models\ForumThread;
 
 return [
 
@@ -154,6 +156,12 @@ return [
                 'filterableAttributes'=> ['id', 'name', 'body'],
                 // we need to sort based on these columns
                 'sortableAttributes' => ['name'],
+            ],
+            ForumThread::class => [
+                // we need to filter based on id and category_id
+                'filterableAttributes'=> ['id', 'title', 'body', 'thumbnail'],
+                // we need to sort based on these columns
+                'sortableAttributes' => ['title'],
             ],
         ],
     ],

@@ -40,13 +40,13 @@ class ForumThread extends Model
         $array['title'] = $this->title;
         $array['body'] = $this->body;
         $array['created_at'] = $this->created_at->timestamp;
-        $array['creator_name'] = $this->creator()->username ?? null; 
+        $array['creator_name'] = $this->creator()->username ?? null;
         $array['topic_name'] = $this->topic()->name ?? null;
 
         unset(
             $array['updated_at'],
             $array['creator_id'],
-            $array['topic_id'],  
+            $array['topic_id'],
         );
 
         return $array;
