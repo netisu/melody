@@ -132,7 +132,7 @@ RUN rm -rf /app/node_modules \
 
 # Copy essential runtime artifacts from previous stages
 COPY --from=composer_dependencies /app/vendor ./vendor
-COPY --from=bun_build /app/public/build ./public/build
+COPY --from=bun_build /app/public/build/ ./public/build
 COPY --from=bun_build /app/bootstrap/ssr/ ./bootstrap/ssr/
 COPY --from=php_asset_generation /app/bootstrap/cache/ ./bootstrap/cache/
 COPY --from=php_asset_generation /app/storage/framework/views/ ./storage/framework/views/
