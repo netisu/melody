@@ -7,6 +7,7 @@ import { ref, watch, onMounted, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
 import { debounce } from "lodash";
+import VLazyImage from "v-lazy-image";
 
 const props = defineProps({
     initialSearchQuery: String,
@@ -109,11 +110,11 @@ onMounted(() => {
                 <i class="fad fa-spinner fa-spin text-4xl mt-4"></i>
             </div>
             <div v-else-if="results.length > 0">
+                <div class="grid-x grid-margin-x">
                 <div v-for="result in results" :key="result.url + result.type + result.id" class="cell medium-6 mb-2">
                     <div class="card card-body card-status">
-                        <div class="grid-x grid-margin-x">
-                            <div class="gap-2 cell small-7 medium-9 flex-container">
 
+<div class="gap-2 cell small-7 medium-9 flex-container">
                                 <Link :href="result.url" class="flex items-center w-full">
                                 <v-lazy-image v-if="result.image" :src="result.image" width="45px"
                                     class="border img-fluid headshot rounded-circle border-secondary bg-dark"

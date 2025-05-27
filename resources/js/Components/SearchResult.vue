@@ -25,7 +25,7 @@ defineProps<{
                     />
                     <i
                         v-else-if="icon"
-                        class="text-2xl text-body"
+                        class="text-4xl text-body"
                         :class="icon"
                     ></i>
                     <VLazyImage
