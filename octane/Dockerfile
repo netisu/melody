@@ -87,7 +87,6 @@ COPY --from=php_extensions_build /usr/bin/supervisorctl /usr/bin/supervisorctl
 COPY --from=php_extensions_build /usr/bin/supervisord /usr/bin/supervisord
 COPY --from=php_extensions_build /usr/bin/git /usr/bin/git
 COPY --from=php_extensions_build /usr/bin/unzip /usr/bin/unzip
-COPY --from=php_extensions_build /usr/bin/procps /usr/bin/procps
 
 # Copy compiled Composer dependencies from composer_dependencies stage
 COPY --from=composer_dependencies /app/vendor /app/vendor
