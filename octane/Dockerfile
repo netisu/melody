@@ -21,15 +21,29 @@ RUN composer install \
     --no-dev \
     --optimize-autoloader
 
+# === STAGE 1.5: Generate Laravel Application Assets (including Ziggy) ===
+FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_asset_generation
+
+WORKDIR /app
+COPY . .
+COPY --from=composer_dependencies /app/vendor /app/vendor
+RUN chown -R frankenphp:frankenphp vendor \
+    && chmod -R ug+rwx vendor
+RUN php artisan ziggy:generate --path=resources/js/ziggy.js
+RUN php artisan event:cache \
+    && php artisan route:cache \
+    && php artisan view:cache \
+    && php artisan config:cache
+
 # === STAGE 2: Bun (Node.js/JS) Dependencies and Frontend Build ===
 FROM oven/bun:${BUN_VERSION} AS bun_build
 
 WORKDIR /app
 
 # Copy only frontend-related files for caching
-COPY --from=composer_dependencies /app/vendor ./vendor
 COPY package.json bun.lockb tsconfig.json vite.config.ts ./
-COPY resources/ ./resources/ 
+COPY --from=composer_dependencies /app/vendor ./vendor
+COPY --from=php_asset_generation /app/resources/ ./resources/
 
 # Install Bun dependencies
 RUN bun install
@@ -41,6 +55,11 @@ RUN bun run build
 FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_extensions_build
 
 WORKDIR /app
+
+ENV SERVER_NAME="https://"
+ENV APP_ENV="production"
+ENV APP_DEBUG="false"
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0"
 
 # Install system dependencies required for PHP extensions and runtime
 RUN apt-get update \
@@ -64,60 +83,30 @@ RUN install-php-extensions \
     exif \
     sockets \
     zip
-
-# === STAGE 4: Final Production Image ===
-# This is the leanest stage, containing only what's needed at runtime.
-FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS final
-
-WORKDIR /app
-
-# Set production environment variables
-ENV SERVER_NAME="https://" 
-ENV APP_ENV="production"
-ENV APP_DEBUG="false"
-ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0"
-
-# Copy PHP binary and extensions from the php_extensions_build stage
-COPY --from=php_extensions_build /usr/local/bin/php /usr/local/bin/php
-COPY --from=php_extensions_build /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
-COPY --from=php_extensions_build /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
-
-# Copy system binaries needed at runtime (e.g., for supervisor, git if used by app)
-COPY --from=php_extensions_build /usr/bin/supervisorctl /usr/bin/supervisorctl
-COPY --from=php_extensions_build /usr/bin/supervisord /usr/bin/supervisord
-COPY --from=php_extensions_build /usr/bin/git /usr/bin/git
-COPY --from=php_extensions_build /usr/bin/unzip /usr/bin/unzip
-
-# Copy compiled Composer dependencies from composer_dependencies stage
 COPY --from=composer_dependencies /app/vendor /app/vendor
-
-# Copy built frontend assets from bun_build stage
 COPY --from=bun_build /app/public/build /app/public/build
 
-# Copy application code (excluding dev-only files and already copied artifacts)
 COPY . /app
 
-# Clean up source files that are not needed at runtime or were copied from other stages
+# Remove build-time artifacts and dev-only files to keep the final image lean
 RUN rm -rf /app/node_modules \
-           /app/composer.lock \
-           /app/bun.lockb \
-           /app/package.json \
-           /app/vite.config.js \
-           /app/tsconfig.json \
-           /app/resources/js \
-           /app/resources/css \
-           /app/.env.example
+    /app/composer.lock \
+    /app/bun.lockb \
+    /app/package.json \
+    /app/vite.config.js \
+    /app/tsconfig.json \
+    /app/resources/js \
+    /app/resources/css \
+    /app/.env.example \
+    /app/resources/js/ziggy.js
 
 # Copy FrankenPHP/Octane specific configs and scripts
 COPY ./octane/start-container /usr/local/bin/start-container
 COPY ./octane/php.ini /etc/php/${PHP_VERSION}/cli/conf.d/php.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Cache Laravel application artifacts for production speed
-RUN php artisan event:cache \
-    && php artisan route:cache \
-    && php artisan view:cache \
-    && php artisan config:cache
+# Copy Laravel cached config/routes/views from php_asset_generation stage
+COPY --from=php_asset_generation /app/bootstrap/cache/ ./bootstrap/cache/
+COPY --from=php_asset_generation /app/storage/framework/views/ ./storage/framework/views/
 
 # Regenerate Application Key
 RUN php artisan key:generate
@@ -125,11 +114,10 @@ RUN php artisan key:generate
 # Make entrypoint script executable
 RUN chmod +x /usr/local/bin/start-container
 
-# Set permissions for Laravel storage and cache directories
-RUN chown -R frankenphp:frankenphp storage bootstrap/cache \
-    && chmod -R ug+rwx storage bootstrap/cache
+# Set permissions for Laravel storage, cache, and vendor directories.
+RUN chown -R frankenphp:frankenphp storage bootstrap/cache vendor \
+    && chmod -R ug+rwx storage bootstrap/cache vendor
 
 EXPOSE 8000
 
-# Start Supervisor
 ENTRYPOINT ["start-container"]
