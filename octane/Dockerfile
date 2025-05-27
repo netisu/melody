@@ -28,7 +28,7 @@ FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_asset_generation
 
 WORKDIR /app
 COPY . .
-COPY --from=composer_dependencies /app/vendor /app/vendor
+COPY --from=composer_dependencies /app/vendor ./vendor
 
 RUN php artisan ziggy:generate --path=resources/js/ziggy.js
 
