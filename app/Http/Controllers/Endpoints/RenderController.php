@@ -215,8 +215,8 @@ class RenderController extends Controller
 
     private function makeRenderRequest($requestData)
     {
-        $host = config('app.render.host');
-        $port = config('app.render.port');
+        $host = config('app.renderer.host');
+        $port = config('app.renderer.port');
 
         if ($port) {
             $url = $host . ":" . $port;
