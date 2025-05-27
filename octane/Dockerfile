@@ -28,7 +28,7 @@ WORKDIR /app
 
 # Copy only frontend-related files for caching
 COPY package.json bun.lockb tsconfig.json vite.config.ts ./
-COPY resources/js resources/css ./resources/ 
+COPY resources/ ./resources/ 
 
 # Install Bun dependencies
 RUN bun install
