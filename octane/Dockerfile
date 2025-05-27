@@ -41,11 +41,26 @@ RUN composer install \
     --no-interaction \
     --ignore-platform-reqs \
     --no-plugins \
+    --no-scripts \
     --no-dev \
     --prefer-dist
 
 # Run only when in production
 RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
+
+# Remove build-time artifacts and dev-only files from the final app directory
+RUN rm -Rf tests/
+
+RUN rm -rf /app/node_modules \
+           /app/composer.lock \
+           /app/bun.lockb \
+           /app/package.json \
+           /app/vite.config.ts \
+           /app/tsconfig.json \
+           /app/resources/js \
+           /app/resources/css \
+           /app/.env.example \
+           /app/resources/js/ziggy.js
 
 # Cache all values
 RUN php artisan event:cache
@@ -67,8 +82,13 @@ RUN bun run build
 
 RUN chmod +x /usr/local/bin/start-container
 
-# Set permissions for Laravel.
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Ensure essential Laravel directories exist for runtime and set permissions
+RUN mkdir -p storage bootstrap/cache bootstrap/ssr storage/framework/sessions \
+           storage/framework/views storage/framework/cache storage/logs
+
+# Set permissions for Laravel storage, cache, bootstrap, and vendor directories.
+RUN chown -R www-data:www-data storage bootstrap/cache bootstrap/ssr vendor \
+    && chmod -R ug+rwx storage bootstrap/cache bootstrap/ssr vendor
 
 EXPOSE 8000
 
