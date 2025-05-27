@@ -133,6 +133,7 @@ RUN rm -rf /app/node_modules \
 # Copy essential runtime artifacts from previous stages
 COPY --from=composer_dependencies /app/vendor ./vendor
 COPY --from=bun_build /app/public/build ./public/build
+COPY --from=bun_build /app/bootstrap/ssr/ ./bootstrap/ssr/
 COPY --from=php_asset_generation /app/bootstrap/cache/ ./bootstrap/cache/
 COPY --from=php_asset_generation /app/storage/framework/views/ ./storage/framework/views/
 
@@ -152,9 +153,6 @@ RUN php artisan key:generate
 RUN chmod +x /usr/local/bin/start-container
 
 # Set permissions for Laravel storage, cache, bootstrap, and vendor directories.
-RUN groupadd --system --gid 1000 $WWWGROUP || true && \
-    useradd --system --uid 1000 --gid $WWWGROUP --home /var/www/html --shell /bin/bash $WWWUSER || true
-    
 RUN chown -R www-data:www-data storage bootstrap/cache bootstrap/ssr vendor \
     && chmod -R ug+rwx storage bootstrap/cache bootstrap/ssr vendor
 

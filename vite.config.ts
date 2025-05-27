@@ -14,9 +14,10 @@ import vueDevTools from "vite-plugin-vue-devtools";
 import i18n from "laravel-vue-i18n/vite";
 
 export default {
-        build: {
-    target: 'esnext', // Target modern JavaScript only
-    minify: 'esbuild', // Enable esbuild for minification
+    build: {
+        ssr: true,
+        target: "esnext", // Target modern JavaScript only
+        minify: "esbuild", // Enable esbuild for minification
         rollupOptions: {
             output: {
                 manualChunks(id) {
