@@ -27,6 +27,7 @@ FROM oven/bun:${BUN_VERSION} AS bun_build
 WORKDIR /app
 
 # Copy only frontend-related files for caching
+COPY --from=composer_dependencies /app/vendor ./vendor
 COPY package.json bun.lockb tsconfig.json vite.config.ts ./
 COPY resources/ ./resources/ 
 
