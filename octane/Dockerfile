@@ -95,15 +95,9 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     git \
     unzip \
-    supervisor \
-    procps \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    libwebp-dev \
     librabbitmq-dev \
     libpq-dev \
-    libicu-dev \
-    libzip-dev \
+    supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions directly in this final stage.
@@ -113,11 +107,7 @@ RUN install-php-extensions \
     opcache \
     pdo \
     pdo_mysql \
-    redis \
-    intl \
-    exif \
-    sockets \
-    zip
+    redis
 
 # Copy core application files
 COPY . /app
