@@ -110,11 +110,7 @@ RUN install-php-extensions \
     redis
 
 # Copy Bun executable into the final image
-RUN curl -fsSL https://bun.sh/install | bash
-# Add bun to the system's PATH for all users.
-ENV PATH="/root/.bun/bin:$PATH"
-# Create a symlink to /usr/local/bin so it's globally accessible and in standard PATH
-RUN ln -s /root/.bun/bin/bun /usr/local/bin/bun
+RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 
 # Copy core application files
 COPY . /app
