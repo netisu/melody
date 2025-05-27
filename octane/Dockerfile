@@ -152,6 +152,9 @@ RUN php artisan key:generate
 RUN chmod +x /usr/local/bin/start-container
 
 # Set permissions for Laravel storage, cache, bootstrap, and vendor directories.
+RUN groupadd --system --gid 1000 $WWWGROUP || true && \
+    useradd --system --uid 1000 --gid $WWWGROUP --home /var/www/html --shell /bin/bash $WWWUSER || true
+    
 RUN chown -R www-data:www-data storage bootstrap/cache bootstrap/ssr vendor \
     && chmod -R ug+rwx storage bootstrap/cache bootstrap/ssr vendor
 
