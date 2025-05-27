@@ -115,6 +115,8 @@ COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY --from=php_asset_generation /app/bootstrap/cache/ ./bootstrap/cache/
 COPY --from=php_asset_generation /app/storage/framework/views/ ./storage/framework/views/
 
+COPY .env /app/.env
+
 # Regenerate Application Key
 RUN php artisan key:generate
 
