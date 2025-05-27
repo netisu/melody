@@ -110,9 +110,7 @@ RUN install-php-extensions \
     redis
 
 # Copy Bun executable into the final image
-COPY --from=bun_build /usr/local/bin/bun /usr/local/bin/bun
-COPY --from=bun_build /usr/local/bin/bunx /usr/local/bin/bunx
-
+COPY --from=bun_build /usr/local/bin/bun /usr/local/bin/
 RUN chmod +x /usr/local/bin/bun
 
 # Copy core application files
