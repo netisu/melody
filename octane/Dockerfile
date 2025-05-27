@@ -27,8 +27,6 @@ RUN composer install \
     --no-dev \
     --optimize-autoloader
 
----
-
 # === STAGE 2: PHP Asset Generation (Laravel Caching & Ziggy) ===
 # Runs PHP Artisan commands that generate files for the frontend or runtime.
 FROM dunglas/frankenphp:latest-php${PHP_VERSION} AS php_asset_generation
@@ -60,8 +58,6 @@ RUN php artisan event:cache \
     && php artisan view:cache \
     && php artisan config:cache
 
----
-
 # === STAGE 3: Bun Frontend Build ===
 # Installs Node.js dependencies and builds frontend assets using Bun.
 FROM oven/bun:${BUN_VERSION} AS bun_build
@@ -80,8 +76,6 @@ RUN bun install
 
 # Build frontend assets
 RUN bun run build
-
----
 
 # === STAGES 4: Final Production Image ===
 # The leanest stage, containing only what's needed at runtime.
