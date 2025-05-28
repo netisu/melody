@@ -58,6 +58,7 @@ Route::group(['as' => 'api.'], function () {
         });
         Route::get('/name-availability', [UserController::class, 'UsernameAvailability'])->name('name-availability');
         Route::get('/validate-email', [UserController::class, 'ValidateEmail'])->name('email-validate');
+        Route::get('/profile-image/{username}', [UserController::class, 'ProfileImage'])->name('profile-image');
         Route::get('/validate-password', [UserController::class, 'ValidatePassword'])->name('password-validate');
         Route::get('/profile-data/{username}', [UserController::class, 'getUser'])->name('profile-data');
         Route::get('/online/{id}', [UserController::class, 'getStatus'])->name('online');

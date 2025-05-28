@@ -79,10 +79,18 @@ class UserController extends Controller
         return $statuses;
     }
 
+    public function ProfileImage(string $username)
+    {
+        $GetUser = User::where('username', $username)->first();
+        if ($GetUser) {
+            return response()->json($GetUser->headshot());
+        };
+        return response()->json(config('app.default_avatar_file'));
+    }
 
     public function getAvatar($userID)
     {
-        $GetUser = Avatar::where('id', '=', $userID)->first();
+        $GetUser = Avatar::where('id', $userID)->first();
         $url = config('Values.storage.url');
         $image = ($GetUser->image === 'default') ? config('Values.render.default_avatar') : $GetUser->image;
         $image =  "{$url}/{$image}.png";
@@ -211,7 +219,7 @@ class UserController extends Controller
 
 
 
-         $response = response()->json([
+        $response = response()->json([
             'user' => [
                 'id' => $user->id,
                 'username' => $user->username,

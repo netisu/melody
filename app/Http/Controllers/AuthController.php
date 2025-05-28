@@ -220,7 +220,7 @@ class AuthController extends Controller
 
         Inertia::clearHistory();
 
-        return redirect()->intended(route("Welcome"))->with([
+        return redirect()->intended(route("welcome.page"))->with([
             'type' => 'success',
             'message' => 'You have logged out.'
         ]);

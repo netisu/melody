@@ -25,5 +25,13 @@ return [
         'type' => 'route',
         'icon' => 'fad fa-tachometer-alt',
     ],
+    [
+        'name' => 'Discover',
+        'keywords' => ['users', 'discover', 'players', 'online'],
+        'url' => 'route("my.dashboard.page")',
+        'description' => 'Access your personal dashboard.',
+        'type' => 'route',
+        'icon' => 'fad fa-user-group',
+    ],
     // Add more as needed
 ];

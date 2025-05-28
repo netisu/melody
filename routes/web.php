@@ -22,7 +22,7 @@ use App\Http\Controllers\{
     Notification,
     MembershipController,
     SearchController,
-    Endpoints\SearchSiteController,
+    PolicyController,
 };
 use App\Http\Middleware\{
     EnsurePasswordIsConfirmed,
@@ -327,35 +327,50 @@ Route::post('/email/verification-notification', function (Request $request) {
     }
 })->middleware('throttle:6,1')->name('verification.send');
 
-// --- Admin Routes ---
-Route::domain(config('app.admin.domain'))
-    ->middleware(['cacheable'])->group(function () {
-        Route::group(['as' => 'admin.',  'middleware' => [Admin::class, EnsurePasswordIsConfirmed::class,  'verified']], function () {
+// --- Policy Routes ---
+Route::group(['as' => 'policies.', 'prefix' => 'policies'], function () {
+    Route::get('/terms-of-service', [PolicyController::class, 'TermsOfService'])->name('tos');
+    Route::get('/privacy', [PolicyController::class, 'PrivacyPolicy'])->name('privacy');
+});
 
-            Route::get('/', [AdminController::class, 'AdminIndex'])->name('page');
-            Route::group(['as' => 'users.', 'prefix' => 'users'], function () {
-                Route::get('/', [AdminController::class, 'UserIndex'])->name('page');
-                Route::get('/manage/{id}', [AdminController::class, 'ManageUser'])->name('manage-user');
-                Route::get('/gift/{id}', [AdminController::class, 'GiftUser'])->name('gift-user');
-            });
-            Route::group(['as' => 'items.', 'prefix' => 'items'], function () {
-                Route::get('/', [AdminController::class, 'ItemIndex'])->name('page');
-                Route::get('/manage/{id}', [AdminController::class, 'ManageItem'])->name('manage-item');
-                Route::group(['as' => 'create.', 'prefix' => 'create'], function () {
-                    Route::get('/', [AdminController::class, 'CreateIndex'])->name('create-item');
-                    Route::post('/validate', [AdminController::class, 'uploadItem'])->name('validate');
-                });
-            });
-            Route::group(['as' => 'messaging.', 'prefix' => 'intranet'], function () {
-                Route::get('/', [AdminController::class, 'messagingIndex'])->name('page');
-                Route::post('/validate', [AdminController::class, 'postMessage'])->name('validate');
-            });
-            Route::group(['as' => 'reports.', 'prefix' => 'reports'], function () {
-                Route::get('/', [AdminController::class, 'ReportIndex'])->name('page');
-                Route::get('/view/{id}', [AdminController::class, 'ReportIndex'])->name('view');
-            });
-            Route::group(['as' => 'assets.', 'prefix' => 'assets'], function () {
-                Route::get('/approve', [AdminController::class, 'ContentApprovingIndex'])->name('approve');
+
+// --- Admin Routes ---
+$adminRoutes = function () {
+    Route::group(['as' => 'admin.', 'middleware' => [Admin::class, EnsurePasswordIsConfirmed::class, 'verified']], function () {
+        Route::get('/', [AdminController::class, 'AdminIndex'])->name('page');
+        Route::group(['as' => 'users.', 'prefix' => 'users'], function () {
+            Route::get('/', [AdminController::class, 'UserIndex'])->name('page');
+            Route::get('/manage/{id}', [AdminController::class, 'ManageUser'])->name('manage-user');
+            Route::get('/gift/{id}', [AdminController::class, 'GiftUser'])->name('gift-user');
+        });
+        Route::group(['as' => 'items.', 'prefix' => 'items'], function () {
+            Route::get('/', [AdminController::class, 'ItemIndex'])->name('page');
+            Route::get('/manage/{id}', [AdminController::class, 'ManageItem'])->name('manage-item');
+            Route::group(['as' => 'create.', 'prefix' => 'create'], function () {
+                Route::get('/', [AdminController::class, 'CreateIndex'])->name('create-item');
+                Route::post('/validate', [AdminController::class, 'uploadItem'])->name('validate');
             });
         });
+        Route::group(['as' => 'messaging.', 'prefix' => 'intranet'], function () {
+            Route::get('/', [AdminController::class, 'messagingIndex'])->name('page');
+            Route::post('/validate', [AdminController::class, 'postMessage'])->name('validate');
+        });
+        Route::group(['as' => 'reports.', 'prefix' => 'reports'], function () {
+            Route::get('/', [AdminController::class, 'ReportIndex'])->name('page');
+            Route::get('/view/{id}', [AdminController::class, 'ReportIndex'])->name('view');
+        });
+        Route::group(['as' => 'assets.', 'prefix' => 'assets'], function () {
+            Route::get('/approve', [AdminController::class, 'ContentApprovingIndex'])->name('approve');
+        });
     });
+};
+
+if (config('app.env') === 'production') {
+    Route::domain(config('app.admin.domain'))
+        ->middleware(['cacheable'])
+        ->group($adminRoutes);
+} else {
+    Route::prefix('admin')
+        ->middleware(['cacheable'])
+        ->group($adminRoutes);
+}

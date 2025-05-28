@@ -111,10 +111,11 @@ onMounted(() => {
             </div>
             <div v-else-if="results.length > 0">
                 <div class="grid-x grid-margin-x">
-                <div v-for="result in results" :key="result.url + result.type + result.id" class="cell medium-6 mb-2">
-                    <div class="card card-body card-status">
+                    <div v-for="result in results" :key="result.url + result.type + result.id"
+                        class="cell medium-6 mb-2">
+                        <div class="card card-body card-status">
 
-<div class="gap-2 cell small-7 medium-9 flex-container">
+                            <div class="gap-2 cell small-7 medium-9 flex-container">
                                 <Link :href="result.url" class="flex items-center w-full">
                                 <v-lazy-image v-if="result.image" :src="result.image" width="45px"
                                     class="border img-fluid headshot rounded-circle border-secondary bg-dark"
@@ -138,7 +139,7 @@ onMounted(() => {
                                 </div>
                                 <div class="cell show-for-large small-5 medium-3 flex-container align-right gap-2">
                                     <div class="badge badge-info" style="height:25px;"> {{ result.type.replace("_", " ")
-                                        }}</div>
+                                    }}</div>
                                 </div>
                                 </Link>
                             </div>

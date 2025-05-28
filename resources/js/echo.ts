@@ -7,12 +7,8 @@ interface TypingResponse {
     userID: number;
 }
 
-declare const window: { [x: string]: any } & Window &
-    typeof globalThis & { Pusher: typeof Pusher; Echo: typeof Echo };
 window.Pusher = Pusher;
-window._Echo = Echo;
-
-const _Echo = (window._Echo = new Echo({
+window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env?.['VITE_REVERB_APP_KEY'],
     wsHost: import.meta.env?.['VITE_REVERB_HOST'],
@@ -36,7 +32,7 @@ const _Echo = (window._Echo = new Echo({
     },
     forceTLS: (import.meta.env?.['VITE_REVERB_SCHEME'] ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
-}));
+});
 export function PushMessage(
     toUserId: number,
     authUserId: number,
@@ -44,13 +40,12 @@ export function PushMessage(
     isFriendTypingTimer: Ref<null>,
     messageHandler: (message: string) => void // Add a callback for message handling
   ) {
-    if (_Echo) {
-      _Echo.private(`chat.${authUserId}`)
+      window.Echo.private(`chat.${authUserId}`)
         .listen('MessageSent', (response: { message: string }) => {
           messageHandler(response.message); // Call the provided handler
         });
 
-      _Echo.private(`chat.${toUserId}`)
+      window.Echo.private(`chat.${toUserId}`)
         .listenForWhisper('typing', (response: TypingResponse) => {
           isFriendTyping.value = response.userID === toUserId;
 
@@ -62,14 +57,11 @@ export function PushMessage(
             isFriendTyping.value = false;
           }, 1000);
         });
-    }
   }
 
   // Function to send typing whisper (unchanged)
   export function sendTypingWhisper(toUserId: number, authUserId: number) {
-    if (_Echo) {
-      _Echo.private(`chat.${toUserId}`).whisper('typing', {
+      window.Echo.private(`chat.${toUserId}`).whisper('typing', {
         userID: authUserId,
       });
-    }
   }

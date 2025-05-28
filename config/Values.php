@@ -4,9 +4,9 @@ return [
     'logo' => '/assets/img/netisu-logo.svg',
     'icon' => '/assets/img/logo.svg',
     'marketLogo' => '/assets/img/netisu-logo.svg',
+    'minimum_age_without_consent' => 13,
 
     'in_event' => true,
-
     'system_account_id' => 2,
     'in_testing_phase' => false,
 

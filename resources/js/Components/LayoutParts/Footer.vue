@@ -2,10 +2,6 @@
 import { usePage } from "@inertiajs/vue3";
 
 const props = usePage<any>().props;
-
-defineProps({
-    isLanding: { type: Boolean, default: false },
-});
 </script>
 
 <template>
@@ -21,8 +17,8 @@ defineProps({
                         {{ props.site.name }}. All rights reserved.
                     </div>
                     <div class="mb-2 flex-container-lg mb-lg-0">
-                        <a href="#" class="text-sm footer-link fw-semibold"><i class="fad fa-scroll"></i> TERMS OF SERVICE</a>
-                        <a href="#" class="text-sm footer-link fw-semibold"><i class="fad fa-lock"></i> PRIVACY POLICY</a>
+                        <Link :href="route(`policies.tos`)" class="text-sm footer-link fw-semibold"><i class="fad fa-scroll"></i> TERMS OF SERVICE</Link>
+                        <Link :href="route(`policies.privacy`)" class="text-sm footer-link fw-semibold"><i class="fad fa-lock"></i> PRIVACY POLICY</Link>
                         <a href="#" class="text-sm footer-link fw-semibold"><i class="fad fa-hard-hat"></i> JOBS</a>
                         <a href="#" class="text-sm footer-link fw-semibold"><i class="fad fa-envelope"></i> CONTACT</a>
                     </div>

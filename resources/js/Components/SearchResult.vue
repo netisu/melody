@@ -25,12 +25,15 @@ defineProps<{
                     />
                     <i
                         v-else-if="icon"
-                        class="text-4xl text-body"
                         :class="icon"
+                        class="text-xl align-middle headshot text-muted flex-container align-center flex-child-grow"
+                        style="height: 40px; width: 40px"
                     ></i>
-                    <span v-else class="text-lg text-gray-500"
-                        ><i class="fa-duotone fa-solid fa-seal-question"></i
-                    ></span>
+                    <i
+                        v-else
+                        class="text-xl fa-duotone fa-seal-question align-middle headshot text-muted flex-container align-center flex-child-grow"
+                        style="height: 40px; width: 40px"
+                    ></i>
                     <div>{{ name }}</div>
                 </div>
                 <i class="px-1 fas fa-chevron-right text-muted"></i>

@@ -15,7 +15,7 @@ import { route } from "ziggy-js";
             <div class="text-center card">
                 <div class="card-body">
                     Terms of Service (TOS) for {{ usePage<any>().props.site.production.domains.main }}
-                    <div class="text-2xl text-info"><i class="fad fa-information"></i>Last Updated: 26th Febuary 2025</div>
+                    <div class="text-2xl text-info"><i class="fad fa-information"></i>Last Updated: 28th May 2025</div>
 
                     1. Acceptance of Terms:
                     By accessing and using {{ usePage<any>().props.site.production.domains.main }} (the "Site"), you ("User," "you," or "your") agree to comply with
@@ -29,8 +29,8 @@ import { route } from "ziggy-js";
 
 
                     3. User Accounts:
-                    Eligibility: You must be at least [Insert Age, e.g., 13] years old to create an account. If you are
-                    under [Insert Age], you must have parental or guardian consent.
+                    Eligibility: You must be at least {{ usePage<any>().props.site.minimum_age_without_consent }} years old to create an account. If you are
+                    under {{ usePage<any>().props.site.minimum_age_without_consent }}, you must have parental or guardian consent.
                     Account Responsibility: You are responsible for maintaining the confidentiality of your account
                     credentials and for all activities that occur under your account.
                     Accurate Information: You agree to provide accurate and complete information when creating your
@@ -71,7 +71,7 @@ import { route } from "ziggy-js";
                     Respect other Users.
                     Do not engage in harassment, bullying, or other harmful behavior.
                     Follow the instructions of the moderation team.
-                    Do not exploit glitches or vulnerabilities in the Site.
+                    Do not exploit glitches or vulnerabilities onsite.
                     Do not attempt to reverse engineer the site.
 
                     8. Disclaimer of Warranties:
@@ -100,7 +100,7 @@ import { route } from "ziggy-js";
                     Singapore, without regard to its conflict of law principles.
 
                     13. Contact Information:
-                    If you have any questions about these TOS, please contact us at [Insert Contact Email].
+                    If you have any questions about these TOS, please contact us at {{ usePage<any>().props.site.production.domains.support }}.
                 </div>
             </div>
         </div>
