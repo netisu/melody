@@ -1,9 +1,7 @@
 <?php
-
-use Illuminate\Support\Facades\Auth;
-
 $searchRoutes = [
     [
+
         'name' => 'Marketplace',
         'keywords' => ['market', 'store', 'shop', 'marketplace', 'buy', 'sell', 'products'],
         'url' => 'route("store.page")',
@@ -29,36 +27,4 @@ $searchRoutes = [
     ],
 ];
 
-if (Auth::check() && Auth::user()) {
-    $searchRoutes[] = [[
-        'name' => 'Dashboard',
-        'keywords' => ['dashboard', 'home', 'stats', 'analytics'],
-        'url' => 'route("my.dashboard.page")',
-        'description' => 'Access your personal dashboard.',
-        'type' => 'route',
-        'icon' => 'fad fa-tachometer-alt',
-    ], [
-        'name' => 'Money',
-        'keywords' => ['money', 'purchases', 'transactions', 'sales'],
-        'url' => 'route("my.money.page")',
-        'description' => 'Manage your finances and convert your currencies.',
-        'type' => 'route',
-        'icon' => 'fad fa-tachometer-alt',
-    ], [
-        'name' => 'Your Profile',
-        'keywords' => ['profile', '', 'transactions', 'sales'],
-        'url' => 'route("my.money.page")',
-        'description' => 'Manage your finances and convert your currencies.',
-        'type' => 'route',
-        'icon' => 'fad fa-tachometer-alt',
-    ], [
-        'name' => 'Settings',
-        'keywords' => ['account', 'settings', 'profile', 'password', 'appearence', 'language'],
-        'url' => 'route("my.money.page")',
-        'description' => 'Manage your finances and convert your currencies.',
-        'type' => 'route',
-        'icon' => 'fad fa-tachometer-alt',
-    ]];
-};
-
-return $searchRoutes;
+return (Array) $searchRoutes;
