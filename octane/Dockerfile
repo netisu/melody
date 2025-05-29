@@ -19,13 +19,27 @@ RUN apt-get update && \
 
 # Install PHP extensions
 RUN install-php-extensions \
+    pdo_pgsql \
+    sqlite3 \
     gd \
-    pcntl \
-    opcache \
-    pdo \
-    pdo_mysql \
+    imagick \
+    curl \
+    imap \
+    mysqli \
+    mbstring \
+    xml \
+    zip \
+    bcmath \
+    soap \
+    intl \
+    readline \
+    ldap \
+    msgpack \
+    igbinary \
     redis \
-    curl
+    swoole \
+    memcached \
+    pcov 
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
