@@ -17,11 +17,11 @@ use Throwable;
 use Illuminate\Auth\Events\Registered;
 use App\Models\Admin;
 
-class GoogleSocialiteController extends Controller
+class DiscordSocialiteController extends Controller
 {
-    public function redirectToGoogle()
+    public function redirectToDiscord()
     {
-        $socialiteRedirectResponse = Socialite::driver('google')->redirect();
+        $socialiteRedirectResponse = Socialite::driver('discord')->redirect();;
         $redirectUrl = $socialiteRedirectResponse->getTargetUrl();
         return Inertia::location($redirectUrl);
     }
@@ -35,15 +35,15 @@ class GoogleSocialiteController extends Controller
     {
         try {
             // Get the user information from Google
-            $googleUser = Socialite::driver(driver: 'google')->user();
+            $discordUser = Socialite::driver(driver: 'discord')->user();
         } catch (Throwable $e) {
             return response()->json([
                 'type' => 'danger',
-                'message' => 'Google authentication failed.'
+                'message' => 'Discord authentication failed.'
             ]);
         }
 
-        $existingUser  = User::where(column: 'email', operator: $googleUser->email)->first();
+        $existingUser  = User::where(column: 'email', operator: $discordUser->email)->first();
 
         if ($existingUser) {
             return response()->json([
@@ -52,16 +52,15 @@ class GoogleSocialiteController extends Controller
             ]);
         } else {
             $newUser = User::create(attributes: [
-                'username' => $googleUser->username,
-                'display_name' => $googleUser->username,
-                'email' => $googleUser->email,
+                'username' => $discordUser->name,
+                'display_name' => $discordUser->nickname,
+                'email' => $discordUser->email,
                 'email_verified_at' => now(),
                 'password' => Hash::make(value: Str::random(length: 10)),
-                'birthdate' => $googleUser->birthdate,
                 'status' => 'Hey, Im new to ' . config('Values.name'),
                 'about_me' => 'Greetings! Im new to ' . config('Values.name'),
-                'social_id' => $googleUser->id,
-                'social_type' => 'google',
+                'social_id' => $discordUser->id,
+                'social_type' => 'discord',
             ]);
 
             $newUser->createDefaultAvatar();
@@ -70,7 +69,7 @@ class GoogleSocialiteController extends Controller
                 'user_id' => $newUser->id,
                 'profile_picture_enabled' => true,
                 'profile_picture_pending' => false,
-                'profile_picture_url' => $googleUser->avatar,
+                'profile_picture_url' => $discordUser->avatar,
             ]);
 
             if ($newUser->id === 1) {

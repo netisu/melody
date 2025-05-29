@@ -192,8 +192,16 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
                 // Guest-only authentication routes
                 Route::group(['as' => 'login.', 'prefix' => 'login'], function () {
                     // Google login
-                    Route::get('/google/v2', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('google');
-                    Route::get('callback/google', [GoogleSocialiteController::class, 'handleCallback'])->name('google.validation');
+                    Route::group(['as' => 'google.', 'prefix' => 'google'], function () {
+                        Route::get('/google/v2', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('auth');
+                        Route::get('/callback', [GoogleSocialiteController::class, 'handleCallback'])->name('validation');
+                    });
+
+                    // Discord login
+                    Route::group(['as' => 'discord.', 'prefix' => 'discord'], function () {
+                        Route::get('/discord', [GoogleSocialiteController::class, 'redirectToDiscord'])->name('auth');
+                        Route::get('/callback/discord', [GoogleSocialiteController::class, 'handleCallback'])->name('validation');
+                    });
 
                     //  remove (//) If you want Facebook login
                     //Route::get('auth/facebook', [FacebookSocialiteController::class, 'redirectToFB']);
