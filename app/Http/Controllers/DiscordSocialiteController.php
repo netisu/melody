@@ -48,42 +48,46 @@ class DiscordSocialiteController extends Controller
         if ($existingUser) {
             return response()->json([
                 'type' => 'danger',
-                'message' => 'You already have an account under your google email.'
+                'message' => 'You already have an account under your discord account.'
             ]);
-        } else {
-            $newUser = User::create(attributes: [
-                'username' => $discordUser->name,
-                'display_name' => $discordUser->nickname,
-                'email' => $discordUser->email,
-                'email_verified_at' => now(),
-                'password' => Hash::make(value: Str::random(length: 10)),
-                'status' => 'Hey, Im new to ' . config('Values.name'),
-                'about_me' => 'Greetings! Im new to ' . config('Values.name'),
-                'social_id' => $discordUser->id,
-                'social_type' => 'discord',
-            ]);
-
-            $newUser->createDefaultAvatar();
-
-            UserSettings::create([
-                'user_id' => $newUser->id,
-                'profile_picture_enabled' => true,
-                'profile_picture_pending' => false,
-                'profile_picture_url' => $discordUser->avatar,
-            ]);
-
-            if ($newUser->id === 1) {
-                Admin::create([
-                    'user_id' => $newUser->id,
-                    'role_id' => 1,
-                ]);
-            }
-
-            event(new Registered($newUser));
-
-            Auth::login(user: $newUser);
-
-            return redirect(to: '/my/dashboard');
         }
+        
+        if ($existingUser && $existingUser->social_type = 'discord') {
+            Auth::loginUsingId($existingUser->id);
+        }
+
+        $newUser = User::create(attributes: [
+            'username' => $discordUser->name,
+            'display_name' => $discordUser->nickname,
+            'email' => $discordUser->email,
+            'email_verified_at' => now(),
+            'password' => Hash::make(value: Str::random(length: 10)),
+            'status' => 'Hey, Im new to ' . config('Values.name'),
+            'about_me' => 'Greetings! Im new to ' . config('Values.name'),
+            'social_id' => $discordUser->id,
+            'social_type' => 'discord',
+        ]);
+
+        $newUser->createDefaultAvatar();
+
+        UserSettings::create([
+            'user_id' => $newUser->id,
+            'profile_picture_enabled' => true,
+            'profile_picture_pending' => false,
+            'profile_picture_url' => $discordUser->avatar,
+        ]);
+
+        if ($newUser->id === 1) {
+            Admin::create([
+                'user_id' => $newUser->id,
+                'role_id' => 1,
+            ]);
+        }
+
+        event(new Registered($newUser));
+
+        Auth::login(user: $newUser);
+
+        return redirect(to: '/my/dashboard');
     }
 }

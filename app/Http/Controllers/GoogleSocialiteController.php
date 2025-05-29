@@ -50,7 +50,12 @@ class GoogleSocialiteController extends Controller
                 'type' => 'danger',
                 'message' => 'You already have an account under your google email.'
             ]);
-        } else {
+        }
+
+        if ($existingUser && $existingUser->social_type = 'google') {
+            Auth::loginUsingId($existingUser->id);
+        }
+
             $newUser = User::create(attributes: [
                 'username' => $googleUser->nickname,
                 'display_name' => $googleUser->name,
@@ -85,6 +90,5 @@ class GoogleSocialiteController extends Controller
             Auth::login(user: $newUser);
 
             return redirect(to: '/my/dashboard');
-        }
     }
 }
