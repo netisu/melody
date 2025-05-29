@@ -46,49 +46,50 @@ class GoogleSocialiteController extends Controller
         $existingUser  = User::where(column: 'email', operator: $googleUser->email)->first();
 
         if ($existingUser) {
+            if ($existingUser->social_type = 'google') {
+                Auth::loginUsingId($existingUser->id);
+            }
             return response()->json([
                 'type' => 'danger',
                 'message' => 'You already have an account under your google email.'
             ]);
         }
 
-        if ($existingUser && $existingUser->social_type = 'google') {
-            Auth::loginUsingId($existingUser->id);
+
+
+        $newUser = User::create(attributes: [
+            'username' => $googleUser->nickname,
+            'display_name' => $googleUser->name,
+            'email' => $googleUser->email,
+            'email_verified_at' => now(),
+            'password' => Hash::make(value: Str::random(length: 10)),
+            'birthdate' => $googleUser->birthdate,
+            'status' => 'Hey, Im new to ' . config('Values.name'),
+            'about_me' => 'Greetings! Im new to ' . config('Values.name'),
+            'social_id' => $googleUser->id,
+            'social_type' => 'google',
+        ]);
+
+        $newUser->createDefaultAvatar();
+
+        UserSettings::create([
+            'user_id' => $newUser->id,
+            'profile_picture_enabled' => true,
+            'profile_picture_pending' => false,
+            'profile_picture_url' => $googleUser->avatar,
+        ]);
+
+        if ($newUser->id === 1) {
+            Admin::create([
+                'user_id' => $newUser->id,
+                'role_id' => 1,
+            ]);
         }
 
-            $newUser = User::create(attributes: [
-                'username' => $googleUser->nickname,
-                'display_name' => $googleUser->name,
-                'email' => $googleUser->email,
-                'email_verified_at' => now(),
-                'password' => Hash::make(value: Str::random(length: 10)),
-                'birthdate' => $googleUser->birthdate,
-                'status' => 'Hey, Im new to ' . config('Values.name'),
-                'about_me' => 'Greetings! Im new to ' . config('Values.name'),
-                'social_id' => $googleUser->id,
-                'social_type' => 'google',
-            ]);
+        event(new Registered($newUser));
 
-            $newUser->createDefaultAvatar();
+        Auth::login(user: $newUser);
 
-            UserSettings::create([
-                'user_id' => $newUser->id,
-                'profile_picture_enabled' => true,
-                'profile_picture_pending' => false,
-                'profile_picture_url' => $googleUser->avatar,
-            ]);
-
-            if ($newUser->id === 1) {
-                Admin::create([
-                    'user_id' => $newUser->id,
-                    'role_id' => 1,
-                ]);
-            }
-
-            event(new Registered($newUser));
-
-            Auth::login(user: $newUser);
-
-            return redirect(to: '/my/dashboard');
+        return redirect(to: '/my/dashboard');
     }
 }

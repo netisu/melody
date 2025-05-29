@@ -46,14 +46,13 @@ class DiscordSocialiteController extends Controller
         $existingUser  = User::where(column: 'email', operator: $discordUser->email)->first();
 
         if ($existingUser) {
+            if ($existingUser->social_type = 'discord') {
+                Auth::loginUsingId($existingUser->id);
+            }
             return response()->json([
                 'type' => 'danger',
                 'message' => 'You already have an account under your discord account.'
             ]);
-        }
-        
-        if ($existingUser && $existingUser->social_type = 'discord') {
-            Auth::loginUsingId($existingUser->id);
         }
 
         $newUser = User::create(attributes: [
