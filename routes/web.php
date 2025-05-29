@@ -201,7 +201,7 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
                     // Discord login
                     Route::group(['as' => 'discord.', 'prefix' => 'discord'], function () {
                         Route::get('/', [DiscordSocialiteController::class, 'redirectToDiscord'])->name('auth');
-                        Route::get('/callback/discord', [DiscordSocialiteController::class, 'handleCallback'])->name('validation');
+                        Route::get('/callback', [DiscordSocialiteController::class, 'handleCallback'])->name('validation');
                     });
 
                     //  remove (//) If you want Facebook login
