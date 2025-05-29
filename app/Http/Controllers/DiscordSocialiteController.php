@@ -48,6 +48,7 @@ class DiscordSocialiteController extends Controller
         if ($existingUser) {
             if ($existingUser->social_type = 'discord') {
                 Auth::loginUsingId($existingUser->id);
+                return redirect(to: '/my/dashboard');
             }
             return response()->json([
                 'type' => 'danger',

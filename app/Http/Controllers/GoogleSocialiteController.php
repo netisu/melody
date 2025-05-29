@@ -48,6 +48,8 @@ class GoogleSocialiteController extends Controller
         if ($existingUser) {
             if ($existingUser->social_type = 'google') {
                 Auth::loginUsingId($existingUser->id);
+                        return redirect(to: '/my/dashboard');
+
             }
             return response()->json([
                 'type' => 'danger',
