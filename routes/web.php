@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     Web3LoginController,
     MaintenanceController,
     GoogleSocialiteController,
+    DiscordSocialiteController,
     AchievementController,
     Forum\ForumController,
     Leaderboard\LeaderboardController,
@@ -193,14 +194,14 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
                 Route::group(['as' => 'login.', 'prefix' => 'login'], function () {
                     // Google login
                     Route::group(['as' => 'google.', 'prefix' => 'google'], function () {
-                        Route::get('/google/v2', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('auth');
+                        Route::get('/v2', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('auth');
                         Route::get('/callback', [GoogleSocialiteController::class, 'handleCallback'])->name('validation');
                     });
 
                     // Discord login
                     Route::group(['as' => 'discord.', 'prefix' => 'discord'], function () {
-                        Route::get('/discord', [GoogleSocialiteController::class, 'redirectToDiscord'])->name('auth');
-                        Route::get('/callback/discord', [GoogleSocialiteController::class, 'handleCallback'])->name('validation');
+                        Route::get('/', [DiscordSocialiteController::class, 'redirectToDiscord'])->name('auth');
+                        Route::get('/callback/discord', [DiscordSocialiteController::class, 'handleCallback'])->name('validation');
                     });
 
                     //  remove (//) If you want Facebook login
