@@ -460,7 +460,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
     {
         if (config('app.env') != 'local') {
             $url = config('app.storage.url');
-            if ($this->settings && $this->settings->profile_picture_pending != false && $this->settings->profile_picture_enabled != false) {
+            if ($this->settings && $this->settings->profile_picture_pending != true && $this->settings->profile_picture_enabled != false) {
                 $imageUrl = $this->settings->profile_picture_url;
 
                 // Check if profile_picture_url doesn't contain an external domain
