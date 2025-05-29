@@ -50,6 +50,7 @@
         "railsware/mailtrap-php": "^3.0",
         "simplito/elliptic-php": "^1.0",
         "socialiteproviders/discord": "^4.2",
+        "socialiteproviders/google": "*",
         "spatie/laravel-discord-alerts": "^1.6",
         "spatie/laravel-json-api-paginate": "^1.16",
         "spatie/laravel-responsecache": "^7.6",
