@@ -12,7 +12,8 @@ RUN apt-get update \
     unzip \
     librabbitmq-dev \
     libpq-dev \
-    supervisor
+    supervisor \
+    curl
 
 RUN install-php-extensions \
     gd \
@@ -20,7 +21,8 @@ RUN install-php-extensions \
     opcache \
     pdo \
     pdo_mysql \
-    redis
+    redis \
+    curl
 
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -81,7 +83,7 @@ RUN rm -rf /app/node_modules \
            /app/resources/css \
            /app/.env.example \
            /app/resources/js/ziggy.js
-           
+
 # Ensure essential Laravel directories exist for runtime and set permissions
 RUN mkdir -p storage bootstrap/cache bootstrap/ssr storage/framework/sessions \
            storage/framework/views storage/framework/cache storage/logs

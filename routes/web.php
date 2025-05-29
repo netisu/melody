@@ -327,9 +327,6 @@ Route::post('/email/verification-notification', function (Request $request) {
         if (!$request->user()->hasVerifiedEmail()) {
             // Dispatch the SendVerificationEmail job to the queue
             Queue::push(new SendVerificationEmail($request->user()));
-        } else {
-            // Even if already sent, we'll re-queue to be safe and consistent
-            Queue::push(new SendVerificationEmail($request->user()));
         }
     } else {
         User::where('id', Auth::id())->update(['email_verified_at' => now()]);

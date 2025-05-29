@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class SendVerificationEmail implements ShouldQueue
 {
@@ -33,6 +34,8 @@ class SendVerificationEmail implements ShouldQueue
      */
     public function handle()
     {
-        $this->user->sendEmailVerificationNotification();
+        if ($this->user instanceof MustVerifyEmail && ! $this->user->hasVerifiedEmail()) {
+            $this->user->sendEmailVerificationNotification();
+        }
     }
 }
