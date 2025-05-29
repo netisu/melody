@@ -52,8 +52,8 @@ class GoogleSocialiteController extends Controller
             ]);
         } else {
             $newUser = User::create(attributes: [
-                'username' => $googleUser->username,
-                'display_name' => $googleUser->username,
+                'username' => $googleUser->nickname,
+                'display_name' => $googleUser->name,
                 'email' => $googleUser->email,
                 'email_verified_at' => now(),
                 'password' => Hash::make(value: Str::random(length: 10)),
