@@ -11,7 +11,6 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import viteImagemin from "vite-plugin-imagemin";
 import compression from "vite-plugin-compression2";
 import vueDevTools from "vite-plugin-vue-devtools";
-import i18n from "laravel-vue-i18n/vite";
 
 export default {
     build: {
@@ -88,7 +87,6 @@ export default {
                 },
             },
         }),
-        i18n(),
         basicSsl(),
         viteImagemin({}),
         compression(),

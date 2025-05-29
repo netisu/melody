@@ -35,19 +35,19 @@ createInertiaApp({
     resolve: (name) => {
         const page = resolvePageComponent(
             `./Pages/${name}.vue`,
-            import.meta.glob<DefineComponent>("./Pages/**/*.vue"),
+            import.meta.glob<DefineComponent>("./Pages/**/*.vue")
         );
         return page;
     },
-       setup({ el, App, props, plugin }) {
+    setup({ el, App, props, plugin }) {
         createSSRApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
             .use(VueTippy)
-            .use(i18nVue, {
-                resolve: async (lang) => {
-                    const langs = import.meta.glob("../../lang/*.json");
-                    return await langs[`../../lang/${lang}.json`]();
+            .use(i18nVue as any, {
+                resolve: async (lang: string) => {
+                    const langFiles = import.meta.glob("../../lang/*.json");
+                    return await langFiles[`../../lang/${lang}.json`]();
                 },
             })
             .component("Skeletor", Skeletor)
@@ -55,6 +55,6 @@ createInertiaApp({
             .component("AppHead", AppHead)
             .component("Head", Head)
             .component("Link", Link)
-            . mount(el);
+            .mount(el);
     },
 });

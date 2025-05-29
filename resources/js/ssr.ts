@@ -7,7 +7,7 @@ import "../css/style.css";
 // アプリの作成
 import { createSSRApp, type DefineComponent, h } from "vue";
 import { i18nVue } from "laravel-vue-i18n";
-import { ZiggyVue } from 'ziggy-js';
+import { ZiggyVue } from "ziggy-js";
 import { Skeletor } from "vue-skeletor";
 import AppHead from "./Components/AppHead.vue";
 import createServer from "@inertiajs/vue3/server";
@@ -37,7 +37,7 @@ createServer((page) =>
         resolve: (name) =>
             resolvePageComponent(
                 `./Pages/${name}.vue`,
-                import.meta.glob<DefineComponent>("./Pages/**/*.vue"),
+                import.meta.glob<DefineComponent>("./Pages/**/*.vue")
             ),
         setup({ App, props, plugin }) {
             return createSSRApp({ render: () => h(App, props) })
@@ -49,13 +49,15 @@ createServer((page) =>
                 .component("AppHead", AppHead)
                 .component("Head", Head)
                 .component("Link", Link)
-                .use(i18nVue, {
-					lang: page.props.locale, /* use correct language server-side */
-					resolve: lang => {
-						const langs = import.meta.glob('../../lang/*.json', { eager: true });
-						return langs[`../../lang/${lang}.json`].default;
-					},
-				});
+                .use(i18nVue as any, {
+                    lang: page.props?.['locale'] || 'ja',
+                    resolve: (lang: string) => {
+                        const langs = import.meta.glob("../../lang/*.json", {
+                            eager: true,
+                        });
+                        return langs[`../../lang/${lang}.json`].default;
+                    },
+                });
         },
-    }),
+    })
 );
