@@ -166,7 +166,7 @@ class AuthController extends Controller
 
         UserSettings::create([
             'user_id' => $user->id,
-            'country_code' => $request->country,
+            'country_code' => strtolower($request->country),
         ]);
 
 

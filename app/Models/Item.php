@@ -110,4 +110,20 @@ class Item extends Model
             return null;
         }
     }
+    public function slug(): string
+    {
+        $text = $this->name;
+
+        // Convert to lowercase and replace spaces with a separator
+        $text = strtolower(trim(preg_replace('/\s+/', '-', $text)));
+
+        $allowedChars = 'a-z0-9-'; // Adjust this to include desired characters
+        $text = preg_replace('/[^' . $allowedChars . ']/', '', $text);
+        $text = preg_replace('/-{2,}/', '-', $text);
+
+        // Handle trailing separators
+        $text = trim($text, '-');
+
+        return $text;
+    }
 }

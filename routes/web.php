@@ -100,7 +100,7 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
         });
 
         // --- Promocodes Routes ---
-        Route::group(['as' => 'promocodes.', 'prefix' => 'promocodes', 'middleware' => 'verified'], function () {
+        Route::group(['as' => 'promocodes.', 'prefix' => 'promocodes', 'middleware' => 'auth'], function () {
             Route::get('/', [PromocodeController::class, 'PromocodeIndex'])->name('page');
             Route::post('/validate', [PromocodeController::class, 'PromocodeVal'])->name('redeem');
         });
