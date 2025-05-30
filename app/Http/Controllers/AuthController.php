@@ -39,8 +39,8 @@ class AuthController extends Controller
         $request->validate([
             'password' => 'required',
         ]);
-
-        if (! Hash::check($request->password, Auth::user()->password)) {
+        
+        if (!Auth::attempt(['username' => Auth::user()->username, 'password' => $request->password])) {
             return response()->json(['message' => 'Incorrect password.'], 422);
         }
 
