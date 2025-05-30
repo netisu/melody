@@ -18,12 +18,9 @@ RUN apt-get update && \
 
 # Install PHP extensions
 RUN install-php-extensions \
-    pdo_pgsql \
-    sqlite3 \
     gd \
     imagick \
     curl \
-    imap \
     mysqli \
     mbstring \
     xml \
@@ -31,15 +28,10 @@ RUN install-php-extensions \
     bcmath \
     soap \
     intl \
-    readline \
-    ldap \
-    msgpack \
-    igbinary \
+    pdo_mysql \
     redis \
-    swoole \
-    memcached \
-    pcov \
-    pcntl
+    pcntl \
+    imap
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -49,7 +41,7 @@ RUN groupadd --system --gid 1000 $WWWGROUP || true && \
 # Copy Application and Configuration
 COPY . /app
 COPY ./octane/start-container /usr/local/bin/start-container
-COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/php.ini
+COPY ./octane/php.ini /etc/php/8.4/cli/conf.d/99-octane.ini
 COPY ./octane/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY .env .env
 
