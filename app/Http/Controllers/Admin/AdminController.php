@@ -279,13 +279,8 @@ class AdminController extends Controller
 
         $itemUrl = route('store.item', $item->id);
 
-        $formattedPrice = [
-            $request->price_sparkles . 'Coins',
-            $request->price_stars . 'Stars',
-        ];
-
         $sendWebhook = new SendItemWebhook;
-        $sendWebhook->sendDiscordNotification($item->item_type, $item->name, $item->description, $formattedPrice, $item->thumbnail(), $itemUrl);
+        $sendWebhook->sendDiscordNotification($item);
 
 
         return inertia()->location($itemUrl);

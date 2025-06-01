@@ -3,49 +3,43 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-
+use Spatie\DiscordAlerts\Facades\DiscordAlert;
+use App\Models\Item;
 class SendItemWebhook
 {
-public function sendDiscordNotification(string $itemType, string $name, string $description, array $formattedPrice, string $thumbnail, string $link)
+    public function sendDiscordNotification(Item $item)
     {
-        $webhookUrl = config('app.DISCORD_ALERT_WEBHOOK');
-
-        $timestamp = date("c", strtotime("now"));
-        $priceString = implode(' | ', array_filter($formattedPrice)); // Remove empty elements
-
-        $messageData = [
-            'content' => "New " . ucfirst($itemType) . "!",
-            'username' => config('site.name') . ' Item Notifier',
-            'embeds' => [
-                [
-                    'title' => $name,
-                    'type' => 'rich',
-                    'description' => "$description - $priceString",
-                    'url' => $link,
-                    'timestamp' => $timestamp,
-                    'color' => hexdec('3366ff'),
-                    'footer' => [
-                        'text' => '&copy; ' . config('Values.name'),
-                        'icon_url' => config('Values.icon'),
-                    ],
-                    // Thumbnail
-                    'image' => [
-                        'url' => 'img',
-                    ],
-                    "thumbnail" => [
-                         "url" => $thumbnail,
-                    ],
-                    'author' => [
-                        'name' => config('Values.name') . ' Item Notifier',
-                        'url' => config('Values.production.domains.main'),
+        $formattedType = ucfirst($item->item_type);
+        $siteName = config('Values.name');
+        DiscordAlert::message("New {$formattedType}!", [
+            [
+                'content' => $item->name,
+                'username' => "{$siteName} Item Notifier",
+                'embeds' => [
+                    [
+                        'type' => 'rich',
+                        'description' => "$item->description",
+                        'url' => route('store.item', $item->id),
+                        'timestamp' => $item->created_at->diffForHumans(),
+                        'color' => hexdec('3366ff'),
+                        'footer' => [
+                            'text' => "© {$siteName}",
+                            'icon_url' => config('Values.icon'),
+                        ],
+                        // Thumbnail
+                        'image' => [
+                            'url' => 'img',
+                        ],
+                        "thumbnail" => [
+                            "url" => $item->thumbnail(),
+                        ],
+                        'author' => [
+                            'name' => $item->creator->username,
+                            'url' => route('user.profile', $item->creator->username),
+                        ],
                     ],
                 ],
-            ],
-        ];
-
-        $response = Http::post($webhookUrl, $messageData);
-
-        // Handle response if needed
-        return $response;
+            ]
+        ]);
     }
 }

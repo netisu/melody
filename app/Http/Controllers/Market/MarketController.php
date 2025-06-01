@@ -213,6 +213,7 @@ class MarketController extends Controller
     public function update(Request $request, int $id)
     {
         $item = Item::findOrFail($id);
+
         if (!$item) {
             abort(404);
         }
@@ -222,11 +223,11 @@ class MarketController extends Controller
         }
 
         $item->update([
-            'name' => $request->name ??  $item->name,
-            'description' => $request->description ??  $item->description,
-            'cost_sparkles' => $request->cost_sparkles ??  $item->cost_sparkles,
-            'cost_stars' => $request->cost_stars ??  $item->cost_stars,
-            'onsale' => $request->isOnsale ??  $item->onsale,
+            'name' => $request->name ?? $item->name,
+            'description' => $request->description ?? $item->description,
+            'cost_sparkles' => $request->cost_sparkles ?? $item->cost_sparkles,
+            'cost_stars' => $request->cost_stars ?? $item->cost_stars,
+            'onsale' => $request->isOnsale ?? $item->onsale,
         ]);
 
         return redirect()->route('store.item', $item->id)->with([

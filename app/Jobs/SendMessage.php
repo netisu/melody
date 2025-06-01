@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Events\GotMessage;
+use App\Events\MessageSent;
 use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +19,7 @@ class SendMessage implements ShouldQueue
     }
 
     public function handle(): void {
-        GotMessage::dispatch([
+        MessageSent::dispatch([
             'id' => $this->message->id,
             'sent_to' => $this->message->sent_to,
             'sent_from' => $this->message->sent_from,
