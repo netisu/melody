@@ -560,9 +560,16 @@ onMounted(() => {
 
         <div class="cell medium-9">
             <div class="flex-container gap-2">
-                <span class="text-xl fw-semibold">{{
-                    selectHatSlot ? "Pick a Hat Slot" : "Current Outfit"
-                }}</span>
+                <div class="cell large-3">
+                    <div class="text-xl fw-semibold">{{
+                        selectHatSlot ? "Pick a Hat Slot" : "Current Outfit"
+                    }}</div>
+                    <a
+                        @click="selectHatSlot = !selectHatSlot"
+                        class="text-info text-sm"
+                        ><i class="fad fa-arrow-left"></i> Go back</a
+                    >
+                </div>
             </div>
             <div class="mb-3">
                 <div class="grid-x">
@@ -570,11 +577,6 @@ onMounted(() => {
                         v-if="selectHatSlot === true"
                         class="text-center cell medium-12"
                     >
-                        <a
-                            @click="selectHatSlot = !selectHatSlot"
-                            class="text-info text-sm"
-                            ><i class="fad fa-arrow-left"></i> Go back</a
-                        >
                         <div class="grid-x grid-margin-x grid-padding-y">
                             <template v-for="n in 6" :key="n" :value="n">
                                 <div
