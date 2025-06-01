@@ -34,7 +34,7 @@ RUN install-php-extensions \
     imagick \
     curl \
     pgsql  \
-    mysql  \
+    mysqli  \
     mbstring \
     xml \
     zip \
