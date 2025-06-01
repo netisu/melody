@@ -14,7 +14,7 @@ import { usePage } from "@inertiajs/vue3";
 import VLazyImage from "v-lazy-image";
 
 const colors = usePage<any>().props.colors;
-const currentcat = ref("hat");
+const currentcat = ref<string>("hat");
 const CategoryItems = ref<{
     current_page: number;
     last_page: number;
@@ -32,49 +32,49 @@ var userAvatar = reactive({
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "color_head"
-            ],
+            ]
     ),
     color_torso: computed<any>(
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "color_torso"
-            ],
+            ]
     ),
     color_left_arm: computed<any>(
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "color_left_arm"
-            ],
+            ]
     ),
     color_right_arm: computed<any>(
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "color_right_arm"
-            ],
+            ]
     ),
     color_left_leg: computed<any>(
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "color_left_leg"
-            ],
+            ]
     ),
     color_right_leg: computed<any>(
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "color_right_leg"
-            ],
+            ]
     ),
     image: computed<any>(
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "thumbnail"
-            ],
+            ]
     ),
     current_face: computed<any>(
         () =>
             (usePage<any>().props.avatar as Record<string, unknown>)?.[
                 "current_face"
-            ],
+            ]
     ),
 });
 
@@ -97,7 +97,7 @@ function showModal(modalId: string): void {
 const getItemList = async (category: Ref<string, string>, page: number) => {
     try {
         const response = await axios.get(
-            route(`api.avatar.items`, { category: category, page: page }),
+            route(`api.avatar.items`, { category: category.value, page: page })
         );
         const data = response.data;
         CategoryItems.value = data;
@@ -107,7 +107,7 @@ const getItemList = async (category: Ref<string, string>, page: number) => {
 };
 
 const handlePageClick = (page: number) => {
-    getItemList(currentcat.value, page);
+    getItemList(currentcat, page);
 };
 
 // Mapping of internal part names to user-friendly names
@@ -228,7 +228,7 @@ const SortItemByType = async (id: number, type: string, action: string) => {
 const getItemsbyCategory = async (category) => {
     try {
         const response = await axios.get(
-            route(`api.avatar.items`, { category: category }),
+            route(`api.avatar.items`, { category: category })
         );
         CategoryItems.value = response.data;
         currentcat.value = category;
@@ -243,7 +243,7 @@ const getCurrentlyWearingItems = async () => {
         const response = await axios.get(
             route(`api.user.currently-wearing`, {
                 id: usePage<any>().props.auth.user.id,
-            }),
+            })
         );
         wearingItems.value = response.data;
     } catch (error) {
@@ -266,13 +266,16 @@ const WearItem = async (id, slot) => {
     try {
         VrcRequest.value = true;
         const response = await axios.get(
-            route(`api.avatar.wear-item`, { id: id, slot: slot }),
+            route(`api.avatar.wear-item`, { id: id, slot: slot })
         );
         imageRefreshKey.value += 1;
         thumbnail = response.data.thumbnail;
         VrcRequest.value = false;
 
         getCurrentlyWearingItems();
+        if (slot === "none") {
+            getCurrentlyWearingHats();
+        }
     } catch (error) {
         VrcRequest.value = false;
 
@@ -284,7 +287,7 @@ const TakeOffItem = async (id, slot) => {
     try {
         VrcRequest.value = true;
         const response = await axios.get(
-            route(`api.avatar.remove-item`, { id: id, slot: slot }),
+            route(`api.avatar.remove-item`, { id: id, slot: slot })
         );
         imageRefreshKey.value += 1;
         thumbnail = response.data.thumbnail;
@@ -455,7 +458,7 @@ onMounted(() => {
                                         red 0 100%
                                     );
                                     border-radius: 5px;
-                                    background: url(&quot;/assets/img/rainbow-square.png&quot;);
+                                    background: url('/assets/img/rainbow-square.png');
                                     background-size: 100% 100%;
                                     display: inline-block;
                                     width: 32px;
@@ -469,7 +472,7 @@ onMounted(() => {
                                 setColor(
                                     (
                                         $event.target as HTMLInputElement
-                                    ).value.replace('#', ''),
+                                    ).value.replace('#', '')
                                 )
                             "
                             id="colorPicker"
@@ -567,6 +570,11 @@ onMounted(() => {
                         v-if="selectHatSlot === true"
                         class="text-center cell medium-12"
                     >
+                        <a
+                            @click="selectHatSlot = !selectHatSlot"
+                            class="text-info text-sm"
+                            ><i class="fad fa-arrow-left"></i> Go back</a
+                        >
                         <div class="grid-x grid-margin-x grid-padding-y">
                             <template v-for="n in 6" :key="n" :value="n">
                                 <div
@@ -580,7 +588,7 @@ onMounted(() => {
                                                     wearingHats[n - 1].id,
                                                     wearingHats[n - 1]
                                                         .item_type,
-                                                    'wear',
+                                                    'wear'
                                                 )
                                             "
                                             class="p-2 mb-1 card card-item position-relative"
@@ -595,7 +603,7 @@ onMounted(() => {
                                                 @error="
                                                     onImgErrorSmall(
                                                         wearingHats[n - 1]
-                                                            .thumbnail,
+                                                            .thumbnail
                                                     )
                                                 "
                                             />
@@ -799,7 +807,7 @@ onMounted(() => {
                                             SortItemByType(
                                                 item.id,
                                                 item.item_type,
-                                                'remove',
+                                                'remove'
                                             )
                                         "
                                     >
@@ -811,7 +819,7 @@ onMounted(() => {
                                                 :id="item.thumbnail"
                                                 @error="
                                                     onImgErrorSmall(
-                                                        item.thumbnail,
+                                                        item.thumbnail
                                                     )
                                                 "
                                             />
@@ -855,7 +863,7 @@ onMounted(() => {
                         <select
                             @change="
                                 getItemsbyCategory(
-                                    ($event.target as HTMLInputElement).value,
+                                    ($event.target as HTMLInputElement).value
                                 )
                             "
                             class="mb-2 form form-xs form-select form-has-section-color"
@@ -888,7 +896,7 @@ onMounted(() => {
                                             SortItemByType(
                                                 item.id,
                                                 item.item_type,
-                                                'wear',
+                                                'wear'
                                             )
                                         "
                                         class="p-2 mb-1 card card-inner position-relative"
