@@ -393,7 +393,7 @@ function onImgErrorSmall(id) {
                                 data-toggle-modal="#purchase-with-Stars-modal"
                                 @click="showModal('purchase-with-Stars-modal')">
                                 <i class="fas fa-stars" style="width: 34px"></i>{{ usePage<any>
-                                    ().props.item.cost_Stars }} Stars
+                                    ().props.item.cost_stars }} Stars
                             </button>
                             <div class="mb-2 text-xs fw-bold text-uppercase text-muted">
                                 or
@@ -403,7 +403,7 @@ function onImgErrorSmall(id) {
                                 @click="showModal('purchase-with-sparkles-modal')">
                                 <i class="fas fa-sparkles" style="width: 34px"></i>{{ usePage<any>().props.item.cost_sparkles
                                 }}
-                                    sparkles
+                                    Sparkles
                             </button>
                         </div>
                     </div>
