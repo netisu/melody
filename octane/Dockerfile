@@ -49,7 +49,6 @@ RUN install-php-extensions \
     redis \
     pcntl \
     imap \
-    pgsql \
     opcache
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
