@@ -151,7 +151,7 @@ class ForumController extends Controller
         $post = Cache::remember('forum_post_' . $id, now()->addMinutes(5), fn() => ForumThread::find($id));
 
         // Handle missing post
-        if (!$post->exists()) {
+        if (!$post) {
             abort(404);
         }
 
