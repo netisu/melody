@@ -107,35 +107,11 @@ Make sure you set the correct permissions!
 chmod -R 777 /var/www/* && chmod -R 777 /var/www/html/*
 ```
 
-## Node.js Setup
+## Bun Setup
 
-Install the Node.js Version Manager (NVM) by following these steps:
-
-1. Install nvm (Node.js Version manager):
-
+Install Bun Directly:
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-```
-
-2. Apply fnm configuration to your shell:
-
-### Run this in your shell:
-
-```bash
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-```
-
-### Then:
-
-```bash
-source ~/.bashrc
-```
-
-3. Install the latest LTS version of Node.js:
-
-```bash
-nvm install node
+curl -fsSL https://bun.sh/install | bash
 ```
 
 ## Composer and Dependencies
