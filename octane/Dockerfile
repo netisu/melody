@@ -48,6 +48,7 @@ RUN install-php-extensions \
     pcov \
     redis \
     pcntl \
+    pdo_mysql \
     imap \
     opcache
 
