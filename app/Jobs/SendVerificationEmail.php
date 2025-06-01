@@ -34,7 +34,7 @@ class SendVerificationEmail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->user instanceof MustVerifyEmail && ! $this->user->hasVerifiedEmail()) {
+        if ($this->user instanceof MustVerifyEmail && !$this->user->hasVerifiedEmail()) {
             $this->user->sendEmailVerificationNotification();
         }
     }
