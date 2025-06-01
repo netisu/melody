@@ -8,6 +8,7 @@ ENV SERVER_NAME="https://"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    zip \
     unzip \
     libpq-dev \
     libonig-dev \
@@ -16,6 +17,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcurl4-openssl-dev \
     libicu-dev \
     libzip-dev \
+    libcap2-bin \
+    libpng-dev \
+    dnsutils \
+    librsvg2-bin \
+    fswatch \
+    ffmpeg \
+    gnupg \
+    gosu \
+    supervisor \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install PHP extensions
@@ -23,19 +33,22 @@ RUN install-php-extensions \
     gd \
     imagick \
     curl \
-    nproc \
-    mysqli \
+    pgsql  \
+    mysql  \
     mbstring \
     xml \
     zip \
     bcmath \
     soap \
     intl \
-    pdo_mysql \
+    readline \
+    ldap \
+    igbinary \
+    msgpack \
+    pcov \
     redis \
     pcntl \
     imap \
-    pdo_pgsql \
     pgsql \
     opcache
 
