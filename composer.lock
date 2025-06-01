@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "adc4d403cc03dabdc730c3ac3cba4369",
+    "content-hash": "711a55011be197fef346abad216c9084",
     "packages": [
         {
             "name": "arandilopez/laravel-profane",
@@ -8713,16 +8713,16 @@
         },
         {
             "name": "railsware/mailtrap-php",
-            "version": "3.0.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/railsware/mailtrap-php.git",
-                "reference": "a17c7bc733db3acdc5f09e21f1e1a3a61fb7046b"
+                "reference": "b48e1d167588a0b34a265c7355d13d59ead84ffd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/railsware/mailtrap-php/zipball/a17c7bc733db3acdc5f09e21f1e1a3a61fb7046b",
-                "reference": "a17c7bc733db3acdc5f09e21f1e1a3a61fb7046b",
+                "url": "https://api.github.com/repos/railsware/mailtrap-php/zipball/b48e1d167588a0b34a265c7355d13d59ead84ffd",
+                "reference": "b48e1d167588a0b34a265c7355d13d59ead84ffd",
                 "shasum": ""
             },
             "require": {
@@ -8781,9 +8781,9 @@
             ],
             "support": {
                 "issues": "https://github.com/railsware/mailtrap-php/issues",
-                "source": "https://github.com/railsware/mailtrap-php/tree/3.0.0"
+                "source": "https://github.com/railsware/mailtrap-php/tree/3.1.0"
             },
-            "time": "2025-05-13T08:05:48+00:00"
+            "time": "2025-05-29T14:58:07+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -10986,16 +10986,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v7.2.4",
+            "version": "v7.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "78981a2ffef6437ed92d4d7e2a86a82f256c6dc6"
+                "reference": "57e4fb86314015a695a750ace358d07a7e37b8a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/78981a2ffef6437ed92d4d7e2a86a82f256c6dc6",
-                "reference": "78981a2ffef6437ed92d4d7e2a86a82f256c6dc6",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/57e4fb86314015a695a750ace358d07a7e37b8a9",
+                "reference": "57e4fb86314015a695a750ace358d07a7e37b8a9",
                 "shasum": ""
             },
             "require": {
@@ -11061,7 +11061,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v7.2.4"
+                "source": "https://github.com/symfony/http-client/tree/v7.3.0"
             },
             "funding": [
                 {
@@ -11077,7 +11077,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-02-13T10:27:23+00:00"
+            "time": "2025-05-02T08:23:16+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -11351,16 +11351,16 @@
         },
         {
             "name": "symfony/mailer",
-            "version": "v7.2.6",
+            "version": "v7.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mailer.git",
-                "reference": "998692469d6e698c6eadc7ef37a6530a9eabb356"
+                "reference": "0f375bbbde96ae8c78e4aa3e63aabd486e33364c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mailer/zipball/998692469d6e698c6eadc7ef37a6530a9eabb356",
-                "reference": "998692469d6e698c6eadc7ef37a6530a9eabb356",
+                "url": "https://api.github.com/repos/symfony/mailer/zipball/0f375bbbde96ae8c78e4aa3e63aabd486e33364c",
+                "reference": "0f375bbbde96ae8c78e4aa3e63aabd486e33364c",
                 "shasum": ""
             },
             "require": {
@@ -11411,7 +11411,7 @@
             "description": "Helps sending emails",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/mailer/tree/v7.2.6"
+                "source": "https://github.com/symfony/mailer/tree/v7.3.0"
             },
             "funding": [
                 {
@@ -11427,7 +11427,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-04T09:50:51+00:00"
+            "time": "2025-04-04T09:51:09+00:00"
         },
         {
             "name": "symfony/mailgun-mailer",

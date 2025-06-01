@@ -63,8 +63,8 @@ return [
         'resend' => [
             'transport' => 'resend',
         ],
-        'mailtrap' => [
-            'transport' => 'mailtrap'
+        'mailtrap-sdk' => [
+            'transport' => 'mailtrap-sdk'
         ],
 
         'sendmail' => [
