@@ -117,7 +117,7 @@ class RenderController extends Controller
             ];
         }
 
-        $itemHash = $slotData->item;
+        $itemHash = $slotData->item->hash;
         $editStyleHash = null;
         $isModel = false;
         $isTexture = false;
