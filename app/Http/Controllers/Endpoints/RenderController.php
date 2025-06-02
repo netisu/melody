@@ -112,8 +112,6 @@ class RenderController extends Controller
             return [
                 'item' => 'none',
                 'edit_style' => null,
-                'is_model' => false,
-                'is_texture' => false,
             ];
         }
 
@@ -124,15 +122,20 @@ class RenderController extends Controller
 
         if ($slotData->edit_style_details) {
             $editStyleHash = $slotData->edit_style_details->hash; // Hash from ItemEditStyle
-            $isModel = $slotData->edit_style_details->is_model_style;
-            $isTexture = $slotData->edit_style_details->is_texture_style;
+            $isModel = (bool) $slotData->edit_style_details->is_model_style;
+            $isTexture = (bool) $slotData->edit_style_details->is_texture_style;
+
+            // Construct the 'edit_style' object for the Go backend
+            $editStyleData = [
+                'hash' => $editStyleHash,
+                'is_model' => $isModel,
+                'is_texture' => $isTexture,
+            ];
         }
 
         return [
             'item' => $itemHash,
-            'edit_style' => $editStyleHash,
-            'is_model' => $isModel,
-            'is_texture' => $isTexture,
+            'edit_style' => $editStyleData,
         ];
     }
 
@@ -163,7 +166,7 @@ class RenderController extends Controller
                 'pants',
             ];
             foreach ($itemSlots as $slot) {
-                $itemsForRender[$slot] = $this->getItemRenderData($wearingItems[$slot]);
+                $itemsForRender[$slot] = $this->getItemRenderData($wearingItems[$slot] ?? 'none');
             }
             $requestData['RenderJson'] = [
                 'items' => $itemsForRender,

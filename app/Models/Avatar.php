@@ -73,14 +73,14 @@ class Avatar extends Model
         }
 
         $item = null;
-        // Check if 'id' key exists in the $slotData (which is like ['id' => 1, 'style_id' => 2])
+        // Check if 'id' key exists in the $slotData (which is like ['id' => 1, 'edit_style_id' => 2])
         if (isset($slotData['id'])) {
             $item = Item::find($slotData['id']); // Load the full Item model
         }
 
         $editStyle = null;
-        if (isset($slotData['style_id'])) {
-            $editStyle = ItemEditStyle::find($slotData['style_id']); // Load the full ItemEditStyle model
+        if (isset($slotData['edit_style_id']) && $slotData['edit_style_id'] !== null) {
+            $editStyle = ItemEditStyle::find($slotData['edit_style_id']); // Load the full ItemEditStyle model
         }
 
         if ($item || $editStyle) {
@@ -119,7 +119,7 @@ class Avatar extends Model
 
         return $wearing;
     }
-    
+
     /**
      * Retrieves the specific hat item (and its style) for a given hat number.
      * This is a convenience method now wrapper around getEquippedItemAndStyle.
