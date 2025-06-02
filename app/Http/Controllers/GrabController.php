@@ -31,6 +31,7 @@ use App\Models\ItemPurchase;
 use Illuminate\Support\Facades\Cache;
 use DB;
 use Inertia\Inertia;
+use App\Models\Avatar;
 
 class GrabController extends Controller
 {
@@ -42,33 +43,66 @@ class GrabController extends Controller
 
     public function customizeIndex()
     {
-        $colors = config('avatar_colors'); // Assuming you've defined the colors in a config file.
-        $cacheKey = 'customization_categories';
-
-        $categories = Cache::remember($cacheKey, now()->addHours(6), function () {
-            return config('SimpleCategories');
-        });
+        $availableColors = config('avatar_colors');
+        $categories = config('SimpleCategories');
 
         /** @var \App\Models\User $user **/
         $user = Auth::user();
 
+        $avatar = $user->avatar();
+        if (!$avatar) {
+            $avatar = Avatar::create([
+                'user_id' => $user->id,
+                'image' => 'default',
+                'colors' => [
+                    'head' => 'd3d3d3',
+                    'torso' => '055e96',
+                    'left_arm' => 'd3d3d3',
+                    'right_arm' => 'd3d3d3',
+                    'left_leg' => 'd3d3d3',
+                    'right_leg' => 'd3d3d3',
+                ],
+            ]);
+        }
+
+        // Retrieve current body colors directly from the avatar model's JSON column
+        $currentBodyColors = $avatar->colors ?? [
+            'head' => 'd3d3d3',
+            'torso' => '055e96',
+            'left_arm' => 'd3d3d3',
+            'right_arm' => 'd3d3d3',
+            'left_leg' => 'd3d3d3',
+            'right_leg' => 'd3d3d3',
+        ];
+
+        // Derive current_face_url directly from the 'face' JSON column for the initial prop
+        $faceItemHash = 'none';
+        $faceSlotData = $avatar->face;
+
+        if (is_array($faceSlotData) && isset($faceSlotData['item_id']) && !is_null($faceSlotData['item_id'])) {
+            $faceItem = Item::find($faceSlotData['item_id']);
+            if ($faceItem) {
+                $faceItemHash = $faceItem->hash;
+            }
+        }
+
+        $currentFaceUrl = config('app.storage.url') . (
+            $faceItemHash !== 'none'
+            ? '/uploads/' . $faceItemHash . ".png"
+            : '/assets/default.png'
+        );
+
         return inertia('Customize/Index', [
             'avatar' => [
-                'color_head' => $user->avatar()->color_head,
-                'color_left_arm' => $user->avatar()->color_left_arm,
-                'color_torso' => $user->avatar()->color_torso,
-                'color_right_arm' => $user->avatar()->color_right_arm,
-                'color_left_leg' => $user->avatar()->color_left_leg,
-                'color_right_leg' => $user->avatar()->color_right_leg,
                 'thumbnail' => $user->thumbnail(),
-                'current_face' => config('app.storage.url') . (
-                    $user->avatar()->face ? '/uploads/' . getItemHash($user->avatar()->face) . ".png" : '/assets/default.png'
-                ),
+                'colors' => $currentBodyColors,
+                'current_face_url' => $currentFaceUrl,
             ],
-            'colors' => $colors,
+            'available_colors' => $availableColors,
             'categories' => $categories,
         ]);
     }
+
 
     public function regeneratewithID($id)
     {
@@ -86,83 +120,39 @@ class GrabController extends Controller
         /** @var \App\Models\User $user **/
         $avatar = Auth::user()->avatar();
 
-        $newVrcInstance = new RenderController();
-        $vrs = $newVrcInstance;
-
         switch ($request->action) {
             case 'reset':
                 $avatar->resetAvatar();
                 $this->regenerate($request);
-                return $vrs->getAvatarRenderHash($avatar->id);
-            case 'wear':
-                $item = Item::find($request->id);
-
-                if (!$item) {
-                    return response()->json(['error' => 'Invalid item.']);
-                }
-
-                $item = $item->first();
-                $column = ($item->type == 'hat') ? 'hat_1' : $item->type;
-
-                if (!Auth::user()->ownsItem($item->id)) {
-                    return response()->json(['error' => 'You do not own this item.']);
-                }
-
-                if ($item->status !== 'approved') {
-                    return response()->json(['error' => 'This item is not approved.']);
-                }
-
-                if ($item->type === 'hat') {
-                    if (!$avatar->hat_1) {
-                        $column = 'hat_1';
-                    } elseif (!$avatar->hat_2) {
-                        $column = 'hat_2';
-                    } elseif (!$avatar->hat_3) {
-                        $column = 'hat_3';
-                    }
-                }
-
-                $avatar->$column = $item->id;
-                $avatar->save();
-
-                $this->regenerate($request);
-
-                return $vrs->getAvatarRenderHash($avatar->id);
-
-            case 'remove':
-                $validTypes = ['hat_1', 'hat_2', 'hat_3', 'head', 'face', 'tool', 'addon', 'torso', 'left_arm', 'right_arm', 'left_leg', 'right_leg', 'tshirt', 'shirt', 'pants'];
-
-                if (!in_array($request->type, $validTypes)) {
-                    return response()->json(['error' => 'Invalid type.']);
-                }
-
-                $avatar->{$request->type} = null;
-                $avatar->save();
-
-                $this->regenerate($request);
-
                 return Auth::user()->thumbnail();
-                case 'color':
+            case 'color':
                 $validBodyParts = ['head', 'torso', 'left_arm', 'right_arm', 'left_leg', 'right_leg'];
+                $bodyPart = $request->body_part;
+                $newColor = $request->color;
 
-                if (!in_array($request->body_part, $validBodyParts)) {
-                    return response()->json(['error' => 'Invalid body part.']);
+                if (!in_array($bodyPart, $validBodyParts)) {
+                    return response()->json(['error' => 'Invalid body part.'], 400); // 400 Bad Request
                 }
 
+                $currentColors = $avatar->colors ?? [];
 
-                Log::info('Current color of ' . $request->body_part . ': ' . $avatar->{"color_{$request->body_part}"});
-                Log::info('Requested color: ' . $request->color);
+
+                Log::info('Current color of ' . $bodyPart . ': ' . ($currentColors[$bodyPart] ?? 'N/A'));
+                Log::info('Requested color: ' . $newColor);
 
                 // Check if the avatar's current color for the specified body part matches the requested color
-                if ($avatar->{"color_{$request->body_part}"} == $request->color) {
+                if (($currentColors[$bodyPart] ?? null) === $newColor) {
                     Log::info('Color already matches, skipping regeneration for user ID: ' . Auth::id());
                     return Auth::user()->thumbnail();
                 }
+                Log::info('Saving Color for:' . $avatar->user_id);
+
+                $currentColors[$bodyPart] = $newColor;
+
+                $avatar->colors = $currentColors;
 
                 // Update the avatar's color for the specified body part
-                $avatar->{"color_{$request->body_part}"} = $request->color;
                 $avatar->save();
-                Log::info('Saving Color for:' . $avatar->user_id);
 
                 Log::info('About to call $this->regenerate() for user ID: ' . $avatar->user_id);
                 $this->regeneratewithID($avatar->user_id);

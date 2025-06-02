@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('item_edit_styles', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('creator_id')->unsigned();
             $table->bigInteger('item_id')->unsigned();
             $table->string('name')->unique(); // Name of the style (e.g., "Black")
             $table->string('description')->nullable();

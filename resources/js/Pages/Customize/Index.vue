@@ -13,7 +13,37 @@ import JsonPagination from "@/Components/JsonPagination.vue";
 import { usePage } from "@inertiajs/vue3";
 import VLazyImage from "v-lazy-image";
 
-const colors = usePage<any>().props.colors;
+interface AvatarProps {
+    thumbnail: string;
+    colors: {
+        // This is the entire colors object as passed
+        head: string;
+        torso: string;
+        left_arm: string;
+        right_arm: string;
+        left_leg: string;
+        right_leg: string;
+    };
+    current_face_url: string; // The URL for the current face
+}
+
+interface AvatarColors {
+    head: string;
+    torso: string;
+    left_arm: string;
+    right_arm: string;
+    left_leg: string;
+    right_leg: string;
+}
+
+interface Item {
+    item: string; // hash of the item
+    edit_style: string | null; // hash of the selected edit style
+    is_model: boolean;
+    is_texture: boolean;
+}
+
+const colors = usePage<any>().props.available_colors;
 const currentcat = ref<string>("hat");
 const CategoryItems = ref<{
     current_page: number;
@@ -26,55 +56,28 @@ const wearingHats = ref([]);
 const SelectedItemID = ref<Number>();
 const slotValue = ref<Number>();
 const selectHatSlot = ref(false);
+const initialAvatarProps = usePage<any>().props.avatar as AvatarProps;
 
-var userAvatar = reactive({
-    color_head: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "color_head"
-            ]
+const userAvatar = reactive({
+    // --- Properties directly from Inertia Page Props ---
+    colors: reactive<AvatarColors>({
+        // Make 'colors' itself a reactive object
+        head: initialAvatarProps?.colors?.head || "d3d3d3",
+        torso: initialAvatarProps?.colors?.torso || "055e96",
+        left_arm: initialAvatarProps?.colors?.left_arm || "d3d3d3",
+        right_arm: initialAvatarProps?.colors?.right_arm || "d3d3d3",
+        left_leg: initialAvatarProps?.colors?.left_leg || "d3d3d3",
+        right_leg: initialAvatarProps?.colors?.right_leg || "d3d3d3",
+    }),
+
+    // Thumbnail URL from props
+    image: computed<string>(
+        () => initialAvatarProps?.thumbnail || "/assets/default_thumbnail.png"
     ),
-    color_torso: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "color_torso"
-            ]
-    ),
-    color_left_arm: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "color_left_arm"
-            ]
-    ),
-    color_right_arm: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "color_right_arm"
-            ]
-    ),
-    color_left_leg: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "color_left_leg"
-            ]
-    ),
-    color_right_leg: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "color_right_leg"
-            ]
-    ),
-    image: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "thumbnail"
-            ]
-    ),
-    current_face: computed<any>(
-        () =>
-            (usePage<any>().props.avatar as Record<string, unknown>)?.[
-                "current_face"
-            ]
+
+    // Current face URL from props
+    current_face: computed<string>(
+        () => initialAvatarProps?.current_face_url || "/assets/default.png"
     ),
 });
 
@@ -164,7 +167,6 @@ function changeColor(color: string, part: string) {
     axios
         .post(route(`avatar.update`), requestData)
         .then((response) => {
-            // Handle the response from the server
             imageRefreshKey.value += 1;
             thumbnail = response.data;
             selectedColor.value = color;
@@ -172,25 +174,12 @@ function changeColor(color: string, part: string) {
         })
         .catch((error) => {
             VrcRequest.value = false;
-            // Handle any errors
             console.error(error);
         });
 
-    const updatedUserAvatar = { ...userAvatar };
-    if (part === "head") {
-        updatedUserAvatar.color_head = color;
-    } else if (part === "left_arm") {
-        updatedUserAvatar.color_left_arm = color;
-    } else if (part === "torso") {
-        updatedUserAvatar.color_torso = color;
-    } else if (part === "right_arm") {
-        updatedUserAvatar.color_right_arm = color;
-    } else if (part === "left_leg") {
-        updatedUserAvatar.color_left_leg = color;
-    } else {
-        updatedUserAvatar.color_right_leg = color;
+    if (userAvatar.colors) {
+        userAvatar.colors[part as keyof AvatarColors] = color;
     }
-    userAvatar = updatedUserAvatar;
 
     console.log(`Changing ${part} color to: ${color}`);
 }
@@ -561,10 +550,13 @@ onMounted(() => {
         <div class="cell medium-9">
             <div class="flex-container gap-2">
                 <div class="cell large-3">
-                    <div class="text-xl fw-semibold">{{
-                        selectHatSlot ? "Pick a Hat Slot" : "Current Outfit"
-                    }}</div>
+                    <div class="text-xl fw-semibold">
+                        {{
+                            selectHatSlot ? "Pick a Hat Slot" : "Current Outfit"
+                        }}
+                    </div>
                     <a
+                        v-if="selectHatSlot"
                         @click="selectHatSlot = !selectHatSlot"
                         class="text-info text-sm"
                         ><i class="fad fa-arrow-left"></i> Go back</a
@@ -686,7 +678,8 @@ onMounted(() => {
                                             id="head"
                                             :style="{
                                                 backgroundColor:
-                                                    '#' + userAvatar.color_head,
+                                                    '#' +
+                                                    userAvatar.colors.head,
                                                 padding: '5px',
                                                 borderRadius: '15px',
                                                 marginTop: '-1px',
@@ -722,7 +715,7 @@ onMounted(() => {
                                             :style="{
                                                 backgroundColor:
                                                     '#' +
-                                                    userAvatar.color_left_arm,
+                                                    userAvatar.colors.left_arm,
                                                 padding: '50px',
                                                 paddingRight: '0px',
                                             }"
@@ -737,7 +730,7 @@ onMounted(() => {
                                             :style="{
                                                 backgroundColor:
                                                     '#' +
-                                                    userAvatar.color_torso,
+                                                    userAvatar.colors.torso,
                                                 padding: '50px',
                                             }"
                                         ></button>
@@ -751,7 +744,7 @@ onMounted(() => {
                                             :style="{
                                                 backgroundColor:
                                                     '#' +
-                                                    userAvatar.color_right_arm,
+                                                    userAvatar.colors.right_arm,
                                                 padding: '50px',
                                                 paddingRight: '0px',
                                             }"
@@ -769,7 +762,7 @@ onMounted(() => {
                                             :style="{
                                                 backgroundColor:
                                                     '#' +
-                                                    userAvatar.color_left_leg,
+                                                    userAvatar.colors.left_leg,
                                                 padding: '50px',
                                                 paddingRight: '0px',
                                                 paddingLeft: '47px',
@@ -785,7 +778,7 @@ onMounted(() => {
                                             :style="{
                                                 backgroundColor:
                                                     '#' +
-                                                    userAvatar.color_right_leg,
+                                                    userAvatar.colors.right_leg,
                                                 padding: '50px',
                                                 paddingRight: '0px',
                                                 borderBottom: '15px',

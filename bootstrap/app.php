@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,12 +13,12 @@ use Illuminate\Support\Carbon;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        api: __DIR__ .'/../routes/api.php',
-        commands: __DIR__.'/../routes/console.php',
+        web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )->withBroadcasting(
-        __DIR__ .'/../routes/channels.php',
+        __DIR__ . '/../routes/channels.php',
         ['prefix' => 'api', 'middleware' => ['api', 'auth:sanctum']],
     )->withMiddleware(function (Middleware $middleware) {
         $middleware->throttleWithRedis();
@@ -151,8 +152,8 @@ return Application::configure(basePath: dirname(__DIR__))
                             'username' => $user->username,
                             'display_name' => $user->display_name,
                             'next_currency_payout' => Carbon::parse($user->next_reward_payout)->diffForHumans(),
-                            'coins' => shortNum($user->coins),
-                            'bucks' => shortNum($user->bucks),
+                            'sparkles' => shortNum($user->sparkles),
+                            'stars' => shortNum($user->stars),
                             'staff' => $user->isStaff() ?? false,
                             'headshot' => $user->headshot(),
                             'thumbnail' => $user->thumbnail(),

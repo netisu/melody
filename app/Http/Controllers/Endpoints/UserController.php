@@ -447,18 +447,23 @@ class UserController extends Controller
             return response()->json(['error' => 'No avatar record found.']); // No avatar found for this user
         }
 
-        $wearingItems = $avatar->WearingItems();
+        $wearingData = $avatar->getWearingItemsStructured();
+
+        unset($wearingData['colors']); // Remove 'colors' from the list of items to process
 
         $items = [];
-        foreach ($wearingItems as $slot => $item) {
-            if ($item) {
-                $item->slot = $slot;
-                $item->creator = $item->creator;
-                $item->thumbnail = $item->thumbnail();
-                $items[] = $item;
+        foreach ($wearingData as $slot => $itemData) {
+            if (is_array($itemData)) {
+                if (!empty($itemData['item']) && $itemData['item'] !== 'none') {
+                    $fullItem = Item::where('hash', $itemData['item'])->first();
+                    $itemData['slot'] = $slot;
+                    $itemData['creator'] = $fullItem->creator;
+                    $itemData['thumbnail'] = $fullItem->thumbnail();
+                    $itemData[] = $itemData;
+                }
             }
-        }
 
-        return $items;
+            return $items;
+        }
     }
 }

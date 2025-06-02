@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Inventory;
 use Laravel\Scout\Searchable;
 use Spatie\LaravelData\Attributes\Validation\InArray;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\ItemEditStyle;
 class Item extends Model
 {
     use HasFactory, Searchable;
@@ -50,7 +51,7 @@ class Item extends Model
      *
      * @var array<string, string>
      */
-    
+
     public function toSearchableArray(): array
     {
         // All model attributes are made searchable
@@ -126,5 +127,9 @@ class Item extends Model
         $text = trim($text, '-');
 
         return $text;
+    }
+    public function editStyles(): HasMany
+    {
+        return $this->hasMany(ItemEditStyle::class);
     }
 }

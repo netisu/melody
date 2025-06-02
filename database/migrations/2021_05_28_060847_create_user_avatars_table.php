@@ -17,22 +17,22 @@ class CreateUserAvatarsTable extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
             $table->string('image')->default('default');
-            $table->json('hat_1')->nullable()->change();
-            $table->json('hat_2')->nullable()->change();
-            $table->json('hat_3')->nullable()->change();
-            $table->json('hat_4')->nullable()->change();
-            $table->json('hat_5')->nullable()->change();
-            $table->json('hat_6')->nullable()->change();
+            $table->json('hat_1')->nullable();
+            $table->json('hat_2')->nullable();
+            $table->json('hat_3')->nullable();
+            $table->json('hat_4')->nullable();
+            $table->json('hat_5')->nullable();
+            $table->json('hat_6')->nullable();
 
-            $table->json('addon')->nullable()->change();
-            $table->json('head')->nullable()->change();
-            $table->json('face')->nullable()->change();
-            $table->json('tool')->nullable()->change();
-            $table->json('tshirt')->nullable()->change();
-            $table->json('shirt')->nullable()->change();
-            $table->json('pants')->nullable()->change();
+            $table->json('addon')->nullable();
+            $table->json('head')->nullable();
+            $table->json('face')->nullable();
+            $table->json('tool')->nullable();
+            $table->json('tshirt')->nullable();
+            $table->json('shirt')->nullable();
+            $table->json('pants')->nullable();
 
-            $table->json('colors')->nullable()->after('pants');
+            $table->json('colors')->nullable();
             $table->timestamps();
         });
     }

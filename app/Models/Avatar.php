@@ -94,7 +94,7 @@ class Avatar extends Model
     /**
      * Get all equipped items and their styles in a structured array.
      */
-    public function WearingItems(): array
+    public function getWearingItemsStructured(): array // Renamed from WearingItems() for clarity
     {
         $slots = [
             'hat_1',
@@ -103,8 +103,8 @@ class Avatar extends Model
             'hat_4',
             'hat_5',
             'hat_6',
-            'head',
             'addon',
+            'head',
             'face',
             'tool',
             'tshirt',
@@ -114,10 +114,40 @@ class Avatar extends Model
 
         $wearing = [];
         foreach ($slots as $slot) {
-            $wearing[$slot] = $this->getEquippedItemAndStyle($slot);
+            $equipped = $this->getEquippedItemAndStyle($slot);
+
+            $itemHash = 'none';
+            $editStyleHash = null;
+            $isModel = false;
+            $isTexture = false;
+
+            if ($equipped) {
+                if ($equipped->item) {
+                    $itemHash = $equipped->item->hash;
+                }
+                if ($equipped->edit_style_details) {
+                    $editStyleHash = $equipped->edit_style_details->hash;
+                    $isModel = (bool) $equipped->edit_style_details->is_model_style;
+                    $isTexture = (bool) $equipped->edit_style_details->is_texture_style;
+                }
+            }
+
+            $wearing[$slot] = [
+                'item' => $itemHash,
+                'edit_style' => $editStyleHash,
+                'is_model' => $isModel,
+                'is_texture' => $isTexture,
+            ];
         }
 
-        $wearing['colors'] = $this->colors ?? [];
+        $wearing['colors'] = $this->colors ?? [
+            'head' => 'd3d3d3',
+            'torso' => '055e96',
+            'left_arm' => 'd3d3d3',
+            'right_arm' => 'd3d3d3',
+            'left_leg' => 'd3d3d3',
+            'right_leg' => 'd3d3d3',
+        ];
 
         return $wearing;
     }
