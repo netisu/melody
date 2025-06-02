@@ -121,22 +121,27 @@ class Avatar extends Model
             $isModel = false;
             $isTexture = false;
 
+
             if ($equipped) {
-                if ($equipped->item) {
+                if (isset($equipped->item) && is_object($equipped->item)) {
                     $itemHash = $equipped->item->hash;
                 }
-                if ($equipped->edit_style_details) {
+                if (isset($equipped->edit_style_details) && is_object($equipped->edit_style_details)) {
                     $editStyleHash = $equipped->edit_style_details->hash;
-                    $isModel = (bool) $equipped->edit_style_details->is_model_style;
-                    $isTexture = (bool) $equipped->edit_style_details->is_texture_style;
+                    $isModel = (bool) ($equipped->edit_style_details->is_model_style ?? false);
+                    $isTexture = (bool) ($equipped->edit_style_details->is_texture_style ?? false);
                 }
             }
 
-            $wearing[$slot] = [
+
+            $wearing[$slot] = (object)[
                 'item' => $itemHash,
-                'edit_style' => $editStyleHash,
-                'is_model' => $isModel,
-                'is_texture' => $isTexture,
+                'edit_style_details' => (object) [ // This needs to be an object to match getItemRenderData's expectation
+                    'hash' => $editStyleHash,
+                    'is_model_style' => $isModel,
+                    'is_texture_style' => $isTexture,
+                ],
+
             ];
         }
 
