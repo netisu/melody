@@ -19,19 +19,11 @@ RUN apt-get update && \
 # Install PHP extensions
 RUN install-php-extensions \
     gd \
-    imagick \
-    curl \
-    mysqli \
-    mbstring \
-    xml \
-    zip \
-    bcmath \
-    soap \
-    intl \
-    pdo_mysql \
-    redis \
     pcntl \
-    imap
+    opcache \
+    pdo \
+    pdo_mysql \
+    redis
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
