@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->integer('creator_id')->nullable();
+            $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
             $table->string('creator_type')->default('user');
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('hash')->nullable();
             $table->string('item_type');
-            $table->string('status')->default('review'); // review, moderated, accepted
+            $table->string('status')->default('pending'); // pending, denied, approved
             $table->boolean('public_view')->default(true);
             $table->integer('cost_sparkles');
             $table->integer('cost_stars');
@@ -28,10 +28,8 @@ return new class extends Migration
             $table->string('avatar_preview')->nullable();
             $table->string('thumbnail_hash')->nullable();
             $table->boolean('rare')->default(false);
-            $table->integer('in_event')->nullable();
-            $table->integer('event_id')->nullable();
-            $table->boolean('in_style')->default(false);
-            $table->integer('style_of')->nullable();
+            $table->boolean('in_event')->default(false);
+            $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->boolean('onsale');
             $table->integer('initial_stock')->default(0);
             $table->integer('remaining_stock')->default(0);

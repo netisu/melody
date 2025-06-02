@@ -151,7 +151,6 @@ class MarketController extends Controller
         ]);
 
         $inventory = new Inventory;
-
         $inventory->create([
             'user_id' => Auth::id(),
             'item_id' => $item->id,

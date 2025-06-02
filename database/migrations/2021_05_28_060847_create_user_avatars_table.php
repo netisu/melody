@@ -14,32 +14,26 @@ class CreateUserAvatarsTable extends Migration
     {
         Schema::create('user_avatars', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
             $table->string('image')->default('default');
-            $table->integer('hat_1')->nullable();
-            $table->integer('hat_2')->nullable();
-            $table->integer('hat_3')->nullable();
-            $table->integer('hat_4')->nullable();
-            $table->integer('hat_5')->nullable();
-            $table->integer('hat_6')->nullable();
-            
-            $table->integer('addon')->nullable();
-            $table->integer('head')->nullable();
-            $table->integer('face')->nullable();
-            $table->integer('tool')->nullable();
-            $table->integer('tshirt')->nullable();
-            $table->integer('shirt')->nullable();
-            $table->integer('pants')->nullable();
+            $table->json('hat_1')->nullable()->change();
+            $table->json('hat_2')->nullable()->change();
+            $table->json('hat_3')->nullable()->change();
+            $table->json('hat_4')->nullable()->change();
+            $table->json('hat_5')->nullable()->change();
+            $table->json('hat_6')->nullable()->change();
 
-            $table->string('color_head')->default('d3d3d3');
-            $table->string('color_torso')->default('055e96');
-            $table->string('color_left_arm')->default('d3d3d3');
-            $table->string('color_right_arm')->default('d3d3d3');
-            $table->string('color_left_leg')->default('d3d3d3');
-            $table->string('color_right_leg')->default('d3d3d3');
+            $table->json('addon')->nullable()->change();
+            $table->json('head')->nullable()->change();
+            $table->json('face')->nullable()->change();
+            $table->json('tool')->nullable()->change();
+            $table->json('tshirt')->nullable()->change();
+            $table->json('shirt')->nullable()->change();
+            $table->json('pants')->nullable()->change();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->json('colors')->nullable()->after('pants');
+            $table->timestamps();
         });
     }
 

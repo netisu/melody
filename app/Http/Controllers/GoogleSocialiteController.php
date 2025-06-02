@@ -48,8 +48,7 @@ class GoogleSocialiteController extends Controller
         if ($existingUser) {
             if ($existingUser->social_type = 'google') {
                 Auth::loginUsingId($existingUser->id);
-                        return redirect(to: '/my/dashboard');
-
+                return redirect(to: '/my/dashboard');
             }
             return response()->json([
                 'type' => 'danger',
@@ -72,7 +71,7 @@ class GoogleSocialiteController extends Controller
             'social_type' => 'google',
         ]);
 
-        $newUser->createDefaultAvatar();
+        $newUser->avatar;
 
         UserSettings::create([
             'user_id' => $newUser->id,

@@ -13,6 +13,9 @@ use Laravel\Cashier\Cashier;
 use Illuminate\Support\Facades\Event;
 use Inertia\Ssr\Gateway;
 use App\Http\InertiaHttpGateway;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Listeners\CreateUserAvatarOnRegistration;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +47,11 @@ class AppServiceProvider extends ServiceProvider
         RedirectIfAuthenticated::redirectUsing(function () {
             return route('my.dashboard.page');
         });
+
+        Event::listen(
+            SendEmailVerificationNotification::class,
+            CreateUserAvatarOnRegistration::class,
+        );
 
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);

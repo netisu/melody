@@ -39,7 +39,7 @@ class AuthController extends Controller
         $request->validate([
             'password' => 'required',
         ]);
-        
+
         if (!Auth::attempt(['username' => Auth::user()->username, 'password' => $request->password])) {
             return response()->json(['message' => 'Incorrect password.'], 422);
         }
@@ -162,8 +162,8 @@ class AuthController extends Controller
             'about_me' => 'Greetings! Im new to ' . config('Values.name'),
         ]);
 
-        $user->createDefaultAvatar();
-
+        $user->avatar;
+        
         UserSettings::create([
             'user_id' => $user->id,
             'country_code' => strtolower($request->country),

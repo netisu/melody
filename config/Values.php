@@ -1,9 +1,9 @@
 <?php
 return [
     'name' => 'Netisu',
-    'logo' => '/assets/img/netisu-logo.svg',
+    'logo' => '/assets/img/netisu-logo2.svg',
     'icon' => '/assets/img/logo.svg',
-    'marketLogo' => '/assets/img/netisu-logo.svg',
+    'marketLogo' => '/assets/img/site-banners/market-title-new.svg',
     'minimum_age_without_consent' => 13,
 
     'in_event' => true,

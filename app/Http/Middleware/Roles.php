@@ -31,22 +31,11 @@ class Roles
             ]);
         };
 
-        if (Auth::check() && !UserSettings::where(['user_id' => Auth::id()])->exists()) {
-            $user = UserSettings::create([
-                'user_id' => Auth::id(),
-            ]);
-        };
-
         if (config('app.env') != 'local') {
             if (Auth::check() && config('Values.in_testing_phase') && $user->settings->beta_tester !== true) {
                 $user = UserSettings::where('id', Auth::id())->update(['beta_tester' => true]);
             };
         }
-        if (Auth::check() && !Avatar::where(['user_id' => Auth::id()])->exists()) {
-            $user = Avatar::create([
-                'user_id' => Auth::id(),
-            ]);
-        };
 
 
         return $next($request);

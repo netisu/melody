@@ -50,6 +50,7 @@ class Item extends Model
      *
      * @var array<string, string>
      */
+    
     public function toSearchableArray(): array
     {
         // All model attributes are made searchable

@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Item;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Avatar extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
 
     protected $table = 'user_avatars';
 
@@ -31,84 +29,118 @@ class Avatar extends Model
         'tshirt',
         'shirt',
         'pants',
-        'color_head',
-        'color_torso',
-        'color_left_arm',
-        'color_right_arm',
-        'color_left_leg',
-        'color_right_leg',
-
+        'colors',
     ];
 
-    public function WearingItems(): Array
+    protected $casts = [
+        'hat_1' => 'array',
+        'hat_2' => 'array',
+        'hat_3' => 'array',
+        'hat_4' => 'array',
+        'hat_5' => 'array',
+        'hat_6' => 'array',
+        'addon' => 'array',
+        'head' => 'array',
+        'face' => 'array',
+        'tool' => 'array',
+        'tshirt' => 'array',
+        'shirt' => 'array',
+        'pants' => 'array',
+        'colors' => 'array',
+    ];
+
+    /**
+     * Get the user that owns the avatar.
+     */
+    public function user(): BelongsTo
     {
-        $array = [
-            'hat_1' => $this->hat(1),
-            'hat_2' => $this->hat(2),
-            'hat_3' => $this->hat(3),
-            'hat_4' => $this->hat(4),
-            'hat_5' => $this->hat(5),
-            'hat_6' => $this->hat(6),
-            'head' => $this->head(),
-            'addon' => $this->addon(),
-            'face' => $this->face(),
-            'tool' => $this->tool(),
-            'tshirt' => $this->tshirt(),
-            'shirt' => $this->shirt(),
-            'pants' => $this->pants(),
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Helper to get an equipped item and its applied edit style.
+     *
+     * @param string $slotName The name of the slot (e.g., 'hat_1', 'shirt', 'head').
+     * @return object|null An object containing 'item' (Item::class) and 'edit_style' (ItemEditStyle::class), or null.
+     */
+    public function getEquippedItemAndStyle(string $slotName): ?object
+    {
+        $slotData = $this->{$slotName};
+
+        // Ensure slot data is an array and contains an item_id
+        if (!is_array($slotData) || !isset($slotData['item_id'])) {
+            return null; // Slot is empty or invalid data
+        }
+
+        // Retrieve the main equipped Item model
+        $equippedItem = Item::find($slotData['item_id']);
+
+        if (!$equippedItem) {
+            return null; // Equipped item not found in the 'items' table
+        }
+
+        $editStyleDetails = null;
+        // Check if an edit style ID is present in the slot data
+        if (isset($slotData['edit_style_id'])) {
+            $editStyleDetails = ItemEditStyle::find($slotData['edit_style_id']);
+        }
+
+        return (object) [
+            'item' => $equippedItem,
+            'edit_style_details' => $editStyleDetails,
+        ];
+    }
+
+    /**
+     * Get all equipped items and their styles in a structured array.
+     */
+    public function WearingItems(): array
+    {
+        $slots = [
+            'hat_1',
+            'hat_2',
+            'hat_3',
+            'hat_4',
+            'hat_5',
+            'hat_6',
+            'head',
+            'addon',
+            'face',
+            'tool',
+            'tshirt',
+            'shirt',
+            'pants',
         ];
 
-        return $array;
-    }
+        $wearing = [];
+        foreach ($slots as $slot) {
+            $wearing[$slot] = $this->getEquippedItemAndStyle($slot);
+        }
 
-    public function hat($num)
-    {
-        return Item::where('id', '=', $this->{"hat_{$num}"})->first();
-    }
+        $wearing['colors'] = $this->colors ?? [];
 
-    public function face()
-    {
-        return Item::where('id', '=', $this->face)->first();
+        return $wearing;
     }
-
-    public function tool()
+    /**
+     * Retrieves the specific hat item (and its style) for a given hat number.
+     * This is a convenience method now wrapper around getEquippedItemAndStyle.
+     */
+    public function hat(int $num): ?object
     {
-        return Item::where('id', '=', $this->tool)->first();
+        return $this->getEquippedItemAndStyle("hat_{$num}");
     }
-
-    public function tshirt()
-    {
-        return Item::where('id', '=', $this->tshirt)->first();
-    }
-
-    public function head()
-    {
-        return Item::where('id', '=', $this->head)->first();
-    }
-
-    public function addon()
-    {
-        return Item::where('id', '=', $this->addon)->first();
-    }
+    // Example usage: $avatar->getEquippedItemAndStyle('face');
 
 
-    public function shirt()
+    /**
+     * Resets the avatar to its default state, handling JSON columns.
+     */
+    public function resetAvatar(): void
     {
-        return Item::where('id', '=', $this->shirt)->first();
-    }
-
-    public function pants()
-    {
-        return Item::where('id', '=', $this->pants)->first();
-    }
-    
-    public function resetAvatar()
-    {
-        // Set the paths for thumbnail and headshot
+        // Set the paths for thumbnail and headshot (if they are still part of the image column)
         $thumbnail = "thumbnails/{$this->image}.png";
         $headshot = "thumbnails/{$this->image}_headshot.png";
 
-        // Reset all attributes to their default values
         $defaultAttributes = [
             'image' => 'default',
             'hat_1' => null,
@@ -124,16 +156,17 @@ class Avatar extends Model
             'tshirt' => null,
             'shirt' => null,
             'pants' => null,
-            'color_head' => 'd3d3d3',
-            'color_torso' => '055e96',
-            'color_left_arm' => 'd3d3d3',
-            'color_right_arm' => 'd3d3d3',
-            'color_left_leg' => 'd3d3d3',
-            'color_right_leg' => 'd3d3d3',
+            'colors' => [
+                'head' => 'd3d3d3',
+                'torso' => '055e96',
+                'left_arm' => 'd3d3d3',
+                'right_arm' => 'd3d3d3',
+                'left_leg' => 'd3d3d3',
+                'right_leg' => 'd3d3d3',
+            ],
         ];
 
         // Update the model with the default values and save it
-        $this->timestamps = false;
         $this->fill($defaultAttributes);
         $this->save();
     }

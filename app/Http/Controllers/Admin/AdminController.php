@@ -142,7 +142,8 @@ class AdminController extends Controller
     {
         // Define a cache key for this query result
         $cacheKey = 'admin_users_index';
-        $users = Cache::remember($cacheKey, now()->addMinutes(30), function () {
+        $currentPage = request()->get('page', 1);
+        $users = Cache::remember($cacheKey . '-' . $currentPage, now()->addMinutes(3), function () {
             return User::orderBy('id', 'asc')->paginate(10)->through(function ($user) {
                 return [
                     'id' => $user->id,
@@ -167,7 +168,8 @@ class AdminController extends Controller
     {
         // Define a cache key for this query result
         $cacheKey = 'item_index';
-        $items = Cache::remember($cacheKey, now()->addMinutes(30), function () {
+        $currentPage = request()->get('page', 1);
+        $items = Cache::remember($cacheKey . '-' . $currentPage, now()->addMinutes(3), function () {
             return Item::where("creator_id", "=", config("Values.system_account_id"))->orderBy('id', 'asc')->paginate(10)->through(function ($item) {
                 return [
                     'id' => $item->id,

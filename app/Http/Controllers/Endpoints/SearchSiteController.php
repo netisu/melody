@@ -64,7 +64,7 @@ class SearchSiteController extends Controller
                 return [
                     'name' => $post->title,
                     'image' => $post->creator->headshot() ?? null,
-                    'url' => route('forum.post.show', [$post->id, $post->slug()]),
+                    'url' => route('forum.post', [$post->id, $post->slug()]),
                     'type' => 'forum_post',
                     'icon' => 'fas fa-newspaper',
                     'description' => Str::limit($post->content ?? '', 100),

@@ -169,9 +169,9 @@ class UserController extends Controller
                     "alert_enabled" => $user->settings->alert_enabled ?? false,
                     "alert_message" => $user->settings->alert_message ?? null,
                     "calling_card_enabled" => $user->settings->calling_card_enabled ?? false,
-                    "calling_card_url" => $user->settings->calling_card_url ?? null,
+                    "calling_card_url" => $user->settings->callingCard() ?? null,
                     "profile_banner_enabled" => $user->settings->profile_banner_enabled ?? false,
-                    "profile_banner_url" => $user->settings->profile_banner_url ?? null,
+                    "profile_banner_url" => $user->settings->banner() ?? null,
                     "primarySpace" => $user->settings->primarySpace ? [
                         'id' => $user->settings->primarySpace->id,
                         'slug' => $user->settings->primarySpace->slug(),

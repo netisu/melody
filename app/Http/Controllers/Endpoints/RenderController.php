@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Log;
 
 class RenderController extends Controller
 {
-    function getAvatarRecord($id) : Avatar
+    function getAvatarRecord($id): Avatar
     {
-        return Avatar::where('user_id', $id)->first();
+        return Avatar::where('user_id', $id)->firstOrFail();
     }
 
     public function UserRender($id): string
@@ -106,6 +106,37 @@ class RenderController extends Controller
         }
     }
 
+    private function getItemRenderData(?object $slotData): array
+    {
+        if (!$slotData || !$slotData->item) {
+            return [
+                'item' => 'none',
+                'edit_style' => null,
+                'is_model' => false,
+                'is_texture' => false,
+            ];
+        }
+
+        $itemHash = $slotData->item->hash;
+        $editStyleHash = null;
+        $isModel = false;
+        $isTexture = false;
+
+        if ($slotData->edit_style_details) {
+            $editStyleHash = $slotData->edit_style_details->hash; // Hash from ItemEditStyle
+            $isModel = $slotData->edit_style_details->is_model_style;
+            $isTexture = $slotData->edit_style_details->is_texture_style;
+        }
+
+        return [
+            'item' => $itemHash,
+            'edit_style' => $editStyleHash,
+            'is_model' => $isModel,
+            'is_texture' => $isTexture,
+        ];
+    }
+
+    // --- Prepare Request Data Method ---
     private function prepareRequestData($type, $db, $hash)
     {
         $requestData = [
@@ -114,93 +145,97 @@ class RenderController extends Controller
         ];
 
         if ($type == 'user') {
+            $wearingItems = $db->WearingItems(); // Get the structured data from Avatar model
+            $itemsForRender = [];
+            $itemSlots = [
+                'hat_1',
+                'hat_2',
+                'hat_3',
+                'hat_4',
+                'hat_5',
+                'hat_6',
+                'addon',
+                'head',
+                'face',
+                'tool',
+                'tshirt',
+                'shirt',
+                'pants',
+            ];
+            foreach ($itemSlots as $slot) {
+                $itemsForRender[$slot] = $this->getItemRenderData($wearingItems[$slot]);
+            }
             $requestData['RenderJson'] = [
-                'items' => [
-                    'face' => ($db->face) ? getItemHash($db->face) : 'none',
-                    'hats' => [
-                        ($db->hat_1) ? getItemHash($db->hat_1) : 'none',
-                        ($db->hat_2) ? getItemHash($db->hat_2) : 'none',
-                        ($db->hat_3) ? getItemHash($db->hat_3) : 'none',
-                        ($db->hat_4) ? getItemHash($db->hat_4) : 'none',
-                        ($db->hat_5) ? getItemHash($db->hat_5) : 'none',
-                    ],
-                    'addon' => ($db->addon) ? getItemHash($db->addon) : 'none',
-                    'tool' => ($db->tool) ? getItemHash($db->tool) : 'none',
-                    'head' => ($db->head) ? getItemHash($db->head) : 'none',
-                    'shirt' => ($db->shirt) ? getItemHash($db->shirt) : 'none',
-                    'pants' => ($db->pants) ? getItemHash($db->pants) : 'none',
-                    'tshirt' => ($db->tshirt) ? getItemHash($db->tshirt) : 'none',
-                ],
+                'items' => $itemsForRender,
                 'colors' => [
-                    'head_color' => $this->getColor($db->color_head, 'ffffff'),
-                    'torso_color' => $this->getColor($db->color_torso, '055e96'),
-                    'leftLeg_color' => $this->getColor($db->color_left_leg, 'ffffff'),
-                    'rightLeg_color' => $this->getColor($db->color_right_leg, 'ffffff'),
-                    'leftArm_color' => $this->getColor($db->color_left_arm, 'ffffff'),
-                    'rightArm_color' => $this->getColor($db->color_right_arm, 'ffffff')
+                    'head_color' => $this->getColor($db->colors['head'], 'd3d3d3'),
+                    'torso_color' => $this->getColor($db->colors['torso'], '055e96'),
+                    'leftLeg_color' => $this->getColor($db->colors['left_leg'], 'd3d3d3'),
+                    'rightLeg_color' => $this->getColor($db->colors['right_leg'], 'd3d3d3'),
+                    'leftArm_color' => $this->getColor($db->colors['left_arm'], 'd3d3d3'),
+                    'rightArm_color' => $this->getColor($db->colors['right_arm'], 'd3d3d3')
                 ],
             ];
         } elseif ($type == 'item') {
             $requestData['RenderJson'] = [
-                    'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
-                    'PathMod' => false,
+                'ItemType' => $db->item_type,
+                'Item' => getItemHash($db->id),
+                'PathMod' => false,
             ];
         } elseif ($type == 'item_preview') {
             if ($db->item_type == 'hat') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => true,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'addon') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => true,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'face') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => true,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'tshirt') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => false,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => false,
                 ];
             } elseif ($db->item_type == 'tool') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => true,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'shirt') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => false,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => false,
                 ];
             } elseif ($db->item_type == 'pants') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => false,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => false,
                 ];
             } elseif ($db->item_type == 'head') {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => false,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => false,
                 ];
-            }
-            else {
+            } else {
                 $requestData['RenderJson'] = [
-                        'ItemType' => $db->item_type,
-                        'Item' => getItemHash($db->id),
-                        'PathMod' => true,
+                    'ItemType' => $db->item_type,
+                    'Item' => getItemHash($db->id),
+                    'PathMod' => true,
                 ];
             }
         }
@@ -225,7 +260,8 @@ class RenderController extends Controller
         }
 
         return Http::withBody($requestData, 'application/json')->withOptions([
-            'headers' => ['Aeo-Access-Key' => config('app.renderer.key')]
-        ])->post($url);
+            'headers' => ['Aeo-Access-Key' => config('app.renderer.key')],
+            'timeout' => 30,
+        ])->post($url)->throw();
     }
 }

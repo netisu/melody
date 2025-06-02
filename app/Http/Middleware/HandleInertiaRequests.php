@@ -58,46 +58,56 @@ class HandleInertiaRequests extends Middleware
             'locales' => function (): mixed {
                 return config('ActiveLocales');
             },
-            'auth' => function () use ($request,  $pendingItemsAndSpaces, $notifications): array {
-                $response = [
-                    'user' => $request->user() ? [
-                        'id' => $request->user()->id,
-                        'username' => $request->user()->username,
-                        'display_name' => $request->user()->display_name,
-                        'next_currency_payout' => Carbon::parse($request->user()->next_reward_payout)->diffForHumans(),
-                        'sparkles' => shortNum($request->user()->sparkles),
-                        'stars' => shortNum($request->user()->stars),
-                        'staff' => $request->user()->isStaff() ?? false,
-                        'headshot' => $request->user()->headshot(),
-                        'thumbnail' => $request->user()->thumbnail(),
-                        'settings' => $request->user()->settings,
-                        'level' => $request->user()->getLevel(),
-                        'xp' => $request->user()->getPoints(),
-                        'nextlevelxp' =>  $request->user()->nextLevelAt(),
-                        'mainSpaces' => $request->user()->mainSpaces(),
-                        'navSpaces' => $request->user()->navSpaces(),
-                        'notifications' => $notifications,
-                    ] : null,
-                ];
+                'auth' => function () use ($request): array {
+                    $user = $request->user();
+                    $userData = null;
 
-                if ($request->user() && $request->user()->isStaff()) {
-                    $response['user']['position'] = $request->user()->CurrentPosition();
-                    $response['user']['positionID'] = $request->user()->CurrentPositionID();
-                    $response['user']['pendingAssets'] = $pendingItemsAndSpaces->count();
-                };
+                    if ($user) {
+                        $notifications = $user->unreadNotifications()->limit(5)->get()
+                            ->each(fn($notification) => $notification->DateHum = $notification->created_at->diffForHumans());
 
-                if ($request->user() && config(key: 'Values.in_event')) {
-                     $response['user']['event_currency'] = shortNum(num: $request->user()->event_currency);
-                };
+                        $userData = [
+                            'id' => $user->id,
+                            'username' => $user->username,
+                            'display_name' => $user->display_name,
+                            'next_currency_payout' => Carbon::parse($user->next_reward_payout)->diffForHumans(),
+                            'coins' => shortNum($user->coins),
+                            'bucks' => shortNum($user->bucks),
+                            'staff' => $user->isStaff() ?? false,
+                            'headshot' => $user->headshot(),
+                            'thumbnail' => $user->thumbnail(),
+                            'settings' => $user->settings,
+                            'level' => $user->getLevel(),
+                            'xp' => $user->getPoints(),
+                            'nextlevelxp' => $user->nextLevelAt(),
+                            'mainSpaces' => $user->mainSpaces(),
+                            'navSpaces' => $user->navSpaces(),
+                            'notifications' => $notifications,
+                        ];
 
-                if ($request->user() && $request->route()->named(patterns: 'user.settings.page')){
-                         $response['user']['email'] = preg_replace(pattern: '/[^@]+@([^\s]+)/', replacement: ''.substr(string: $request->user()->email, offset: 0, length: 3).'********@$1', subject: $request->user()->email);
-                         $response['user']['birthdate'] = $request->user()->birthdate;
-                         $response['user']['email_verified_at'] = $request->user()->email_verified_at;
-                };
+                        if ($user->isStaff()) {
+                            // Only fetch these if staff
+                            $pendingItems = Item::where('status', 'pending')->with('creator')->count(); // Get count directly
+                            $pendingSpaces = Space::where('thumbnail_pending', true)->with('creator')->count(); // Get count directly
+                            $userData['position'] = $user->CurrentPosition();
+                            $userData['positionID'] = $user->CurrentPositionID();
+                            $userData['pendingAssets'] = $pendingItems + $pendingSpaces; // Sum counts
+                        };
 
-                return $response;
-            },
+                        if (config('Values.in_event')) {
+                            $userData['event_currency'] = shortNum($user->event_currency);
+                        };
+
+                        if ($request->route()->named('user.settings.page')) {
+                            // Sensitive info, only send on specific page
+                            $userData['email'] = preg_replace(pattern: '/[^@]+@([^\s]+)/', replacement: '' . substr(string: $user->email, offset: 0, length: 3) . '********@$1', subject: $user->email);
+                            $userData['birthdate'] = $user->birthdate;
+                            $userData['email_verified_at'] = $user->email_verified_at;
+                        };
+                    }
+
+                    return ['user' => $userData];
+                },
         ]);
     }
 }

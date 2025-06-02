@@ -149,16 +149,8 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
     // Classes
     public function avatar(): Avatar
     {
-        return $this->hasOne(related: Avatar::class)->first() ?? $this->createDefaultAvatar();
-    }
-
-    public function createDefaultAvatar(): Avatar
-    {
-        $avatar = Avatar::create(attributes: [
-            'user_id' => $this->id,
-        ]);
-
-        $defaultAttributes = [
+        // Define the default avatar attributes
+        $defaultAvatarAttributes = [
             'image' => 'default',
             'hat_1' => null,
             'hat_2' => null,
@@ -173,19 +165,22 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
             'tshirt' => null,
             'shirt' => null,
             'pants' => null,
-            'color_head' => 'd3d3d3',
-            'color_torso' => '055e96',
-            'color_left_arm' => 'd3d3d3',
-            'color_right_arm' => 'd3d3d3',
-            'color_left_leg' => 'd3d3d3',
-            'color_right_leg' => 'd3d3d3',
+            'colors' => [
+                'head' => 'd3d3d3',
+                'torso' => '055e96',
+                'left_arm' => 'd3d3d3',
+                'right_arm' => 'd3d3d3',
+                'left_leg' => 'd3d3d3',
+                'right_leg' => 'd3d3d3',
+            ],
         ];
-        $avatar->timestamps = false;
-        $avatar->fill(attributes: $defaultAttributes);
-        $avatar->save();
 
-        return $avatar;
+        return $this->hasOne(Avatar::class)->firstOrCreate(
+            ['user_id' => $this->id],
+            $defaultAvatarAttributes
+        );
     }
+
 
     public function promocodes(): HasOne
     {
@@ -194,7 +189,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function getNextLevelExp()
     {
-        $currentLevel = min( $this->getLevel() + 1,  100);
+        $currentLevel = min($this->getLevel() + 1,  100);
         $nextLevel = Level::where(column: 'level', operator: $currentLevel)->first();
         return $nextLevel->next_level_experience;
     }
@@ -372,7 +367,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
             ->take(value: $spaceAmount)
             ->get();
 
-        return $spaces->map(callback: function ( $space) {
+        return $spaces->map(callback: function ($space) {
             return [
                 'id' => $space->id,
                 'name' => $space->name,
@@ -465,7 +460,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
                 // Check if profile_picture_url doesn't contain an external domain
                 if (!preg_match(pattern: '/https?:\/\/[^\/]+/', subject: $imageUrl)) {
-                    return "{$url}/thumbnails/profile-pictures/{$imageUrl}.png";
+                    return "{$url}/uploads/profile-pictures/{$imageUrl}.png";
                 } else {
                     // Return the external URL from settings if present
                     return $imageUrl;

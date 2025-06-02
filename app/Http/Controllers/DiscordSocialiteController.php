@@ -68,7 +68,7 @@ class DiscordSocialiteController extends Controller
             'social_type' => 'discord',
         ]);
 
-        $newUser->createDefaultAvatar();
+        $newUser->avatar;
 
         UserSettings::create([
             'user_id' => $newUser->id,

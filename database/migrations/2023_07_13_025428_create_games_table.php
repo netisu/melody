@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->string('executable_path')->nullable(); // Path to the game server executable
             $table->timestamps();
         });
     }

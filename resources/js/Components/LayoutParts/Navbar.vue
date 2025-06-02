@@ -246,7 +246,7 @@ const lang = computed<any>(() => props.locale);
                 <v-lazy-image
                     :src="props.site.logo"
                     class="show-for-medium"
-                    width="180"
+                    width="130"
                 />
             </Link>
             <template v-for="topbarlinks in topbar">
