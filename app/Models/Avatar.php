@@ -63,86 +63,49 @@ class Avatar extends Model
      * @param string $slotName The name of the slot (e.g., 'hat_1', 'shirt', 'head').
      * @return object|null An object containing 'item' (Item::class) and 'edit_style' (ItemEditStyle::class), or null.
      */
-    public function getEquippedItemAndStyle(string $slotName): ?object
+    private function getEquippedItemAndStyle(string $slot): ?object
     {
-        $slotData = $this->{$slotName};
+        $slotData = $this->{$slot} ?? null;
 
-        // Ensure slot data is an array and contains an item_id
-        if (!is_array($slotData) || !isset($slotData['item_id'])) {
-            return null; // Slot is empty or invalid data
+        // If no data for this slot, or if it's not in the expected array format return null.
+        if (!$slotData || !is_array($slotData)) {
+            return null;
         }
 
-        // Retrieve the main equipped Item model
-        $equippedItem = Item::find($slotData['item_id']);
-
-        if (!$equippedItem) {
-            return null; // Equipped item not found in the 'items' table
+        $item = null;
+        // Check if 'id' key exists in the $slotData (which is like ['id' => 1, 'style_id' => 2])
+        if (isset($slotData['id'])) {
+            $item = Item::find($slotData['id']); // Load the full Item model
         }
 
-        $editStyleDetails = null;
-        // Check if an edit style ID is present in the slot data
-        if (isset($slotData['edit_style_id'])) {
-            $editStyleDetails = ItemEditStyle::find($slotData['edit_style_id']);
+        $editStyle = null;
+        if (isset($slotData['style_id'])) {
+            $editStyle = ItemEditStyle::find($slotData['style_id']); // Load the full ItemEditStyle model
         }
 
-        return (object) [
-            'item' => $equippedItem,
-            'edit_style_details' => $editStyleDetails,
-        ];
+        if ($item || $editStyle) {
+            return (object) [
+                'item' => $item,
+                'edit_style_details' => $editStyle,
+            ];
+        }
+
+        return null; // Nothing equipped in this specific slot
     }
 
     /**
      * Get all equipped items and their styles in a structured array.
      */
-    public function getWearingItemsStructured(): array // Renamed from WearingItems() for clarity
+    public function getWearingItemsStructured(): array
     {
         $slots = [
-            'hat_1',
-            'hat_2',
-            'hat_3',
-            'hat_4',
-            'hat_5',
-            'hat_6',
-            'addon',
-            'head',
-            'face',
-            'tool',
-            'tshirt',
-            'shirt',
-            'pants',
+            'hat_1', 'hat_2', 'hat_3', 'hat_4', 'hat_5', 'hat_6',
+            'addon', 'head', 'face', 'tool', 'tshirt', 'shirt', 'pants',
         ];
 
         $wearing = [];
         foreach ($slots as $slot) {
-            $equipped = $this->getEquippedItemAndStyle($slot);
-
-            $itemHash = 'none';
-            $editStyleHash = null;
-            $isModel = false;
-            $isTexture = false;
-
-
-            if ($equipped) {
-                if (isset($equipped->item) && is_object($equipped->item)) {
-                    $itemHash = $equipped->item->hash;
-                }
-                if (isset($equipped->edit_style_details) && is_object($equipped->edit_style_details)) {
-                    $editStyleHash = $equipped->edit_style_details->hash;
-                    $isModel = (bool) ($equipped->edit_style_details->is_model_style ?? false);
-                    $isTexture = (bool) ($equipped->edit_style_details->is_texture_style ?? false);
-                }
-            }
-
-
-            $wearing[$slot] = (object)[
-                'item' => $itemHash,
-                'edit_style_details' => (object) [ // This needs to be an object to match getItemRenderData's expectation
-                    'hash' => $editStyleHash,
-                    'is_model_style' => $isModel,
-                    'is_texture_style' => $isTexture,
-                ],
-
-            ];
+            $wearing[$slot] = $this->getEquippedItemAndStyle($slot);
         }
 
         $wearing['colors'] = $this->colors ?? [
@@ -156,6 +119,7 @@ class Avatar extends Model
 
         return $wearing;
     }
+    
     /**
      * Retrieves the specific hat item (and its style) for a given hat number.
      * This is a convenience method now wrapper around getEquippedItemAndStyle.
