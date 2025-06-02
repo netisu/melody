@@ -6,51 +6,32 @@ WORKDIR /app
 # Read more: https://frankenphp.dev/docs/config/#environment-variables
 ENV SERVER_NAME="https://"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    zip \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    git \
     unzip \
+    librabbitmq-dev \
     libpq-dev \
-    libonig-dev \
-    libssl-dev \
-    libxml2-dev \
-    libcurl4-openssl-dev \
-    libicu-dev \
-    libzip-dev \
-    libcap2-bin \
-    libpng-dev \
-    dnsutils \
-    librsvg2-bin \
-    fswatch \
-    ffmpeg \
-    gnupg \
-    gosu \
     supervisor \
-    && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN install-php-extensions \
     gd \
     imagick \
     curl \
-    pgsql  \
-    mysqli  \
+    mysqli \
     mbstring \
     xml \
     zip \
     bcmath \
     soap \
     intl \
-    readline \
-    ldap \
-    igbinary \
-    msgpack \
-    pcov \
+    pdo_mysql \
     redis \
     pcntl \
-    pdo_mysql \
-    imap \
-    opcache
+    imap
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 

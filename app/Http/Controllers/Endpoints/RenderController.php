@@ -145,7 +145,7 @@ class RenderController extends Controller
         ];
 
         if ($type == 'user') {
-            $wearingItems = $db->WearingItems(); // Get the structured data from Avatar model
+            $wearingItems = $db->getWearingItemsStructured(); // Get the structured data from Avatar model
             $itemsForRender = [];
             $itemSlots = [
                 'hat_1',
