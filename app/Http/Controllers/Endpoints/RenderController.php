@@ -165,7 +165,8 @@ class RenderController extends Controller
                 'pants',
             ];
             $wearingItems = $db->getWearingItemsStructured();
-            unset($wearingItemsRaw['colors']);
+            unset($wearingItems['colors']);
+            
             $itemsForRender = [];
 
             foreach ($wearingItems as $slotName => $slotDataObject) {
