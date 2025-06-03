@@ -65,17 +65,20 @@ class Avatar extends Model
      */
     private function getEquippedItemAndStyle(string $slot): ?object
     {
-        $slotData = $this->{$slot} ?? null;
+        $slotData = $this->{$slot};
 
         // If no data for this slot, or if it's not in the expected array format return null.
         if (!$slotData || !is_array($slotData)) {
-            return null;
+            return (object) [
+                'item' => null,
+                'edit_style' => null,
+            ];;
         }
 
         $item = null;
         // Check if 'id' key exists in the $slotData (which is like ['id' => 1, 'edit_style_id' => 2])
-        if (isset($slotData['id'])) {
-            $item = Item::find($slotData['id']); // Load the full Item model
+        if (isset($slotData['item_id']) && $slotData['item_id'] !== null) {
+            $item = Item::find($slotData['item_id']);
         }
 
         $editStyle = null;
@@ -86,7 +89,7 @@ class Avatar extends Model
         if ($item || $editStyle) {
             return (object) [
                 'item' => $item,
-                'edit_style_details' => $editStyle,
+                'edit_style' => $editStyle,
             ];
         }
 
@@ -99,13 +102,28 @@ class Avatar extends Model
     public function getWearingItemsStructured(): array
     {
         $slots = [
-            'hat_1', 'hat_2', 'hat_3', 'hat_4', 'hat_5', 'hat_6',
-            'addon', 'head', 'face', 'tool', 'tshirt', 'shirt', 'pants',
+            'hat_1',
+            'hat_2',
+            'hat_3',
+            'hat_4',
+            'hat_5',
+            'hat_6',
+            'addon',
+            'head',
+            'face',
+            'tool',
+            'tshirt',
+            'shirt',
+            'pants',
         ];
 
         $wearing = [];
         foreach ($slots as $slot) {
-            $wearing[$slot] = $this->getEquippedItemAndStyle($slot);
+            $equipped = $this->getEquippedItemAndStyle($slot);
+
+            if (is_object($equipped)) {
+                $wearing[$slot] = $equipped;
+            }
         }
 
         $wearing['colors'] = $this->colors ?? [
@@ -136,10 +154,7 @@ class Avatar extends Model
      */
     public function resetAvatar(): void
     {
-        // Set the paths for thumbnail and headshot (if they are still part of the image column)
-        $thumbnail = "thumbnails/{$this->image}.png";
-        $headshot = "thumbnails/{$this->image}_headshot.png";
-
+        $currentImageName = $this->image;
         $defaultAttributes = [
             'image' => 'default',
             'hat_1' => null,
@@ -168,5 +183,20 @@ class Avatar extends Model
         // Update the model with the default values and save it
         $this->fill($defaultAttributes);
         $this->save();
+
+        if ($currentImageName !== 'default' && $currentImageName !== null) {
+            $thumbnailPath = "thumbnails/{$currentImageName}.png";
+            $headshotPath = "thumbnails/{$currentImageName}_headshot.png";
+
+            // Delete thumbnail if it exists
+            if (Storage::disk('spaces')->exists($thumbnailPath)) {
+                Storage::disk('spaces')->delete($thumbnailPath);
+            }
+
+            // Delete headshot if it exists
+            if (Storage::disk('spaces')->exists($headshotPath)) {
+                Storage::disk('spaces')->delete($headshotPath);
+            }
+        }
     }
 }

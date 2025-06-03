@@ -110,7 +110,7 @@ class RenderController extends Controller
     {
         if (!$slotData || !$slotData->item) {
             return [
-                'item' => 'none',
+                'item' => null,
                 'edit_style' => null,
             ];
         }
@@ -126,7 +126,7 @@ class RenderController extends Controller
             $isTexture = (bool) $slotData->edit_style_details->is_texture_style;
 
             // Construct the 'edit_style' object for the Go backend
-            $editStyleData = [
+            $editStyleData =  [
                 'hash' => $editStyleHash,
                 'is_model' => $isModel,
                 'is_texture' => $isTexture,
@@ -148,7 +148,6 @@ class RenderController extends Controller
         ];
 
         if ($type == 'user') {
-            $wearingItems = $db->getWearingItemsStructured(); // Get the structured data from Avatar model
             $itemsForRender = [];
             $itemSlots = [
                 'hat_1',
@@ -165,8 +164,16 @@ class RenderController extends Controller
                 'shirt',
                 'pants',
             ];
-            foreach ($itemSlots as $slot) {
-                $itemsForRender[$slot] = $this->getItemRenderData($wearingItems[$slot] ?? 'none');
+            $wearingItems = $db->getWearingItemsStructured();
+            unset($wearingItemsRaw['colors']);
+            $itemsForRender = [];
+
+            foreach ($wearingItems as $slotName => $slotDataObject) {
+                if (is_object($slotDataObject)) {
+                    $itemsForRender[$slotName] = $this->getItemRenderData($slotDataObject);
+                } else {
+                    $itemsForRender[$slotName] = $this->getItemRenderData(null);
+                }
             }
             $requestData['RenderJson'] = [
                 'items' => $itemsForRender,
@@ -243,7 +250,7 @@ class RenderController extends Controller
             }
         }
 
-        return json_encode($requestData);
+        return dd($requestData);
     }
 
     private function getColor($value, $default)
