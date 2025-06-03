@@ -70,9 +70,9 @@ class Avatar extends Model
         // If no data for this slot, or if it's not in the expected array format return null.
         if (!$slotData || !is_array($slotData)) {
             return (object) [
-                'item' => null,
+                'item' => 'none',
                 'edit_style' => null,
-            ];;
+            ];
         }
 
         $item = null;

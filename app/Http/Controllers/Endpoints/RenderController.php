@@ -110,7 +110,7 @@ class RenderController extends Controller
     {
         if (!$slotData || !$slotData->item) {
             return [
-                'item' => null,
+                'item' => 'none',
                 'edit_style' => null,
             ];
         }
