@@ -245,18 +245,46 @@ class RenderController extends Controller
     }
 
     private function makeRenderRequest($requestData)
-    {
-        $host = config('app.renderer.host');
-        $port = config('app.renderer.port');
+{
+    Log::info('*** Entered makeRenderRequest ***'); // Keep this log!
+    $host = config('app.renderer.host');
+    $port = config('app.renderer.port');
 
-        if ($port) {
-            $url = $host . ":" . $port;
-        } else {
-            $url =  $host;
-        }
-
-        return Http::withBody($requestData, 'application/json')->withOptions([
-            'headers' => ['Aeo-Access-Key' => config('app.renderer.key')],
-        ])->post($url);
+    $url = $host;
+    if ($port) {
+        $url .= ":" . $port;
     }
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        $url = "http://" . $url;
+    }
+
+    Log::info('Making HTTP request to renderer URL: ' . $url, ['requestData' => $requestData]);
+
+    try {
+        $response = Http::withBody($requestData, 'application/json')->withOptions([
+            'headers' => ['Aeo-Access-Key' => config('app.renderer.key')],
+            'timeout' => 60,
+        ])->post($url);
+
+        $response->throw();
+
+        Log::info('Render request successful', ['response_status' => $response->status(), 'response_body' => $response->body()]);
+        return $response;
+
+    } catch (\Illuminate\Http\Client\RequestException $e) {
+        Log::error('HTTP Request failed to renderer: ' . $e->getMessage(), [
+            'url' => $url,
+            'request_body' => json_encode($requestData),
+            'response_status' => $e->response ? $e->response->status() : 'N/A',
+            'response_body' => $e->response ? $e->response->body() : 'N/A',
+            'trace' => $e->getTraceAsString(),
+        ]);
+        throw $e; // Re-throw so the job fails and is logged in failed_jobs/laravel.log
+    } catch (\Exception $e) { // Catch any other general exceptions
+        Log::error('An unexpected error occurred during render request: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+        ]);
+        throw $e;
+    }
+}
 }
