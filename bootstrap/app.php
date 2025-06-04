@@ -12,13 +12,6 @@ use App\Models\Item;
 use App\Models\Space;
 use Illuminate\Support\Carbon;
 use App\Http\Middleware\EnsurePasswordIsConfirmed;
-use Illuminate\Foundation\Http\Kernel;
-
-$router = app('router');
-$kernel = new Kernel($app, $router);
-$kernel->handle(
-    $request = Request::capture()
-);
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptionxceptions) {
