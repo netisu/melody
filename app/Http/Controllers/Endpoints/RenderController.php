@@ -164,12 +164,12 @@ class RenderController extends Controller
             $requestData['RenderJson'] = [
                 'items' => $itemsForRender,
                 'colors' => [
-                    'head_color' => $this->getColor($db->colors['head'], 'd3d3d3'),
-                    'torso_color' => $this->getColor($db->colors['torso'], '055e96'),
-                    'leftLeg_color' => $this->getColor($db->colors['left_leg'], 'd3d3d3'),
-                    'rightLeg_color' => $this->getColor($db->colors['right_leg'], 'd3d3d3'),
-                    'leftArm_color' => $this->getColor($db->colors['left_arm'], 'd3d3d3'),
-                    'rightArm_color' => $this->getColor($db->colors['right_arm'], 'd3d3d3')
+                    'Head' => $this->getColor($db->colors['head'], 'd3d3d3'),
+                    'Torso' => $this->getColor($db->colors['torso'], '055e96'),
+                    'LeftLeg' => $this->getColor($db->colors['left_leg'], 'd3d3d3'),
+                    'RightLeg' => $this->getColor($db->colors['right_leg'], 'd3d3d3'),
+                    'LeftArm' => $this->getColor($db->colors['left_arm'], 'd3d3d3'),
+                    'RightArm' => $this->getColor($db->colors['right_arm'], 'd3d3d3')
                 ],
             ];
         } elseif ($type == 'item') {
