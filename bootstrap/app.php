@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             search: \Illuminate\Http\Middleware\TrustProxies::class,
             replace: \Monicahq\Cloudflare\Http\Middleware\TrustProxies::class
         );
-        $middleware->trustProxies('*');
+        $middleware->trustProxies(['*']);
         $middleware->validateCsrfTokens(except: [
             //
         ]);
