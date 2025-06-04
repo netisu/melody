@@ -171,7 +171,6 @@ class RenderController extends Controller
 
             foreach ($wearingItems as $slotName => $slotDataObject) {
                 if (is_object($slotDataObject)) {
-                    dd($slotDataObject);
                     $itemsForRender[$slotName] = $this->getItemRenderData($slotDataObject);
                 } else {
                     $itemsForRender[$slotName] = $this->getItemRenderData(null);
