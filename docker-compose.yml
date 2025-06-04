@@ -10,9 +10,7 @@ services:
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
             - '${VITE_REVERB_PORT:-8080}:${VITE_REVERB_PORT:-8080}'
         depends_on:
-            - mysql
             - redis
-            - minio
             - meilisearch
         extra_hosts:
             - 'host.docker.internal:host-gateway'
