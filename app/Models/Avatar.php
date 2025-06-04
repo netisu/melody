@@ -63,7 +63,7 @@ class Avatar extends Model
      * @param string $slotName The name of the slot (e.g., 'hat_1', 'shirt', 'head').
      * @return object|null An object containing 'item' (Item::class) and 'edit_style' (ItemEditStyle::class), or null.
      */
-    private function getEquippedItemAndStyle(string $slot): ?object
+    public function getEquippedItemAndStyle(string $slot): ?object
     {
         $slotData = $this->{$slot};
 

@@ -149,21 +149,6 @@ class RenderController extends Controller
 
         if ($type == 'user') {
             $itemsForRender = [];
-            $itemSlots = [
-                'hat_1',
-                'hat_2',
-                'hat_3',
-                'hat_4',
-                'hat_5',
-                'hat_6',
-                'addon',
-                'head',
-                'face',
-                'tool',
-                'tshirt',
-                'shirt',
-                'pants',
-            ];
             $wearingItems = $db->getWearingItemsStructured();
             unset($wearingItems['colors']);
 
