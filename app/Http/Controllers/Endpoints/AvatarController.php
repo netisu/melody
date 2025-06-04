@@ -239,14 +239,24 @@ class AvatarController extends Controller
             $wearingHats = collect();
 
             foreach ($hatColumns as $column) {
-                if ($avatar->{$column} !== null) {
-                    $hat = Item::find($avatar->{$column});
+                $hatData = $avatar->{$column};
+
+                if (is_array($hatData) && isset($hatData['item_id']) && $hatData['item_id'] !== null) {
+                    $itemId = $hatData['item_id'];
+                    $hat = Item::find($itemId);
                     if ($hat) {
+                        $editStyleId = $hatData['edit_style_id'] ?? null;
+                        $editStyle = null;
+                        if ($editStyleId) {
+                            $editStyle = ItemEditStyle::find($editStyleId);
+                        }
                         $wearingHats->push([
                             'id' => $hat->id,
                             'type' => $hat->item_type,
                             'name' => $hat->name,
                             'thumbnail' => $hat->thumbnail(),
+                            'edit_style' => $editStyle ? (object)['hash' => $editStyle->hash, 'is_model' => $editStyle->is_model, 'is_texture' => $editStyle->is_texture] : null,
+
                         ]);
                     }
                 }
