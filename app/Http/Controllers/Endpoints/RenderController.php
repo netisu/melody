@@ -148,17 +148,33 @@ class RenderController extends Controller
         ];
 
         if ($type == 'user') {
-            $itemsForRender = [];
+            $itemsForRender = [
+                'face'   => $this->getItemRenderData(null), // This will be {"item": "none", "edit_style": null}
+                'hats'   => array_fill(0, 6, $this->getItemRenderData(null)), // Initialize 6 hat slots as "none"
+                'addon'  => $this->getItemRenderData(null),
+                'tool'   => $this->getItemRenderData(null),
+                'head'   => $this->getItemRenderData(null),
+                'pants'  => $this->getItemRenderData(null),
+                'shirt'  => $this->getItemRenderData(null),
+                'tshirt' => $this->getItemRenderData(null),
+            ];
             $wearingItems = $db->getWearingItemsStructured();
-            unset($wearingItems['colors']);
-
-            $itemsForRender = [];
-
+            if (isset($wearingItems['colors'])) {
+                unset($wearingItems['colors']);
+            }
             foreach ($wearingItems as $slotName => $slotDataObject) {
-                if (is_object($slotDataObject)) {
-                    $itemsForRender[$slotName] = $this->getItemRenderData($slotDataObject);
-                } else {
-                    $itemsForRender[$slotName] = $this->getItemRenderData(null);
+                if ($slotName === 'hats' && is_array($slotDataObject)) {
+                    $itemsForRender['hats'] = [];
+                    foreach ($slotDataObject as $index => $wornHat) {
+                        if ($index < 6) {
+                            $itemsForRender['hats'][$index] = $this->getItemRenderData($wornHat);
+                        }
+                    }
+                    while (count($itemsForRender['hats']) < 6) {
+                        $itemsForRender['hats'][] = $this->getItemRenderData(null);
+                    }
+                } elseif (isset($itemsForRender[$slotName]) && (is_object($slotDataObject) || (is_array($slotDataObject) && (isset($slotDataObject['item']) || isset($slotDataObject->item))))) {
+                    $itemsForRender[$slotName] = $this->getItemRenderData((object)$slotDataObject);
                 }
             }
             $requestData['RenderJson'] = [
