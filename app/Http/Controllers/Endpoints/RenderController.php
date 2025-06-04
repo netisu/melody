@@ -108,7 +108,7 @@ class RenderController extends Controller
 
     private function getItemRenderData(?object $slotData): array
     {
-        if (!$slotData || !$slotData->item) {
+        if (!$slotData || !isset($slotData->item)) {
             return [
                 'item' => 'none',
                 'edit_style' => null,
@@ -117,10 +117,8 @@ class RenderController extends Controller
 
         $itemHash = $slotData->item->hash;
         $editStyleHash = null;
-        $isModel = false;
-        $isTexture = false;
 
-        if ($slotData->edit_style_details) {
+        if (isset($slotData->edit_style_details)) {
             $editStyleHash = $slotData->edit_style_details->hash; // Hash from ItemEditStyle
             $isModel = (bool) $slotData->edit_style_details->is_model_style;
             $isTexture = (bool) $slotData->edit_style_details->is_texture_style;
