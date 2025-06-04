@@ -41,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             \Illuminate\Http\Middleware\HandleCors::class,
+            \Illuminate\View\ViewServiceProvider::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class,
