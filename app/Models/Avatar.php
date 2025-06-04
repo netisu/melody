@@ -68,15 +68,11 @@ class Avatar extends Model
         $slotData = $this->{$slot};
 
         // If no data for this slot, or if it's not in the expected array format return null.
-        if (!$slotData || !is_array($slotData)) {
-            return (object) [
-                'item' => 'none',
-                'edit_style' => null,
-            ];
+        if (!$slotData || !is_array($slotData) || !isset($slotData['item_id']) || $slotData['item_id'] === null) {
+            return null;
         }
 
         $item = null;
-        // Check if 'id' key exists in the $slotData (which is like ['id' => 1, 'edit_style_id' => 2])
         if (isset($slotData['item_id']) && $slotData['item_id'] !== null) {
             $item = Item::find($slotData['item_id']);
         }
