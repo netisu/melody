@@ -116,7 +116,7 @@ class RenderController extends Controller
         }
 
         $itemHash = $slotData->item->hash;
-        $editStyleHash = null;
+        $editStyleData = null;
 
         if (isset($slotData->edit_style_details)) {
             $editStyleHash = $slotData->edit_style_details->hash; // Hash from ItemEditStyle
