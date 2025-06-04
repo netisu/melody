@@ -51,13 +51,7 @@ RUN composer install \
 RUN sed -i'' -e 's/^APP_ENV=.*/APP_ENV=production/' -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
 
 # Cache all values
-RUN php artisan event:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-RUN php artisan config:cache
 RUN php artisan optimize
-
-# Regenerate Application Key
 RUN php artisan key:generate
 
 
