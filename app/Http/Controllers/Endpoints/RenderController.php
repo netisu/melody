@@ -257,7 +257,6 @@ class RenderController extends Controller
 
         return Http::withBody($requestData, 'application/json')->withOptions([
             'headers' => ['Aeo-Access-Key' => config('app.renderer.key')],
-            'timeout' => 30,
         ])->post($url);
     }
 }
