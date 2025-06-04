@@ -236,7 +236,7 @@ class RenderController extends Controller
             }
         }
 
-        return $requestData;
+        return json_encode($requestData);
     }
 
     private function getColor($value, $default)
