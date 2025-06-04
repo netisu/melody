@@ -236,7 +236,7 @@ class RenderController extends Controller
             }
         }
 
-        return json_encode($requestData);
+        return $requestData;
     }
 
     private function getColor($value, $default)
@@ -261,7 +261,7 @@ class RenderController extends Controller
 
         Log::info('Making HTTP request to renderer URL: ' . $url, ['requestData' => $requestData]);
 
-        return Http::withBody($requestData, 'application/json')->withOptions([
+        return Http::withBody(json_encode($requestData), 'application/json')->withOptions([
             'headers' => ['Aeo-Access-Key' => config('app.renderer.key')],
         ])->post($url);
     }
