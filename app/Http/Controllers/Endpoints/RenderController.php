@@ -166,11 +166,12 @@ class RenderController extends Controller
             ];
             $wearingItems = $db->getWearingItemsStructured();
             unset($wearingItems['colors']);
-            
+
             $itemsForRender = [];
 
             foreach ($wearingItems as $slotName => $slotDataObject) {
                 if (is_object($slotDataObject)) {
+                    dd($slotDataObject);
                     $itemsForRender[$slotName] = $this->getItemRenderData($slotDataObject);
                 } else {
                     $itemsForRender[$slotName] = $this->getItemRenderData(null);
