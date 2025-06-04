@@ -61,16 +61,7 @@ gzip_types  text/plain text/xml text/css
             image/svg+xml
             application/x-font-ttf application/vnd.ms-fontobject image/x-icon;
 
-# Dynamic brotli:
-brotli on;
-brotli_comp_level 6;
-#text/html is always included by default, no need to include explicitely
-brotli_types  text/plain text/xml text/css
-              application/x-javascript application/javascript application/ecmascript text/javascript application/json
-              application/rss+xml
-              application/xml
-              image/svg+xml
-              application/x-font-ttf application/vnd.ms-fontobject image/x-icon;
+    error_log  /var/log/nginx/netisu.com-error.log error;
 
     # Add security headers
     add_header X-Frame-Options "SAMEORIGIN";
@@ -86,9 +77,12 @@ brotli_types  text/plain text/xml text/css
     # Other location blocks for specific routes
 
     location ~ \.php$ {
+        fastcgi_buffers 16 16k;
+        fastcgi_buffer_size 32k;
         fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         include fastcgi_params;
+        fastcgi_index index.php;
     }
 
     # Additional security rules
