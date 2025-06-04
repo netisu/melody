@@ -25,7 +25,7 @@ class UserRenderer implements ShouldQueue
     {
         $this->userID = $userID;
     }
-    
+
     /**
      * Get the middleware the job should pass through.
      *
@@ -52,7 +52,7 @@ class UserRenderer implements ShouldQueue
 
         } catch (\Exception $e) {
             \Log::error('*** Error in UserRenderer job for user ID ' . $this->userID . ' ***: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-            // $this->fail($e);
+            throw $e;
         }
     }
 }
