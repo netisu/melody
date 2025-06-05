@@ -265,12 +265,10 @@ class RenderController extends Controller
         $host = config('app.renderer.host');
         $port = config('app.renderer.port');
 
-        $url = $host;
         if ($port) {
-            $url .= ":" . $port;
-        }
-        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
-            $url = "http://" . $url;
+            $url = $host . ":" . $port;
+        } else {
+            $url =  $host;
         }
 
         Log::info('Making HTTP request to renderer URL: ' . $url, ['requestData' => $requestData]);
