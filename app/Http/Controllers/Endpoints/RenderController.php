@@ -120,8 +120,8 @@ class RenderController extends Controller
 
         if (isset($slotData->edit_style)) {
             $editStyleHash = $slotData->edit_style->hash; // Hash from ItemEditStyle
-            $isModel = (bool) $slotData->edit_style->is_model_style;
-            $isTexture = (bool) $slotData->edit_style->is_texture_style;
+            $isModel = (bool) $slotData->edit_style->is_model;
+            $isTexture = (bool) $slotData->edit_style->is_texture;
 
             // Construct the 'edit_style' object for the Go backend
             $editStyleData =  [
