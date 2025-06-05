@@ -189,67 +189,96 @@ class RenderController extends Controller
         } elseif ($type == 'item') {
             $requestData['RenderJson'] = [
                 'ItemType' => $db->item_type,
-                'Item' => getItemHash($db->id),
+                'Item' => [ // <--- Change here: make it an array (object in JSON)
+                    'item' => getItemHash($db->id),
+                    'edit_style' => null, // <--- Add this, or an actual edit_style object if applicable
+                ],
                 'PathMod' => false,
             ];
         } elseif ($type == 'item_preview') {
             if ($db->item_type == 'hat') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'addon') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'face') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'tshirt') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => false,
                 ];
             } elseif ($db->item_type == 'tool') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => true,
                 ];
             } elseif ($db->item_type == 'shirt') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => false,
                 ];
             } elseif ($db->item_type == 'pants') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => false,
                 ];
             } elseif ($db->item_type == 'head') {
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => false,
                 ];
-            } else {
+            } else { // This is your default case
                 $requestData['RenderJson'] = [
                     'ItemType' => $db->item_type,
-                    'Item' => getItemHash($db->id),
+                    'Item' => [ // <--- Change here
+                        'item' => getItemHash($db->id),
+                        'edit_style' => null,
+                    ],
                     'PathMod' => true,
                 ];
             }
         }
-
         return json_encode($requestData);
     }
 
