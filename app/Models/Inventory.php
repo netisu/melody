@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Inventory extends Model
 {
@@ -14,7 +15,8 @@ class Inventory extends Model
 
     protected $fillable = [
         'user_id',
-        'item_id',
+        'ownable_id',   // <--- Changed from item_id
+        'ownable_type', // <--- Added
     ];
 
     /**
@@ -26,10 +28,10 @@ class Inventory extends Model
     }
 
     /**
-     * Get the item associated with this inventory entry.
+     * Get the owning model of the inventory entry (Item, ItemEditStyle, Achievement, etc.).
      */
-    public function item(): BelongsTo
+    public function ownable(): MorphTo
     {
-        return $this->belongsTo(Item::class, 'item_id');
+        return $this->morphTo();
     }
 }
