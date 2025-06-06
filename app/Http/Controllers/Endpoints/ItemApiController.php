@@ -209,15 +209,16 @@ class ItemApiController extends Controller
 
     private function updateUserInventory($crate, $winningItem)
     {
+        $user = User::where('id',  Auth::id())->first();
         Inventory::where([
-            ['user_id', '=', Auth::user()->id],
+            ['user_id', '=', $user->id],
             ['item_id', '=', $crate->id]
         ])->first()->delete();
 
-        $inventory = new Inventory;
-        $inventory->user_id = Auth::user()->id;
-        $inventory->item_id = $winningItem->item->id;
-        $inventory->save();
+        $user->inventory()->create([
+            'item_id' => $crate->id,
+            'ownable_type' => Item::class,
+        ]);
     }
 
     private function generateUnboxingAnimation($crateItems)

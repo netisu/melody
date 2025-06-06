@@ -98,7 +98,7 @@ class Item extends Model
     public function thumbnail()
     {
         $url = config('app.storage.url');
-        return "{$url}/thumbnails/{$this->hash}.png";
+        return "{$url}/thumbnails/{$this->item_type}/{$this->hash}.png";
     }
 
     public function preview()

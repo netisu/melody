@@ -20,21 +20,11 @@ class AvatarController extends Controller
     public function getItemsByCategory(string $category = "hat")
     {
         $inventory = Inventory::where('user_id', Auth::id())
-            ->whereHas('item', function ($query) use ($category) {
+            ->where('ownable_type', Item::class)
+            ->whereHas('ownable', function ($query) use ($category) {
                 $query->where('item_type', $category);
             })
             ->paginate(24);
-        // Paginate the inventory with 24 items per page, filtered by item_type
-
-        $paginatedItems = $inventory->through(function ($itemData) {
-            $item = $itemData->item;
-            if ($item) {
-                $item->creator = $item->creator;
-                $item->thumbnail = $item->thumbnail();
-                return $item;
-            }
-            return null;
-        })->filter();
 
         return response()->json($inventory);
     }

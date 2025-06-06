@@ -263,11 +263,10 @@ class AdminController extends Controller
             'onsale' => true,
         ]);
 
-        $inventory = new Inventory;
-
-        $inventory->create([
-            'user_id' => Auth::id(),
+        $user = User::where('id',  Auth::id())->first();
+        $user->inventory()->create([
             'item_id' => $item->id,
+            'ownable_type' => Item::class,
         ]);
 
         if ($request->type !== 'face') {

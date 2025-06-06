@@ -138,12 +138,9 @@ class AdminController extends Controller
             ]);
         }
 
-
-        $inventory = new Inventory;
-
-        $inventory->create([
-            'user_id' => $userId,
+        $user->inventory()->create([
             'item_id' => $itemId,
+            'ownable_type' => Item::class,
         ]);
 
         $user->notify(new GiftNotification(Auth::user(), $item));

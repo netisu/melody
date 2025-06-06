@@ -90,6 +90,7 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
         Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
             Route::get('/discover', [UserController::class, 'UserIndex'])->name('page');
             Route::get('/@{username}', [UserController::class, 'ProfileIndex'])->name('profile');
+            Route::get('/@{username}/inventory', [UserController::class, 'ProfileIndex'])->name('inventory');
             Route::middleware(['auth', EnsurePasswordIsConfirmed::class])->group(function () {
                 Route::group(['as' => 'settings.', 'prefix' => 'settings'], function () {
                     Route::get('/', [USController::class, 'edit'])->name('page');

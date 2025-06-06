@@ -151,8 +151,7 @@ class MarketController extends Controller
         ]);
 
         $user = User::where('id',  Auth::id()) ->first();
-    $user->inventory()->create([
-            'user_id' => Auth::id(),
+        $user->inventory()->create([
             'item_id' => $item->id,
             'ownable_type' => Item::class,
         ]);
