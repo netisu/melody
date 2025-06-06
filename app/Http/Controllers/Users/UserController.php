@@ -10,6 +10,7 @@ use App\Models\Followers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+
 class UserController extends Controller
 {
 
@@ -138,7 +139,7 @@ class UserController extends Controller
                 'acheivements' => $user->acheivements,
                 'followers' => $userFollowers,
                 'staff' => $user->isStaff(),
-                'spaces'=> $user->spaces()->take(6),
+                'spaces' => $user->spaces()->take(6),
                 'position' => $user->CurrentPosition(),
                 'followsYou' => $thisFollowing,
                 'followers_count' => $FollowerCount,
@@ -195,5 +196,12 @@ class UserController extends Controller
         ]);
 
         return $response;
+    }
+    public function InventoryIndex($username, Request $request)
+    {
+        return inertia('Users/Inventory', [
+            'user' => ['username' => $username],
+            'inventoryCategories' => config('ItemCategories')
+        ]);
     }
 }

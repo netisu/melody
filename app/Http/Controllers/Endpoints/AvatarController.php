@@ -19,14 +19,50 @@ class AvatarController extends Controller
 {
     public function getItemsByCategory(string $category = "hat")
     {
-        $inventory = Inventory::where('user_id', Auth::id())
+        $query = Inventory::where('user_id', Auth::id())
             ->where('ownable_type', Item::class)
-            ->whereHas('ownable', function ($query) use ($category) {
-                $query->where('item_type', $category);
-            })
-            ->paginate(24);
+            // Eager load the 'ownable' polymorphic relation and its 'creator' relation.
+            // This prevents N+1 query problem when displaying item details.
+            ->with(['ownable' => function ($query) {
+                // Assuming 'creator' is a relationship on your Item model
+                $query->with('creator');
+            }]);
 
-        return response()->json($inventory);
+        // Handle 'exclusive_' categories
+        if (str_starts_with($category, 'exclusive_')) {
+            $baseCategory = str_replace('exclusive_', '', $category);
+
+            $query->whereHas('ownable', function ($ownableQuery) use ($baseCategory) {
+                $ownableQuery->where('rare', true);
+                if ($baseCategory !== 'all') {
+                    $ownableQuery->where('item_type', $baseCategory);
+                }
+            });
+        } else {
+            $query->whereHas('ownable', function ($ownableQuery) use ($category) {
+                $ownableQuery->where('item_type', $category);
+            });
+        }
+
+        $inventory = $query->paginate(24);
+        $transformedItems = $inventory->through(function ($inventoryEntry) {
+            /** @var \App\Models\Item $item */
+            $item = $inventoryEntry->ownable;
+
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'description' => $item->description,
+                'item_type' => $item->item_type,
+                'thumbnail' => $item->thumbnail(),
+                'creator' => [
+                    'id' => $item->creator->id,
+                    'username' => $item->creator->username,
+                ],
+            ];
+        });
+
+        return response()->json($transformedItems);
     }
 
     private function regenerate(): void
