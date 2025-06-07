@@ -36,11 +36,11 @@ export default {
         },
     },
     server: {
-        host: "localhost",
+        host: "100.115.92.197",
         cors: true,
         strictPort: true,
         hmr: {
-            host: "localhost",
+            host: "100.115.92.197",
         },
         watch: {
             usePolling: true,

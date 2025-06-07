@@ -117,21 +117,7 @@ class AuthController extends Controller
 
         ]);
     }
-    private function getItemData(array $itemIds): array
-    {
-        // Logic to fetch item data from database or other source
-        $items = Item::whereIn('id', $itemIds)->get();
 
-        $itemData = []; // Create an empty array to store processed item data
-        foreach ($items as $item) {
-            $itemData[] = [  // Add an object with name and thumbnail to the array
-                'name' => $item->name,
-                'thumbnail' => $item->thumbnail(),
-            ];
-        }
-
-        return $itemData;
-    }
     public function registerVal(Request $request)
     {
         $request->validate([
@@ -180,7 +166,7 @@ class AuthController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
-        return redirect(to: '/my/dashboard');
+        return redirect()->route('my.dashboard.page');
 
     }
     /**

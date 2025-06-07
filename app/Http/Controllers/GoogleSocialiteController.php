@@ -48,7 +48,7 @@ class GoogleSocialiteController extends Controller
         if ($existingUser) {
             if ($existingUser->social_type = 'google') {
                 Auth::loginUsingId($existingUser->id);
-                return redirect(to: '/my/dashboard');
+                return redirect()->route('my.dashboard.page');
             }
             return response()->json([
                 'type' => 'danger',
@@ -91,6 +91,6 @@ class GoogleSocialiteController extends Controller
 
         Auth::login(user: $newUser);
 
-        return redirect(to: '/my/dashboard');
+        return redirect()->route('my.dashboard.page');
     }
 }
