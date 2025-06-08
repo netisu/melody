@@ -396,7 +396,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function online(): int
     {
-        return $this->updated_at->diffInSeconds() < 300;
+        return $this->updated_at->diffInSeconds() < 180;
     }
 
     public function settings(): HasOne
