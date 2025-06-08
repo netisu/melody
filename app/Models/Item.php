@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Inventory;
 use Laravel\Scout\Searchable;
-use Spatie\LaravelData\Attributes\Validation\InArray;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\ItemEditStyle;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+
 class Item extends Model
 {
     use HasFactory, Searchable;
@@ -112,6 +113,12 @@ class Item extends Model
             return null;
         }
     }
+
+    public function inventories(): MorphMany
+    {
+        return $this->morphMany(Inventory::class, 'ownable');
+    }
+
     public function slug(): string
     {
         $text = $this->name;

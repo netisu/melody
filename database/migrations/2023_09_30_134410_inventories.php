@@ -11,8 +11,7 @@ return new class extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade'); // Link directly to the 'items' table
-            $table->string('ownable_type')->default('App\\Models\\Item');
+            $table->nullableMorphs('ownable');
             $table->timestamps();
         });
     }

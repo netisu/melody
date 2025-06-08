@@ -17,7 +17,6 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Item;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -148,8 +147,8 @@ class AuthController extends Controller
             'about_me' => 'Greetings! Im new to ' . config('Values.name'),
         ]);
 
-        $user->avatar;
-        
+        $user->avatar();
+
         UserSettings::create([
             'user_id' => $user->id,
             'country_code' => strtolower($request->country),

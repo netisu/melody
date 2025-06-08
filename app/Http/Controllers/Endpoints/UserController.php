@@ -422,23 +422,41 @@ class UserController extends Controller
         return response()->json(['error' => false, 'message' => 'OK'], 200);
     }
 
-    public function getUserItems($userID)
+public function getUserItems($userID)
     {
-        $inventory = Inventory::where('user_id', $userID)->get();
-        // Changed 'first()' to 'get()' to retrieve all items
+        $perPage = 12;
 
-        $items = $inventory->map(function ($itemData) {
-            $item = $itemData->item;
+        $paginatedInventory = Inventory::where('user_id', $userID)
+            ->where('ownable_type', Item::class)
+            ->with(['ownable' => function ($query) {
+                $query->with('creator');
+            }])
+            ->paginate($perPage);
+
+        $transformedItems = $paginatedInventory->through(function ($inventoryEntry) {
+            /** @var \App\Models\Item|null $item */
+            $item = $inventoryEntry->ownable;
+
             if ($item) {
-                $item->creator = $item->creator;
-                $item->thumbnail = $item->thumbnail();
-                return $item;
+                return [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'description' => $item->description,
+                    'item_type' => $item->item_type,
+                    'thumbnail' => $item->thumbnail(),
+                    'is_exclusive' => $item->is_exclusive ?? false,
+                    'creator' => [
+                        'id' => $item->creator->id,
+                        'username' => $item->creator->username,
+                        'is_verified' => $item->creator->is_verified ?? false,
+                    ],
+                ];
             }
+            return null;
         })->filter();
 
-        return response()->json($items);
+        return response()->json($transformedItems);
     }
-
     public function getUserCurrentlyWearing($userID)
     {
         $avatar = Avatar::where('user_id', $userID)->first();

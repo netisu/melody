@@ -32,13 +32,12 @@ class Event
 
         try {
             // Check if user already has the item
-            if ($user->ownsItem($item->id)) {
+            if ($user->ownsItem($item->id, Item::class)) {
                 Log::error("User already owns item: $key (user: {$user->id}, item: {$item->id})"); // Log error details
                 return false;
             } else {
                 // Grant the item
-                $user->inventory()->create([
-                    'item_id' => $item->id,
+                $item->inventories()->create([
                     'ownable_type' => Item::class,
                 ]);
                 return true;

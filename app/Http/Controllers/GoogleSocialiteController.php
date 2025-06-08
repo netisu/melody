@@ -71,7 +71,7 @@ class GoogleSocialiteController extends Controller
             'social_type' => 'google',
         ]);
 
-        $newUser->avatar;
+        $newUser->avatar();
 
         UserSettings::create([
             'user_id' => $newUser->id,

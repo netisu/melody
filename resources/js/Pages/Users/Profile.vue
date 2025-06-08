@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios';
-import { ref, computed, watch, onMounted, reactive } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 
@@ -37,33 +37,6 @@ const items = ref<any>([]);
 const CurentlyWearingItems = ref<any>([]);
 
 const ItemLoading = ref(false);
-
-var userAvatar = reactive({
-    color_head: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["color_head"]
-    ),
-    color_torso: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["color_torso"]
-    ),
-    color_left_arm: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["color_left_arm"]
-    ),
-    color_right_arm: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["color_right_arm"]
-    ),
-    color_left_leg: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["color_left_leg"]
-    ),
-    color_right_leg: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["color_right_leg"]
-    ),
-    image: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["thumbnail"]
-    ),
-    current_face: computed<any>(
-        () => (usePage<any>().props.user.avatar as Record<string, unknown>)?.["current_face"]
-    ),
-});
 
 function onImgErrorSmall(id) {
     let source = document.getElementById(id) as HTMLImageElement;
@@ -329,7 +302,6 @@ watch(following, (newValue, oldValue) => {
         </div>
         <div class="cell medium-6">
             <div v-show="ActiveCategory === 'Posts'">
-                <div class="mb-1 text-xl fw-semibold">Posts</div>
                 <div class="mb-3 card card-body">
                     <div v-if="!statuses?.['data']?.['length']" class="section">
                         <div class="gap-3 text-center flex-container flex-dir-column">
@@ -417,7 +389,6 @@ watch(following, (newValue, oldValue) => {
             </div>
 
             <div v-show="ActiveCategory === 'Inventory'">
-                <span class="text-xl fw-semibold">Currently Wearing</span>
                                 <div>
                     <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)" class="grid-x grid-margin-x grid-padding-y">
                         <template v-if="ItemLoading">
@@ -543,7 +514,6 @@ watch(following, (newValue, oldValue) => {
                 </div>
             </div>
             <div v-show="ActiveCategory === 'Spaces'">
-                <div class="mb-1 text-xl fw-semibold">Spaces</div>
                 <div class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
                         <i class="text-5xl fad fa-planet-ringed text-muted"></i>
@@ -572,7 +542,6 @@ watch(following, (newValue, oldValue) => {
                 </div>
             </div>
             <div v-show="ActiveCategory === 'Followers'" class="my-2">
-                <div class="mb-1 text-xl fw-semibold">Followers</div>
                 <div v-if="!usePage<any>().props.user.followers?.['data']?.['length']" class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
                         <i class="text-5xl fad fa-face-cry text-muted"></i>
@@ -581,7 +550,7 @@ watch(following, (newValue, oldValue) => {
                                 No followers
                             </div>
                             <div class="text-xs text-muted fw-semibold">
-                                {{ usePage<any>().props.user.username }} has no followers
+                                {{ usePage<any>().props.user.username }} has no followers.
                             </div>
                         </div>
                     </div>
@@ -624,17 +593,15 @@ watch(following, (newValue, oldValue) => {
                 </Pagination>
             </div>
             <div v-show="ActiveCategory === 'Following'" class="my-2">
-                <div class="mb-1 text-xl fw-semibold">Following</div>
                 <div v-if="!usePage<any>().props.user.following?.['data']?.['length']" class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
                         <i class="text-5xl fad fa-face-sleeping text-muted"></i>
                         <div style="line-height: 16px">
                             <div class="text-xs fw-bold text-muted text-uppercase">
-                                No followers
+                                No following
                             </div>
                             <div class="text-xs text-muted fw-semibold">
-                                {{ usePage<any>().props.user.username }} has not posted anything to their
-                                    feed.
+                                {{ usePage<any>().props.user.username }} is not following anyone.
                             </div>
                         </div>
                     </div>

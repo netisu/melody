@@ -110,7 +110,7 @@ class MarketController extends Controller
                 ],
 
             ],
-            'itemOwnership' => Auth::check() ? $authenticatedUserModel->ownsItem($item->id) : false,
+            'itemOwnership' => Auth::check() ? $authenticatedUserModel->ownsItem($item->id, Item::class) : false,
             'recommendations' => $recommendations,
         ]);
     }
@@ -151,8 +151,7 @@ class MarketController extends Controller
         ]);
 
         $user = User::where('id',  Auth::id()) ->first();
-        $user->inventory()->create([
-            'item_id' => $item->id,
+        $item->inventories()->create([
             'ownable_type' => Item::class,
         ]);
 

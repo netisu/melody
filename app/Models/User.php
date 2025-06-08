@@ -265,12 +265,21 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
         return ItemPurchase::where(column: 'seller_id', operator: '=', value: $this->id)->count();
     }
 
-    public function ownsItem(int $id): bool
+    public function inventories(): HasMany
     {
-        return Inventory::where(column: [
-            ['user_id', '=', $this->id],
-            ['item_id', '=', $id]
-        ])->exists();
+        // Laravel automatically assumes 'user_id' as the foreign key on the 'inventories' table
+        // because it follows naming conventions.
+        // ya skid
+        return $this->hasMany(Inventory::class);
+    }
+
+    public function ownsItem(int $ownableId, string $ownableType): bool
+    {
+        // This method will now leverage the 'inventories' relationship directly
+        return $this->inventories()
+            ->where('ownable_id', $ownableId)
+            ->where('ownable_type', $ownableType)
+            ->exists();
     }
 
     public function ipLogs(): HasMany
@@ -286,7 +295,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
     }
 
     public function resellableCopiesOfItem(int $id)
-    {
+    {   // adapt later
         $i = 1;
         $resellableCopies = [];
         $copies = Inventory::where([

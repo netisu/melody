@@ -20,7 +20,7 @@ class CreateUserAvatarOnRegistration
     public function handle(Registered $event): void
     {
         $user = $event->user;
-        $user->avatar;
+        $user->avatar();
         \Log::info("Default avatar created or retrieved for new user: {$user->id}");
     }
 }

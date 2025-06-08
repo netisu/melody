@@ -17,29 +17,24 @@ use App\Models\ItemEditStyle;
 
 class AvatarController extends Controller
 {
-    public function getItemsByCategory(string $category = "hat")
+    public function getItemsByCategory(int $userId, string $category = "hat")
     {
-        $query = Inventory::where('user_id', Auth::id())
-            ->where('ownable_type', Item::class)
-            // Eager load the 'ownable' polymorphic relation and its 'creator' relation.
-            // This prevents N+1 query problem when displaying item details.
-            ->with(['ownable' => function ($query) {
-                // Assuming 'creator' is a relationship on your Item model
-                $query->with('creator');
-            }]);
+        $query = Inventory::where('user_id', $userId)->with(['ownable' => function ($query) {
+            $query->with('creator');
+        }]);
 
         // Handle 'exclusive_' categories
         if (str_starts_with($category, 'exclusive_')) {
             $baseCategory = str_replace('exclusive_', '', $category);
 
-            $query->whereHas('ownable', function ($ownableQuery) use ($baseCategory) {
+            $query->whereHasMorph('ownable', [Item::class], function ($ownableQuery) use ($baseCategory) {
                 $ownableQuery->where('rare', true);
                 if ($baseCategory !== 'all') {
                     $ownableQuery->where('item_type', $baseCategory);
                 }
             });
         } else {
-            $query->whereHas('ownable', function ($ownableQuery) use ($category) {
+            $query->whereHasMorph('ownable', [Item::class], function ($ownableQuery) use ($category) {
                 $ownableQuery->where('item_type', $category);
             });
         }
@@ -125,7 +120,7 @@ class AvatarController extends Controller
         }
         // Generic checks
 
-        if (!$user->ownsItem($item->id)) {
+        if (!$user->ownsItem($item->id, Item::class)) {
             return response()->json([
                 "success" => false,
                 "thumbnail" => $user->thumbnail(),

@@ -217,7 +217,7 @@ const SortItemByType = async (id: number, type: string, action: string) => {
 const getItemsbyCategory = async (category) => {
     try {
         const response = await axios.get(
-            route(`api.avatar.items`, { category: category })
+            route(`api.avatar.items`, { id: usePage<any>().props.auth.user.id,  category: category })
         );
         CategoryItems.value = response.data;
         currentcat.value = category;

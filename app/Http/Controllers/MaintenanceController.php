@@ -44,7 +44,7 @@ class MaintenanceController extends Controller
 
         Session::put('maintenance_password', $password);
 
-        return inertia()->location(route('welcome.page'));
+        return redirect(request()->url());
     }
 
     public function Exit()

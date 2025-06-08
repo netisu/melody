@@ -34,7 +34,7 @@ class UserController extends Controller
                     'online' => $user->online(),
                     'is_following' => $isFollowing,
                     'settings' => [
-                        'beta_tester' => $user->settings->beta_tester ?? false,
+                        'beta_tester' => $user->settings?->beta_tester ?? false,
                     ],
                 ];
             });
@@ -54,7 +54,7 @@ class UserController extends Controller
 
         // Retrieve the user profile from the cache, ensuring `$user` is accessible
         $user = Cache::remember($cacheKey, now()->addMinutes(3), function () use ($username) {
-            return User::where('username', $username)->first();
+            return User::with('settings')->where('username', $username)->first();
         });
 
         // Check if the user exists
@@ -62,8 +62,8 @@ class UserController extends Controller
             abort(404);
         }
 
-        if (!is_null($user->settings->private_profile ?? null)) {
-            if ($user->settings->private_profile) {
+        if (!is_null($user->settings?->private_profile ?? null)) {
+            if ($user->settings?->private_profile) {
                 if (!Auth::check() || (Auth::check() && $user->id != Auth::id())) {
                     return inertia('App/ProfileDisabled', [
                         'username' => $user->username,
@@ -160,34 +160,34 @@ class UserController extends Controller
                     ),
                 ],
                 'settings' => [
-                    "verified" => $user->settings->is_verified ?? false,
-                    "beta_tester" => $user->settings->beta_tester ?? false,
-                    "private_profile" => $user->settings->private_profile ?? false,
-                    "followers_enabled" => $user->settings->followers_enabled  ?? false,
-                    "trading_enabled" => $user->settings->trading_enabled ?? false,
-                    "posting_enabled" => $user->settings->posting_enabled ?? false,
-                    "chat_enabled" => $user->settings->chat_enabled ?? false,
-                    "alert_enabled" => $user->settings->alert_enabled ?? false,
-                    "alert_message" => $user->settings->alert_message ?? null,
-                    "calling_card_enabled" => $user->settings->calling_card_enabled ?? false,
-                    "calling_card_url" => $user->settings->callingCard() ?? null,
-                    "profile_banner_enabled" => $user->settings->profile_banner_enabled ?? false,
-                    "profile_banner_url" => $user->settings->banner() ?? null,
-                    "primarySpace" => $user->settings->primarySpace ? [
-                        'id' => $user->settings->primarySpace->id,
-                        'slug' => $user->settings->primarySpace->slug(),
-                        'name' => $user->settings->primarySpace->name,
-                        'thumbnail' => $user->settings->primarySpace->thumbnail(),
+                    "verified" => $user->settings?->is_verified ?? false,
+                    "beta_tester" => $user->settings?->beta_tester ?? false,
+                    "private_profile" => $user->settings?->private_profile ?? false,
+                    "followers_enabled" => $user->settings?->followers_enabled  ?? false,
+                    "trading_enabled" => $user->settings?->trading_enabled ?? false,
+                    "posting_enabled" => $user->settings?->posting_enabled ?? false,
+                    "chat_enabled" => $user->settings?->chat_enabled ?? false,
+                    "alert_enabled" => $user->settings?->alert_enabled ?? false,
+                    "alert_message" => $user->settings?->alert_message ?? null,
+                    "calling_card_enabled" => $user->settings?->calling_card_enabled ?? false,
+                    "calling_card_url" => $user->settings?->callingCard() ?? null,
+                    "profile_banner_enabled" => $user->settings?->profile_banner_enabled ?? false,
+                    "profile_banner_url" => $user->settings?->banner() ?? null,
+                    "primarySpace" => $user->settings?->primarySpace ? [
+                        'id' => $user->settings?->primarySpace->id,
+                        'slug' => $user->settings?->primarySpace->slug(),
+                        'name' => $user->settings?->primarySpace->name,
+                        'thumbnail' => $user->settings?->primarySpace->thumbnail(),
                     ] : null,
-                    "secondarySpace" => $user->settings->secondarySpace ?  [
-                        'id' => $user->settings->secondarySpace->id,
-                        'slug' => $user->settings->secondarySpace->slug(),
-                        'name' => $user->settings->secondarySpace->name,
-                        'thumbnail' => $user->settings->secondarySpace->thumbnail(),
+                    "secondarySpace" => $user->settings?->secondarySpace ?  [
+                        'id' => $user->settings?->secondarySpace->id,
+                        'slug' => $user->settings?->secondarySpace->slug(),
+                        'name' => $user->settings?->secondarySpace->name,
+                        'thumbnail' => $user->settings?->secondarySpace->thumbnail(),
                     ] : null,
-                    "ugc_creator" => $user->settings->ugc_creator ?? false,
-                    "content_creator" => $user->settings->content_creator ?? false,
-                    "country_code" => $user->settings->country_code ?? null,
+                    "ugc_creator" => $user->settings?->ugc_creator ?? false,
+                    "content_creator" => $user->settings?->content_creator ?? false,
+                    "country_code" => $user->settings?->country_code ?? null,
                 ]
             ],
             'is_following' => $isFollowing,
@@ -197,10 +197,17 @@ class UserController extends Controller
 
         return $response;
     }
-    public function InventoryIndex($username, Request $request)
+    public function InventoryIndex($username)
     {
+        $user = User::where('username', $username)->first();
+        if (!$user) {
+            Abort(404);
+        }
         return inertia('Users/Inventory', [
-            'user' => ['username' => $username],
+            'user' => [
+                'id' => (int)$user->id,
+                'username' => (string)$user->username
+            ],
             'inventoryCategories' => config('ItemCategories')
         ]);
     }

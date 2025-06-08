@@ -264,8 +264,7 @@ class AdminController extends Controller
         ]);
 
         $user = User::where('id',  Auth::id())->first();
-        $user->inventory()->create([
-            'item_id' => $item->id,
+        $item->inventories()->create([
             'ownable_type' => Item::class,
         ]);
 
