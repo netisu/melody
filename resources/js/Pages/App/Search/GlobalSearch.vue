@@ -113,7 +113,7 @@ onMounted(() => {
                 <div class="grid-x grid-margin-x">
                     <div v-for="result in results" :key="result.url + result.type + result.id"
                         class="cell medium-6 mb-2">
-                        <div class="card card-body card-status">
+                        <div class="card card-body">
 
                             <div class="gap-2 cell small-7 medium-9 flex-container">
                                 <Link :href="result.url" class="flex items-center w-full">
@@ -136,10 +136,6 @@ onMounted(() => {
                                         </div>
                                         <div></div>
                                     </div>
-                                </div>
-                                <div class="cell show-for-large small-5 medium-3 flex-container align-right gap-2">
-                                    <div class="badge badge-info" style="height:25px;"> {{ result.type.replace("_", " ")
-                                    }}</div>
                                 </div>
                                 </Link>
                             </div>

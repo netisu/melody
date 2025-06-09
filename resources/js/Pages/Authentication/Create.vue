@@ -472,26 +472,8 @@ theme, index
                                 <!-- Add more sections as needed -->
                                 <div v-show="currentStep === 1">
                                     <div class="gap-1 mt-2 mb-2 flex-container flex-dir-column">
-                                        <div class="text-xs text-muted fw-semibold">
-                                            You can skip this step by signing up
-                                            with Google or Discord!
-                                        </div>
-                                    </div>
-                                    <div class="gap-2 mb-3 flex-container-lg">
-                                        <Link  as="button" :href="route(`auth.login.google.auth`)" class="mb-2 btn btn-gray btn-block mb-lg-0">
-                                            <img src="/assets/img/google.png" width="20" alt="google_logo" class="me-1"
-                                                style="
-                                                    margin-top: -3px;
-                                                    filter: drop-shadow(
-                                                        0 1px 1px
-                                                            rgb(0, 0, 0, 0.2)
-                                                    );
-                                                " />
-                                            Google Sign Up
-                                        </Link>
-                                        <Link as="button" :href="route(`auth.login.discord.auth`)" class="btn btn-discord btn-block">
-                                            <i class="fab fa-discord me-1"></i>
-                                            Discord Sign Up
+                                        <Link as="a" :href="route('auth.providers')" class="text-xs text-info fw-semibold">
+                                            Looking to use your Google or Discord account to sign up?
                                         </Link>
                                     </div>
                                 </div>

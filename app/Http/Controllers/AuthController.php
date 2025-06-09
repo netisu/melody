@@ -33,6 +33,10 @@ class AuthController extends Controller
         ]);
     }
 
+    public function ProvidersIndex() {
+        return Inertia::render('Authentication/Providers');
+    }
+    
     public function confirmPassword(Request $request)
     {
         $request->validate([
@@ -45,8 +49,9 @@ class AuthController extends Controller
 
         $request->session()->put('password.confirmed_at', now()->timestamp);
 
-        return response()->json(['intended' => $request->input('intended')]);
+        return redirect($request->input('intended'));
     }
+
     public function LoginVal(Request $request): RedirectResponse
     {
 
@@ -57,9 +62,9 @@ class AuthController extends Controller
 
         $this->ensureIsNotRateLimited($request);
 
-        $user = User::where('username', $credentials['username'])->where('password', '!=', '')->first();
+        $user = User::where('username', $credentials['username'])->first();
 
-        if (!Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']], $remember = true)) {
+        if (!Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']])) {
             // Authentication failed
             RateLimiter::hit($this->throttleKey($request));
             if ($this->limiter()->attempts($this->throttleKey($request)) == '5') {

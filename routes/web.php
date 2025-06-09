@@ -54,10 +54,10 @@ use Illuminate\Support\Facades\Queue;
 
 // Auto-login for local development (only if user 1 exists and not already logged in)
 // This should only be uncommented for local testing and should be temporary.
-if (app()->environment('local') && User::where('id', 1)->exists() && !Auth::check()) {
-    // Auth::loginUsingId(1);
+/* if (app()->environment('local') && User::where('id', 1)->exists() && !Auth::check()) {
+    Auth::loginUsingId(1);
 }
-
+*/
 Route::domain(config('app.env') === 'production' ? config('Values.production.domains.main') : config('app.url'))
     ->middleware(['cacheable'])->group(function () {
 
@@ -180,9 +180,11 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
         });
 
         // --- Authentication Routes ---
-        Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
+        Route::group(['as' => 'auth.'], function () {
 
-            Route::get('logout', [AuthController::class, 'UserExit'])->name('logout');
+            Route::get('/logout', [AuthController::class, 'UserExit'])->name('logout');
+            Route::get('/auth-providers', [AuthController::class, 'ProvidersIndex'])->name('providers');
+
             // Language setting route
             Route::get('/set-language/{language}', function ($language) {
                 Session::put('locale', $language);

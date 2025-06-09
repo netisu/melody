@@ -71,11 +71,11 @@
 
     --like-btn-hover-bg: 233, 30, 99, 0.1;
 
-    --rounded-none: 0px;
-    --rounded-sm: 4px;
-    --rounded-md: 6px;
-    --rounded-lg: 8px;
-    --rounded-xl: 10px;
-    --rounded-2xl: 12px;
-    --rounded-circle: 9999px;
+    --rounded-none: 0rem;
+    --rounded-sm: 0.25rem;
+    --rounded-md: .375rem;
+    --rounded-lg: 0.5rem;
+    --rounded-xl: 0.75rem;
+    --rounded-2xl: 1rem;
+    --rounded-circle: calc(infinity * 1px);
 }

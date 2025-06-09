@@ -112,12 +112,12 @@ watch(activeInternalCategory, (newCategory) => {
         :url="route('user.inventory', { username: usePage<any>().props.user.username })" />
     <Navbar />
     <Sidebar>
-        <div class="cell medium-12 mb-3">
+        <div class="cell medium-12 mb-2">
             <Link :href="route('user.profile', { username: usePage<any>().props.user.username })"
                 class="text-info text-lg"><i class="fad fa-arrow-left"></i>&nbsp;{{ 'Back to ' + usePage<any>
                     ().props.user.username }}</Link>
         </div>
-        <div class="cell medium-3">
+        <div class="cell medium-3 mb-5">
             <ul class="tabs flex-dir-column">
                 <template v-for="(group, groupName) in inventoryCategories" :key="groupName">
                     <li class="tab-group-title">
@@ -130,7 +130,10 @@ watch(activeInternalCategory, (newCategory) => {
                         <template v-if="key !== 'icon'">
                             <a href="#" class="tab-link squish" @click="setActiveCategory(subCategory.internal)"
                                 :class="{ 'active': subCategory.internal === activeInternalCategory }">
-                                <i :class="subCategory.icon" class="me-1"></i> {{ subCategory.name }}
+                                <span>{{ subCategory.name }}</span>
+                                <span class="tab-icon">
+                                    <i :class="subCategory.icon"></i>
+                                </span>
                             </a>
                         </template>
                     </li>
@@ -175,7 +178,7 @@ watch(activeInternalCategory, (newCategory) => {
                         </div>
                         <div class=" text-sm text-info">
                             {{ usePage<any>().props.user.username }} has no {{ activeInternalCategory.replace(/_/g, " ")
-                                }}{{ activeInternalCategory !== "pants" ? "s" : null }}.
+                            }}{{ activeInternalCategory !== "pants" ? "s" : null }}.
                         </div>
                     </div>
                 </div>
