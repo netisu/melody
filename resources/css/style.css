@@ -333,24 +333,26 @@ body,
 #app {
     height: 100%;
     overflow-x: hidden;
+    position: relative; /* Ensure #app creates a new stacking context */
+    z-index: 0; /* Or any value greater than -1 */
 }
 html,
 body,
 #app::before {
-    -webkit-mask: url("/netisu-body-icons.svg");
-    mask: url("/netisu-body-icons.svg");
-    -webkit-mask-size: 476.47px 200px;
-    mask-size: 476.47px 200px;
-    -webkit-mask-size: cover;
-    -webkit-mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-origin: border-box;
-    -webkit-mask-clip: border-box;
-    mask-size: cover;
-    mask-position: center;
-    mask-repeat: no-repeat;
-    mask-origin: border-box;
-    mask-clip: border-box;
+content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask: url("/netisu-body-icons.svg");
+  mask: url("/netisu-body-icons.svg");
+  -webkit-mask-size: 476.47px 200px;
+  mask-size: 476.47px 200px;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  background-color: lightblue;
+  z-index: -1;
 }
 
 body {
