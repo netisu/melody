@@ -13,6 +13,8 @@ import NewsCardSkeleton from '@/Components/NewsCardSkeleton.vue';
 import VLazyImage from "v-lazy-image";
 import throttle from "lodash/throttle";
 import type { Ref } from 'vue';
+import DummyHeadshot from "@/Images/dummy_headshot.png";
+import DummyAvatar from "@/Images/dummy.png";
 
 const form = useForm({
     message: '',
@@ -88,7 +90,7 @@ onMounted(() => {
                 <Link :href="route(`user.profile`, { username: usePage<any>().props.auth.user.username })">
                 <v-lazy-image :src="usePage<any>().props.auth.user.headshot" width="100"
                     class="border headshot flex-child-shrink img-fluid rounded-circle border-secondary bg-dark v-lazy-image v-lazy-image-loaded flex-wrap col-md-4 d-flex justify-content-center align-content-start"
-                    style="flex-direction: column;" alt="Avatar" src-placeholder="/assets/img/dummy_headshot.png" />
+                    style="flex-direction: column;" alt="Avatar" :src-placeholder="DummyHeadshot" />
                 </Link>
                 <div class="flex-wrap col-md-4 d-flex justify-content-center align-content-start"
                     style="flex-direction: column;">
@@ -108,7 +110,7 @@ onMounted(() => {
         <div class="cell medium-3">
             <div class="gap-2 mb-3 align-middle  card-body flex-container flex-dir-column">
                 <v-lazy-image :src="usePage<any>().props.auth.user.thumbnail" width="200" alt="Avatar"
-                    src-placeholder="/assets/img/dummy.png" />
+                    :src-placeholder="DummyAvatar" />
                 <div class="text-center fw-semibold text-md" style="line-height: 16px">
                     <div :class="usePage<any>().props.auth.user.staff ? 'text-danger' : 'text-success'">
                         {{ usePage<any>().props.auth.user.staff ? usePage<any>().props.auth.user.position : 'Netizen' }}

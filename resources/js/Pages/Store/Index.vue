@@ -50,7 +50,7 @@ async function fetchItems(selectedcat: any, filters?: { search?: string; sort?: 
             selectedSubCategory.value = selectedcat.name;
             currentSelectedInternal.value = selectedcat.internal; // Store the internal ID
 
-            
+
             ItemLoading.value = true;
 
             const apiParams: Record<string, any> = { category: selectedcat.internal };
@@ -257,14 +257,14 @@ provide("selectedSubCategory", selectedSubCategory);
                     <div
                         class="gap-3 mb-2 text-center flex-container flex-dir-column"
                     >
-                        <i class="text-5xl fad fa-cart-xmark text-muted"></i>
+                        <i class="text-5xl fad fa-person-fairy text-info"></i>
                         <div style="line-height: 16px">
                             <div
-                                class="text-xs fw-bold text-muted text-uppercase"
+                                class="text-xs fw-bold text-info text-uppercase"
                             >
                                 No {{ selectedSubCategory }}
                             </div>
-                            <div class="text-muted fw-semibold">
+                            <div class="text-info fw-semibold">
                                 <p class="text-xs">
                                     There are currently no
                                     {{ selectedSubCategory }}.

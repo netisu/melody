@@ -27,6 +27,10 @@ import "tippy.js/themes/light.css";
 
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 
+import.meta.glob([
+  '../img/**',
+]);
+
 const appName = import.meta.env?.["VITE_APP_NAME"] || "Laravel";
 
 createInertiaApp({

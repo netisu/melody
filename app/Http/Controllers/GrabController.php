@@ -22,7 +22,7 @@ class GrabController extends Controller
     public function customizeIndex()
     {
         $availableColors = config('avatar_colors');
-        $categories = config('SimpleCategories');
+        $categories = config('ItemCategories');
 
         /** @var \App\Models\User $user **/
         $user = Auth::user();

@@ -13,9 +13,10 @@ use Laravel\Cashier\Cashier;
 use Illuminate\Support\Facades\Event;
 use Inertia\Ssr\Gateway;
 use App\Http\InertiaHttpGateway;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use App\Listeners\CreateUserAvatarOnRegistration;
+use Illuminate\Support\Facades\Vite;
+use App\Providers\TelescopeServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(UrlGenerator $url): void
     {
+        Vite::prefetch(concurrency: 3);
+
         $this->bootRoute();
         if (!app()->environment('local')) {
             $url->forceScheme('https');

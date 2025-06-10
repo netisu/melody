@@ -130,10 +130,8 @@ watch(activeInternalCategory, (newCategory) => {
                         <template v-if="key !== 'icon'">
                             <a href="#" class="tab-link squish" @click="setActiveCategory(subCategory.internal)"
                                 :class="{ 'active': subCategory.internal === activeInternalCategory }">
+                                <i class="me-1" :class="subCategory.icon"></i>
                                 <span>{{ subCategory.name }}</span>
-                                <span class="tab-icon">
-                                    <i :class="subCategory.icon"></i>
-                                </span>
                             </a>
                         </template>
                     </li>

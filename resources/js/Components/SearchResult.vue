@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import VLazyImage from "v-lazy-image";
+import DummyHeadshot from "@/Images/dummy_headshot.png";
 
 // Props
 defineProps<{
@@ -21,7 +22,7 @@ defineProps<{
                         alt="headshot"
                         width="40"
                         :src="image"
-                        src-placeholder="/assets/img/dummy_headshot.png"
+                        :src-placeholder="DummyHeadshot"
                     />
                     <i
                         v-else-if="icon"

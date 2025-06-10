@@ -35,6 +35,7 @@ const toggleFollow = (id) => {
 
 const items = ref<any>([]);
 const CurentlyWearingItems = ref<any>([]);
+const inventoryCategories = pageProps.inventoryCategories as Record<string, CategoryGroup>;
 
 const ItemLoading = ref(false);
 
@@ -509,7 +510,7 @@ watch(following, (newValue, oldValue) => {
                         as="button"
                         :href="route('user.inventory', {username: usePage<any>().props.user.username})"
                         class="btn btn-info btn-sm text-xs fw-semibold squish"
-                        >More Items</Link
+                        >View All</Link
                     >
                 </div>
             </div>

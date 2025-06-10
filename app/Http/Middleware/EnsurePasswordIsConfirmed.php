@@ -20,7 +20,6 @@ class EnsurePasswordIsConfirmed
     public function handle(Request $request, Closure $next): Response
     {
         if (!$request->session()->get('password.confirmed_at', false) && $request->user()->social_type == null) {
-
             Session::put('url.intended', $request->getRequestUri());
             return Redirect::route('password.confirm.form');
         }

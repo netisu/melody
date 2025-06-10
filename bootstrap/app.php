@@ -113,19 +113,21 @@ return Application::configure(basePath: dirname(__DIR__))
                     'data' => 'Resource not found'
                 ], 404);
             }
-            if ($request->expectsJson() || !$request->isMethod('GET')) {
+            if ($request->wantsJson() || $request->isJson()) {
                 // authenticated API request returning 403
                 if ($statusCode === 403 && !Auth::check()) {
                     return response()->json([
                         'type' => 'error',
                         'message' => 'Unauthenticated.'
-                    ], 401);
+                    ], 403);
                 }
                 // other JSON errors
-                return response()->json([
-                    'type' => 'error',
-                    'message' => $messages[$statusCode] ?? 'An unexpected error occurred.'
-                ], $statusCode);
+                if (!$request->isMethod('GET')) {
+                    return response()->json([
+                        'type' => 'error',
+                        'message' => $messages[$statusCode] ?? 'An unexpected error occurred.'
+                    ], $statusCode);
+                }
             }
             if ($statusCode === 419) {
                 return back()->with([

@@ -9,6 +9,9 @@ import SearchResultSkeleton from "../SearchResultSkeleton.vue";
 import VLazyImage from "v-lazy-image";
 import PageLoader from "../Loaders/PageLoader.vue";
 import throttle from "lodash/throttle";
+import DummyHeadshot from "@/Images/dummy_headshot.png";
+import Logo from "@/Images/netisu-logo2.svg";
+import Icon from "@/Images/netisu-icon.svg";
 
 // Define the SearchResult interface
 interface SearchResult {
@@ -228,10 +231,10 @@ const lang = computed<any>(() => props.locale);
         <ul class="navbar-nav grid-x">
             <Link as="li" class="nav-item cell shrink show-for-small-only me-1" style="cursor: pointer"
                 :href="route(`welcome.page`)">
-            <v-lazy-image :src="props.site.icon" width="30" />
+            <v-lazy-image :src="Icon" width="30" />
             </Link>
             <Link as="li" class="nav-item cell shrink" style="cursor: pointer" :href="route(`welcome.page`)">
-            <v-lazy-image :src="props.site.logo" class="show-for-medium" width="130" />
+            <v-lazy-image :src="Logo" class="show-for-medium" width="130" />
             </Link>
             <template v-for="topbarlinks in topbar">
                 <NavLink :link="topbarlinks.url" :ActiveLink="topbarlinks.ActiveLink" :showForLarge="true">
@@ -411,7 +414,7 @@ const lang = computed<any>(() => props.locale);
                 id="user_dropdown">
                 <button @click="isOpen = !isOpen" class="gap-2 align-middle flex-container squish">
                     <v-lazy-image :src="usePage<any>().props.auth?.user?.headshot" width="40" class="headshot"
-                        alt="Avatar" src-placeholder="assets/img/dummy_headshot.png" />
+                        alt="Avatar" :src-placeholder="DummyHeadshot" :error-src="DummyHeadshot" />
                     <div class="text-start show-for-large">
                         <div class="text-sm fw-semibold text-body">
                             {{ props.auth?.user?.display_name }}

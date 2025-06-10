@@ -16,7 +16,7 @@
     box-shadow: none;
     border-bottom: none;
     position: sticky;
-    border-bottom: 1px dashed var(--gray-100);
+    border-bottom: 2px dashed var(--gray-100);
 }
 
 .navbar.bottom_nav {
@@ -81,6 +81,15 @@
     align-items: center;
 }
 
+.navbar.bottom_nav .nav-item {
+    display: inline-block;
+    height: 34px;
+    line-height: 36px;
+    display: flex;
+    align-items: center;
+}
+
+
 .navbar .nav-link {
     border-radius: var(--rounded-lg);
     text-decoration: none;
@@ -97,8 +106,8 @@
     background: var(--info-600);
 }
 
-.navbar .bottom_nav .nav-link.active {
-    color: #fff;
+.navbar.bottom_nav .nav-link.active:hover {
+    color: var(--gray-100);
     background: transparent;
 }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { route } from "ziggy-js";
 import VLazyImage from "v-lazy-image";
+import DummyHeadshot from "@/Images/dummy_headshot.png";
 
 // Props
 defineProps<{
@@ -17,7 +18,7 @@ defineProps<{
         <div class="mx-auto flex-child-grow" style="width: 100px">
             <Link :href="route(`user.profile`, { username: name})" class="text-sm text-center d-block squish">
                 <v-lazy-image :src="Thumbnail" width="60" class="headshot" alt="Avatar"
-                    src-placeholder="/assets/img/dummy_headshot.png" />
+                    :src-placeholder="DummyHeadshot" />
                 <div style="line-height: 16px">
                     <div class="text-truncate">{{ DisplayName }}</div>
                     <div class="text-xs text-muted text-truncate">
