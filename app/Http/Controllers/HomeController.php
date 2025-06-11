@@ -25,11 +25,16 @@ class HomeController extends Controller
         $cacheKeyItems = 'landing_items';
         $cacheKeyPosts = 'landing_posts';
 
+        $landingUser = Cache::remember('landing_user', 10, function () {
+            return User::inRandomOrder()->first();
+        });
+
         // Use caching to store the item count query result
         $landingItems = Cache::remember($cacheKeyItems, now()->addHours(1), function () {
             return Item::where([
-                ['status', '!=', 'pending']
-            ])->inRandomOrder()->paginate(6)->through(function ($item) {
+                ['public_view', true],
+                ['status', 'approved'],
+            ])->with('creator')->inRandomOrder()->paginate(6)->through(function ($item) {
                 return [
                     'id' => $item->id,
                     'name' => $item->name,
@@ -41,6 +46,8 @@ class HomeController extends Controller
                 ];
             });
         });
+
+
 
         $landingPosts = Cache::remember($cacheKeyPosts, now()->addHours(1), function () use ($bbcodeService) {
             return ForumThread::inRandomOrder()->paginate(4)->through(function ($post) use ($bbcodeService) {
@@ -57,8 +64,15 @@ class HomeController extends Controller
         });
 
         return inertia('Welcome', [
-            'LandingItems' => $landingItems,
-            'LandingPosts' => $landingPosts,
+            'landing' => [
+                'user' => [
+                    'username' => $landingUser->username,
+                    'displayname' => $landingUser->display_name,
+                    'avatar' => $landingUser->thumbnail(),
+                ],
+                'items' => $landingItems,
+                'posts' => $landingPosts,
+            ],
         ]);
     }
 
@@ -66,7 +80,7 @@ class HomeController extends Controller
     public function DashboardIndex()
     {
         // Retrieve recommendations with caching
-        $recommendations = Cache::remember('daily-reccomendtions:' . Auth::id(), now()->addHours(6), function () {
+        $recommendations = Cache::remember('daily-recomendations:' . Auth::id(), now()->addHours(6), function () {
             return Item::where([
                 ['public_view', true],
                 ['status', 'approved'],
@@ -118,7 +132,7 @@ class HomeController extends Controller
             $user = User::find(Auth::id());
             $user->status = $request->message;
             $user->save();
-            
+
             Auth::user()->addPoints(3);
 
             return response()->json([

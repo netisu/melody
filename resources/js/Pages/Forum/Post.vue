@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useForm, usePage, usePoll } from '@inertiajs/vue3';
 import VLazyImage from 'v-lazy-image';
 import SuperBanner from '@/Components/LayoutParts/SuperBanner.vue';
+import DummyAvatar from "@/Images/dummy.png";
 
 defineProps<{
     topic?: Object,
@@ -101,7 +102,7 @@ usePoll(10000, { only: ['replies'] })
                                 :href="route('user.profile', { username: usePage<any>().props.post.creator.username })">
                             <v-lazy-image :src="usePage<any>().props.post.creator.thumbnail" width="136px"
                                 class="border img-fluid" :alt="usePage<any>().props.post.creator.username"
-                                src-placeholder="/assets/img/dummy.png" /> </Link>
+                                :src-placeholder="DummyAvatar" /> </Link>
                             <div class="text-center" style="line-height: 16px">
                                 <div class="fw-semibold  text-truncate">{{ usePage<any>
                                         ().props.post.creator.display_name }}
@@ -139,7 +140,7 @@ usePoll(10000, { only: ['replies'] })
                             <div class="gap-2 mb-3 text-center align-center">
                                 <Link :href="route('user.profile', { username: reply.creator.username })">
                                 <v-lazy-image :src="reply.creator.thumbnail" width="136px" class="border img-fluid"
-                                    :alt="reply.creator.username" src-placeholder="/assets/img/dummy.png" />
+                                    :alt="reply.creator.username" :src-placeholder="DummyAvatar" />
                                 </Link>
                                 <div class="text-center" style="line-height: 16px">
                                     <div class="fw-semibold text-truncate">{{ reply.creator.display_name }}

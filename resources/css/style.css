@@ -336,24 +336,15 @@ body,
     position: relative; /* Ensure #app creates a new stacking context */
     z-index: 0; /* Or any value greater than -1 */
 }
-html,
+/*
+Note to self: Make this work with any theme on release - aeo
 body,
-#app::before {
-content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  -webkit-mask: url("/netisu-body-icons.svg");
-  mask: url("/netisu-body-icons.svg");
-  -webkit-mask-size: 476.47px 200px;
-  mask-size: 476.47px 200px;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  background-color: lightblue;
-  z-index: -1;
+#app {
+    background: url("/netisu-body-icons.svg");
+    background-size: 476.47px 200px;
+    background-repeat: repeat;
 }
+*/
 
 body {
     font-weight: 500;

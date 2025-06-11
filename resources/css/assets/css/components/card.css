@@ -7,9 +7,23 @@
 .card-body {
     padding: 18px;
 }
+.card.padding-sm {
+    padding: 10px;
+}
 .card-inner {
     background: var(--input-bg);
     border-color: var(--input-border-color);
+}
+
+.card-top-heavy {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.card-bottom-heavy {
+    background: var(--input-bg);
+    border-top: 2px dashed  var(--section-border-color);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 }
 
 .card-item-owned {

@@ -7,6 +7,7 @@ import Footer from "@/Components/LayoutParts/Footer.vue";
 import { computed, onMounted, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
+import DummyHeadshot from "@/Images/dummy_headshot.png";
 
 
 const site = computed<any>(() => usePage<any>().props.site);
@@ -160,7 +161,7 @@ function onImgErrorSmall(id) {
                                         <div class="gap-2 flex-container">
                                             <div class="gap-2 flex-container">
                                                 <button class="gap-2 align-middle flex-container squish">
-                                                    <img class="headshot" src="/assets/img/dummy_headshot.png" width="50"
+                                                    <img class="headshot" :src="DummyHeadshot" width="50"
                                                         height="50" alt="Avatar" />
                                                 </button>
                                                 <div>

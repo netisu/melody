@@ -4,6 +4,8 @@ import Navbar from "@/Components/LayoutParts/Navbar.vue";
 import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import VLazyImage from "v-lazy-image";
 //import { Head, Link } from '@inertiajs/vue3';
+import DummyHeadshot from "@/Images/dummy_headshot.png";
+
 </script>
 
 <template>
@@ -80,10 +82,10 @@ import VLazyImage from "v-lazy-image";
                         <a class="gap-2 mt-2 mb-2 align-middle flex-container align-justify squish">
                             <div class="headshot-group">
                                 <div class="headshot">
-                                    <img src="/assets/img/dummy_headshot.png" width="50" />
+                                    <img :src="DummyHeadshot" width="50" />
                                 </div>
                                 <div class="headshot">
-                                    <img src="/assets/img/dummy_headshot.png" width="50" />
+                                    <img :src="DummyHeadshot" width="50" />
                                 </div>
                                 <div class="headshot">
                                     <span
@@ -110,8 +112,8 @@ import VLazyImage from "v-lazy-image";
                 <div class="gap-3 section flex-container flex-dir-column-sm">
                     <div class="mx-auto flex-child-grow" style="width: 100px">
                         <Link href="#" class="text-sm text-center d-block squish">
-                        <v-lazy-image src="/assets/img/dummy_headshot.png" width="60" class="headshot" alt="Avatar"
-                            src-placeholder="/assets/img/dummy_headshot.png" />
+                        <v-lazy-image :src="DummyHeadshot" width="60" class="headshot" alt="Avatar"
+                            :src-placeholder="DummyHeadshot" />
                         <div style="line-height: 16px">
                             <div class="text-truncate">aeno</div>
                             <div class="text-xs text-muted text-truncate">

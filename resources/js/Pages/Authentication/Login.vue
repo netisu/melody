@@ -10,6 +10,7 @@ import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import axios from "axios";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import VLazyImage from "v-lazy-image";
+import DummyHeadshot from "@/Images/dummy_headshot.png";
 
 const ConfirmingAuth = ref(false);
 const userImageUrl = ref("");
@@ -46,16 +47,16 @@ watch(
                 if (response.data && response.data) {
                     userImageUrl.value = response.data;
                 } else {
-                    userImageUrl.value = "/assets/img/dummy_headshot.png";
+                    userImageUrl.value = DummyHeadshot;
                 }
             } catch (error) {
                 console.error("Error fetching user image:", error);
-                userImageUrl.value = "/assets/img/dummy_headshot.png";
+                userImageUrl.value = DummyHeadshot;
             } finally {
                 isLoadingImage.value = false; // Loading is complete
             }
         } else {
-            userImageUrl.value = "/assets/img/dummy_headshot.png";
+            userImageUrl.value = DummyHeadshot;
         }
     },
     { immediate: true }
@@ -94,7 +95,7 @@ watch(
                         class="space-image mb-2"
                         width="150"
                         alt="Headshot"
-                        src-placeholder="/assets/img/dummy_headshot.png"
+                        :src-placeholder="DummyHeadshot"
                     />
                     <div
                         class="text-center text-2xl fw-semibold"

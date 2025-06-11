@@ -12,14 +12,16 @@ import AppHead from '@/Components/AppHead.vue';
 import ItemCardSkeleton from '@/Components/ItemCardSkeleton.vue';
 import type { Ref } from 'vue';
 import SuperBanner from '@/Components/LayoutParts/SuperBanner.vue';
+import DummyAvatar from "@/Images/dummy.png";
 
-defineProps({
+const props = defineProps({
     user: { type: Object },
     is_following: { type: Boolean },
     statuses: { type: Object },
     categorizedItems: { type: Object },
 
 });
+const showUserName = ref(false);
 
 let following = ref(usePage<any>().props.is_following); // Initial follow status
 
@@ -35,7 +37,6 @@ const toggleFollow = (id) => {
 
 const items = ref<any>([]);
 const CurentlyWearingItems = ref<any>([]);
-const inventoryCategories = pageProps.inventoryCategories as Record<string, CategoryGroup>;
 
 const ItemLoading = ref(false);
 
@@ -76,20 +77,12 @@ const creatorRoute = (username) => route(`user.profile`, { username: username })
 
 const ActiveCategory: Ref<string> = ref("Inventory");
 
-function setActiveCategory(category): void {
-    ActiveCategory.value = category;
-};
 
 const showSuccessMessage = (message) => {
 
     console.log('Success:', message);
 };
-const capitalized = (name: string) => {
-    const capitalizedFirst = name[0].toUpperCase();
-    const rest = name.slice(1);
 
-    return capitalizedFirst + rest;
-};
 let followercount = ref(usePage<any>().props.user.followers_count);
 const followUser = (id) => {
     // Send a POST request to follow the user
@@ -222,26 +215,56 @@ watch(following, (newValue, oldValue) => {
             </SuperBanner>
         </template>
         <div class="cell medium-3">
-            <div :class="['card', 'card-body', 'card-status', usePage<any>().props.user.online ? 'online' : 'offline']"
-                :style="usePage<any>().props.user.settings.calling_card_enabled
-                    ? {
-                        'background-image': 'url(' + usePage<any>().props.user.settings.calling_card_url + ')',
-                        'background-repeat': 'no-repeat',
-                        'background-size': 'cover',
-                        'box-shadow':
-                            'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
-                    }
-                    : null">
+
+            <div class="mb-2 flex-container align-middle gap-1 fw-semibold">
+                <i
+                    :class="['fad', 'fa-circle', 'text-xs', usePage<any>().props.user.online ? 'text-info' : 'text-muted']"></i>
+                <div class="text-xl" style="line-height: 16px">
+                    <div v-if="!showUserName" class="fw-semibold mb-1" @mouseover="showUserName = true"
+                        @mouseleave="showUserName = false">{{ usePage
+                            <any>
+                            ().props.user.display_name }}
+                    </div>
+                    <div v-if="showUserName" @mouseleave="showUserName = false" class="fw-semibold mb-1">
+                        {{ "@" + usePage<any>().props.user.username }}
+                    </div>
+                     <div class="fw-semibold mb-1 text-muted">
+                        {{ usePage<any>().props.user.status ?? 'This user does not have a status.' }}
+                     </div>
+                </div>
+                <i v-show="usePage<any>().props.user.staff" class="fad fa-gavel text-danger"></i>
+                <i v-show="usePage<any>().props.user.settings.beta_tester" class="fad fa-hard-hat text-success"></i>
+                <v-lazy-image class="headshot"
+                    :src="'/assets/img/flags/' + usePage<any>().props.user.settings.country_code + '.svg'"
+                    alt="Country Flag" style="width: auto;height: 20px;"
+                    src-placeholder="/assets/img/flags/other/pirate.svg" />
+                <Link v-if="usePage<any>().props.user.settings.primarySpace"
+                    :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.primarySpace.id, slug: usePage<any>().props.user.settings.primarySpace.slug })">
+                <v-lazy-image class="headshot" :src="usePage<any>().props.user.settings.primarySpace.thumbnail"
+                    alt="Country Flag" style="width: auto;height: 20px;"
+                    src-placeholder="/assets/img/flags/other/pirate.svg" v-tippy="{ placement: 'bottom' }"
+                    :content="usePage<any>().props.user.settings.primarySpace.name" />
+                </Link>
+                
+            </div>
+
+            <div class="card card-body mb-3" :style="usePage<any>().props.user.settings.calling_card_enabled
+                ? {
+                    'background-image': 'url(' + usePage<any>().props.user.settings.calling_card_url + ')',
+                    'background-repeat': 'no-repeat',
+                    'background-size': 'cover',
+                    'box-shadow':
+                        'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
+                }
+                : null">
                 <v-lazy-image
-                    :src="usePage<any>().props.user.thumbnail ? usePage<any>().props.user.thumbnail : '/assets/img/dummy.png'"
-                    src-placeholder="/assets/img/dummy.png" />
+                    :src="usePage<any>().props.user.thumbnail ? usePage<any>().props.user.thumbnail : DummyAvatar"
+                    :src-placeholder="DummyAvatar" />
                 <div class="mt-2 text-sm text-center align-center text-info fw-semibold">
                     <div :class="usePage<any>().props.user.staff ? 'text-danger' : 'text-success'">
                         {{ usePage<any>().props.user.staff ? usePage<any>().props.user.position : 'Netizen' }}
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
                 <div class="mt-2 text-center">
                     <div class="gap-3 text-sm flex-container align-center">
                         <div class="min-w-0 px-0 text-center fw-semibold text-muted text-truncate">
@@ -272,11 +295,10 @@ watch(following, (newValue, oldValue) => {
             </div>
             </Link>
             <div class="mb-1 text-xl fw-semibold">About Me</div>
-            <div class="mb-3 card card-body">
+            <div class="card card-body card-top-heavy">
                 {{ usePage<any>().props.user.about_me }}
             </div>
-            <div class="mb-1 text-xl fw-semibold">Statistics</div>
-            <div class="mb-3 card card-body">
+            <div class="mb-3 card card-bottom-heavy padding-sm card-body">
                 <div class="gap-1 align-middle flex-container flex-dir-column">
                     <div class="text-sm text-membership fw-semibold w-100">
                         <i class="text-center fad fa-rocket-launch text-membership" style="width: 26px"></i>
@@ -301,101 +323,19 @@ watch(following, (newValue, oldValue) => {
                 </div>
             </div>
         </div>
-        <div class="cell medium-6">
-            <div v-show="ActiveCategory === 'Posts'">
-                <div class="mb-3 card card-body">
-                    <div v-if="!statuses?.['data']?.['length']" class="section">
-                        <div class="gap-3 text-center flex-container flex-dir-column">
-                            <i class="text-5xl fad fa-face-sleeping text-muted"></i>
-                            <div style="line-height: 16px">
-                                <div class="text-xs fw-bold text-muted text-uppercase">
-                                    No Posts
-                                </div>
-                                <div class="text-xs text-muted fw-semibold">
-                                    {{ usePage<any>().props.user.username }} has not posted anything to their
-                                        feed.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-else v-for="status in statuses?.['data']"
-                        class="gap-3 section flex-container flex-dir-column-sm">
-                        <div class="mx-auto flex-child-grow" style="width: 100px">
-                            <a href="#" class="text-sm text-center d-block squish">
-                                <img src="/assets/img/dummy_headshot.png" class="mb-1 headshot" width="60" />
-                                <div style="line-height: 16px">
-                                    <div class="text-membership text-truncate">
-                                        {{ status.dname }}
-                                    </div>
-                                    <div class="text-xs text-muted text-truncate">{{ '@' + status.name }}
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="card card-body card-inner w-100">
-                            <div class="align-middle flex-container align-justify">
-                                <div class="w-100">
-                                    <div class="text-xs text-muted">
-                                        <i class="far fa-clock me-1"
-                                            style="vertical-align: middle;margin-top: -2.5px;font-size: 10px;"></i>
-                                        {{ status.DateHum }}
-                                    </div>
-                                    <div>
-                                        {{ status.message }}
-                                    </div>
-                                    <div class="text-sm" style="margin-left: -6px">
-                                        <button class="btn-like active squish">
-                                            <i class="far fa-heart"></i>1
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="dropdown ms-auto position-relative">
-                                    <button class="btn-circle" style="margin-right: -10px">
-                                        <i class="fad fa-ellipsis-vertical"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li class="dropdown-item">
-                                            <a href="#" class="dropdown-link dropdown-link-has-icon">
-                                                <i class="fad fa-flag dropdown-icon"></i> Report
-                                            </a>
-                                        </li>
-                                        <div class="align-middle flex-container">
-                                            <div class="dropdown-title">Moderation</div>
-                                            <li class="divider flex-child-grow"></li>
-                                        </div>
-                                        <li class="dropdown-item">
-                                            <a href="#" class="dropdown-link dropdown-link-has-icon text-danger">
-                                                <i class="fad fa-trash text-danger dropdown-icon"></i>
-                                                Delete
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="my-2 align-middle flex-container">
-                                <div class="text-xs fw-bold text-muted text-uppercase">
-                                    Comments
-                                </div>
-                                <div class="divider flex-child-grow"></div>
-                            </div>
-                            <div class="gap-2 mb-2 flex-container">
-                                <input type="text" class="form form-sm form-has-section-color"
-                                    placeholder="What are your thoughts on this post?" />
-                                <input type="button" class="btn btn-success btn-sm" value="Post" />
-                            </div>
-                        </div>
-                    </div>
+        <div class="cell medium-9">
+            <div>
+                <div class="flex-container align-justify align-middle mb-1">
+                    <div class="text-xl fw-semibold">Currently Wearing</div>
                 </div>
-                <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
-            </div>
-
-            <div v-show="ActiveCategory === 'Inventory'">
-                                <div>
-                    <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)" class="grid-x grid-margin-x grid-padding-y">
+                <div class="card card-body mb-3">
+                    <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)"
+                        class="grid-x grid-margin-x grid-padding-y">
                         <template v-if="ItemLoading">
                             <ItemCardSkeleton v-for="n in 6" :key="n" />
                         </template>
-                        <div v-else class="cell large-3 medium-3 small-6" v-for="(item, index) in CurentlyWearingItems" :key="index">
+                        <div v-else class="cell large-3 medium-3 small-6" v-for="(item, index) in CurentlyWearingItems"
+                            :key="index">
                             <Link :href="itemRoute(item.id)" class="d-block">
                             <div class="p-2 mb-1 card card-item position-relative">
                                 <div style="
@@ -429,26 +369,31 @@ watch(following, (newValue, oldValue) => {
                             </div>
                         </div>
                     </div>
-                    <div v-else class="">
-                        <div class="pb-0 card-body">
-                            <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
-                                <i class="text-5xl fad fa-person-fairy text-muted"></i>
-                                <div style="line-height: 16px">
-                                    <div class="text-xs fw-bold text-muted text-uppercase">
-                                        No Items
-                                    </div>
-                                    <div class="text-muted fw-semibold">
-                                        <p class="text-xs">
-                                            {{ usePage<any>().props.user.username }} isn't wearing anything.
-                                        </p>
-                                    </div>
+                    <template v-else>
+                        <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
+                            <i class="text-5xl fad fa-person-fairy text-muted"></i>
+                            <div style="line-height: 16px">
+                                <div class="text-xs fw-bold text-muted text-uppercase">
+                                    No Items
+                                </div>
+                                <div class="text-muted fw-semibold">
+                                    <p class="text-xs">
+                                        {{ usePage<any>().props.user.username }} isn't wearing anything.
+                                    </p>
                                 </div>
                             </div>
                         </div>
+                    </template>
+                </div>
+                <div class="flex-container align-justify align-middle mb-1">
+                    <div class="text-xl fw-semibold">Inventory</div>
+                    <div class="mt-2 align-middle flex-container align-center">
+                        <Link as="button"
+                            :href="route('user.inventory', { username: usePage<any>().props.user.username })"
+                            class="btn btn-secondary btn-sm">View All</Link>
                     </div>
                 </div>
-                <div class="divider mx-1 my-4" />
-                    <span class="text-xl fw-semibold">Inventory</span>
+                <div class="card card-body mb-3">
                     <div v-if="ItemLoading || (items && items.length > 0)" class="grid-x grid-margin-x grid-padding-y">
                         <template v-if="ItemLoading">
                             <ItemCardSkeleton v-for="n in 12" :key="n" />
@@ -505,44 +450,119 @@ watch(following, (newValue, oldValue) => {
                             </div>
                         </div>
                     </div>
-                    <div v-if="!items.length" class="mt-2 align-middle flex-container align-center">
-                    <Link
-                        as="button"
-                        :href="route('user.inventory', {username: usePage<any>().props.user.username})"
-                        class="btn btn-info btn-sm text-xs fw-semibold squish"
-                        >View All</Link
-                    >
                 </div>
             </div>
-            <div v-show="ActiveCategory === 'Spaces'">
-                <div class="mb-3 card card-body">
+            <div class="mb-3 card card-body">
+                <div v-if="!statuses?.['data']?.['length']" class="section">
                     <div class="gap-3 text-center flex-container flex-dir-column">
-                        <i class="text-5xl fad fa-planet-ringed text-muted"></i>
+                        <i class="text-5xl fad fa-face-sleeping text-muted"></i>
                         <div style="line-height: 16px">
                             <div class="text-xs fw-bold text-muted text-uppercase">
-                                No Spaces
+                                No Posts
                             </div>
                             <div class="text-xs text-muted fw-semibold">
-                                {{ usePage<any>().props.user.username }} has not joined any spaces.
+                                {{ usePage<any>().props.user.username }} has not posted anything to their
+                                    feed.
                             </div>
                         </div>
                     </div>
-                    <div class="grid-x grid-margin-x grid-padding-y">
-                        <div class="text-center cell medium-4 small-4">
-                            <a href="#" class="text-body">
-                                <img width="100px" src="/assets/img/icon.png" class="mb-1" />
-                                <div>
-                                    <div class="text-sm fw-semibold text-truncate">
-                                        Project Eclipse
-                                    </div>
-                                    <div class="text-xs text-muted fw-semibold">4 Members</div>
+                </div>
+                <div v-else v-for="status in statuses?.['data']"
+                    class="gap-3 section flex-container flex-dir-column-sm">
+                    <div class="mx-auto flex-child-grow" style="width: 100px">
+                        <a href="#" class="text-sm text-center d-block squish">
+                            <img :src="usePage<any>().props.user.headshot" class="mb-1 headshot" width="60" />
+                            <div style="line-height: 16px">
+                                <div class="text-membership text-truncate">
+                                    {{ status.dname }}
                                 </div>
-                            </a>
+                                <div class="text-xs text-muted text-truncate">{{ '@' + status.name }}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="card card-body card-inner w-100">
+                        <div class="align-middle flex-container align-justify">
+                            <div class="w-100">
+                                <div class="text-xs text-muted">
+                                    <i class="far fa-clock me-1"
+                                        style="vertical-align: middle;margin-top: -2.5px;font-size: 10px;"></i>
+                                    {{ status.DateHum }}
+                                </div>
+                                <div>
+                                    {{ status.message }}
+                                </div>
+                                <div class="text-sm" style="margin-left: -6px">
+                                    <button class="btn-like active squish">
+                                        <i class="far fa-heart"></i>1
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="dropdown ms-auto position-relative">
+                                <button class="btn-circle" style="margin-right: -10px">
+                                    <i class="fad fa-ellipsis-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li class="dropdown-item">
+                                        <a href="#" class="dropdown-link dropdown-link-has-icon">
+                                            <i class="fad fa-flag dropdown-icon"></i> Report
+                                        </a>
+                                    </li>
+                                    <div class="align-middle flex-container">
+                                        <div class="dropdown-title">Moderation</div>
+                                        <li class="divider flex-child-grow"></li>
+                                    </div>
+                                    <li class="dropdown-item">
+                                        <a href="#" class="dropdown-link dropdown-link-has-icon text-danger">
+                                            <i class="fad fa-trash text-danger dropdown-icon"></i>
+                                            Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="my-2 align-middle flex-container">
+                            <div class="text-xs fw-bold text-muted text-uppercase">
+                                Comments
+                            </div>
+                            <div class="divider flex-child-grow"></div>
+                        </div>
+                        <div class="gap-2 mb-2 flex-container">
+                            <input type="text" class="form form-sm form-has-section-color"
+                                placeholder="What are your thoughts on this post?" />
+                            <input type="button" class="btn btn-success btn-sm" value="Post" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-show="ActiveCategory === 'Followers'" class="my-2">
+            <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
+            <div class="mb-3 card card-body">
+                <div class="gap-3 text-center flex-container flex-dir-column">
+                    <i class="text-5xl fad fa-planet-ringed text-muted"></i>
+                    <div style="line-height: 16px">
+                        <div class="text-xs fw-bold text-muted text-uppercase">
+                            No Spaces
+                        </div>
+                        <div class="text-xs text-muted fw-semibold">
+                            {{ usePage<any>().props.user.username }} has not joined any spaces.
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-x grid-margin-x grid-padding-y">
+                    <div class="text-center cell medium-4 small-4">
+                        <a href="#" class="text-body">
+                            <img width="100px" src="/assets/img/icon.png" class="mb-1" />
+                            <div>
+                                <div class="text-sm fw-semibold text-truncate">
+                                    Project Eclipse
+                                </div>
+                                <div class="text-xs text-muted fw-semibold">4 Members</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="my-2">
                 <div v-if="!usePage<any>().props.user.followers?.['data']?.['length']" class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
                         <i class="text-5xl fad fa-face-cry text-muted"></i>
@@ -593,7 +613,7 @@ watch(following, (newValue, oldValue) => {
                     v-bind:pagedata="usePage<any>().props.user.followers">
                 </Pagination>
             </div>
-            <div v-show="ActiveCategory === 'Following'" class="my-2">
+            <div class="my-2">
                 <div v-if="!usePage<any>().props.user.following?.['data']?.['length']" class="mb-3 card card-body">
                     <div class="gap-3 text-center flex-container flex-dir-column">
                         <i class="text-5xl fad fa-face-sleeping text-muted"></i>
@@ -644,17 +664,6 @@ watch(following, (newValue, oldValue) => {
                     v-bind:pagedata="usePage<any>().props.user.following">
                 </Pagination>
             </div>
-        </div>
-
-        <div class="cell medium-3">
-            <ul class="tabs flex-dir-column">
-                <li v-for="(sectionItems, sectionName) in categorizedItems" class="tab-item" :key="sectionName">
-                    <span class="text-xs fw-semibold text-muted text-uppercase">{{ sectionName }}</span>
-                    <a  v-for="category in sectionItems" @click="setActiveCategory(category)"
-                        class="tab-link squish" :class="{ active: category === ActiveCategory }" :key="category"> {{
-                            capitalized(category) }}</a>
-                </li>
-            </ul>
         </div>
     </Sidebar>
     <Footer />

@@ -8,6 +8,7 @@ import VLazyImage from "v-lazy-image";
 import { route } from "ziggy-js"; // If you're using the 'route' function from 'momentum-trail'
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import DummyHeadshot from "@/Images/dummy_headshot.png";
 
 defineProps({
     posts: { type: Object },
@@ -86,7 +87,7 @@ const canPost = () => computed(() => {
                             <Link :href="route('user.profile', { username: post.creator.username })">
                             <v-lazy-image :src="post.creator.headshot" width="65"
                                 class="border headshot flex-child-shrink img-fluid rounded-circle border-secondary bg-dark"
-                                alt="Avatar" src-placeholder="/assets/img/dummy_headshot.png" />
+                                alt="Avatar" :src-placeholder="DummyHeadshot" />
                             </Link>
                             <div class="flex-wrap col-md-4 d-flex justify-content-center align-content-start"
                                 style="flex-direction: column">

@@ -11,6 +11,7 @@ import Footer from "@/Components/LayoutParts/Footer.vue";
 import AppHead from "@/Components/AppHead.vue";
 import { ref, watch } from "vue";
 import VLazyImage from "v-lazy-image";
+import DummyHeadshot from "@/Images/dummy_headshot.png";
 
 
 const MaintenanceActive = ref(usePage<any>().props.siteSettings.inMaintenance);
@@ -55,7 +56,7 @@ watch(MaintenanceActive, (newValue, oldValue) => {
                 <Link :href="route(`user.profile`, { username: usePage<any>().props.auth.user.username })">
                 <v-lazy-image :src="usePage<any>().props.auth.user.headshot" width="100"
                     class="border headshot flex-child-shrink img-fluid rounded-circle border-secondary bg-dark v-lazy-image v-lazy-image-loaded flex-wrap col-md-4 d-flex justify-content-center align-content-start"
-                    style="flex-direction: column;" alt="Avatar" src-placeholder="/assets/img/dummy_headshot.png" />
+                    style="flex-direction: column;" alt="Avatar" :src-placeholder="DummyHeadshot" />
                 </Link>
                 <div class="flex-wrap col-md-4 d-flex justify-content-center align-content-start"
                     style="flex-direction: column;">
