@@ -7,6 +7,7 @@
 @import url("assets/css/components/card.css");
 @import url("assets/css/components/collapsible.css");
 @import url("assets/css/components/button.css");
+@import url("assets/css/components/avatar.css");
 @import url("assets/css/components/input.css");
 @import url("assets/css/components/pagination.css");
 @import url("assets/css/components/progress-bar.css");
@@ -331,11 +332,9 @@ html.nprogress-busy {
 html,
 body,
 #app {
-    height: 100%;
-    overflow-x: hidden;
-    position: relative; /* Ensure #app creates a new stacking context */
-    z-index: 0; /* Or any value greater than -1 */
+    height: 100vh;
 }
+
 /*
 Note to self: Make this work with any theme on release - aeo
 body,
@@ -348,28 +347,8 @@ body,
 
 body {
     font-weight: 500;
-    background: rgba(255, 255, 255, 0.02);
     background: var(--body-bg);
     color: var(--body-color) !important;
     font-family: "Lexend Deca", sans-serif;
     letter-spacing: -0.5px;
-    min-height: 100vh;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-html,
-:host {
-    line-height: 1.5;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-        "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
-    font-feature-settings: normal;
-    font-variation-settings: normal;
-    -webkit-tap-highlight-color: transparent;
 }

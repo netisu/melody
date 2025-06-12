@@ -10,20 +10,26 @@ import Navbar from '@/Components/LayoutParts/Navbar.vue';
 import Sidebar from '@/Components/LayoutParts/Sidebar.vue';
 import AppHead from '@/Components/AppHead.vue';
 import ItemCardSkeleton from '@/Components/ItemCardSkeleton.vue';
-import type { Ref } from 'vue';
-import SuperBanner from '@/Components/LayoutParts/SuperBanner.vue';
 import DummyAvatar from "@/Images/dummy.png";
 
-const props = defineProps({
-    user: { type: Object },
-    is_following: { type: Boolean },
-    statuses: { type: Object },
-    categorizedItems: { type: Object },
+interface AvatarProps {
+    thumbnail: string;
+    colors: {
+        // This is the entire colors object as passed
+        head: string;
+        torso: string;
+        left_arm: string;
+        right_arm: string;
+        left_leg: string;
+        right_leg: string;
+    };
+    current_face_url: string; // The URL for the current face
+}
 
-});
 const showUserName = ref(false);
 
 let following = ref(usePage<any>().props.is_following); // Initial follow status
+const AvatarProps = usePage<any>().props.user.avatar as AvatarProps;
 
 const toggleFollow = (id) => {
     if (following.value) {
@@ -74,9 +80,6 @@ async function fetchCurrentlyWearing() {
 }
 const itemRoute = (itemId) => route(`store.item`, { id: itemId });
 const creatorRoute = (username) => route(`user.profile`, { username: username });
-
-const ActiveCategory: Ref<string> = ref("Inventory");
-
 
 const showSuccessMessage = (message) => {
 
@@ -136,84 +139,7 @@ watch(following, (newValue, oldValue) => {
     <Navbar />
     <Sidebar :alertsEnabled="false"
         :image="usePage<any>().props.user.settings.profile_banner_enabled ? usePage<any>().props.user.settings.profile_banner_url : null"
-        :superBanActive="true" :OfficialImageBackground="false">
-        <template #SuperBanner>
-            <SuperBanner>
-                <template #bannerAsset>
-                    <v-lazy-image :style="usePage<any>().props.user?.settings.calling_card_enabled
-                        ? {
-                            margin: '0',
-                            'background-image':
-                                'url(' +
-                                usePage<any>().props.user?.settings.calling_card_url +
-                                ')',
-                            'background-repeat': 'no-repeat',
-                            'background-size': 'cover',
-                            'box-shadow':
-                                'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
-                        }
-                        : null
-                        " :src="usePage<any>().props.user.headshot" width="100" class="space-image" alt="Headshot"
-                        src-placeholder="/assets/img/dummmy_headshot.png" />
-                </template>
-
-                <template #bannerName>
-                    <div class="text-xl" style="line-height: 16px">
-                        <div class="mb-1 flex-container align-middle gap-1 fw-semibold">
-                            {{ usePage<any>().props.user.display_name }}
-                                <i v-show="usePage<any>().props.user.staff" class="fad fa-gavel text-danger"></i>
-                                <i v-show="usePage<any>().props.user.settings.beta_tester"
-                                    class="fad fa-hard-hat text-success"></i>
-                                <v-lazy-image class="headshot"
-                                    :src="'/assets/img/flags/' + usePage<any>().props.user.settings.country_code + '.svg'"
-                                    alt="Country Flag" style="width: auto;height: 20px;"
-                                    src-placeholder="/assets/img/flags/other/pirate.svg" />
-                                <Link v-if="usePage<any>().props.user.settings.primarySpace"
-                                    :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.primarySpace.id, slug: usePage<any>().props.user.settings.primarySpace.slug })">
-                                <v-lazy-image class="headshot"
-                                    :src="usePage<any>().props.user.settings.primarySpace.thumbnail" alt="Country Flag"
-                                    style="width: auto;height: 20px;"
-                                    src-placeholder="/assets/img/flags/other/pirate.svg"
-                                    v-tippy="{ placement: 'bottom' }"
-                                    :content="usePage<any>().props.user.settings.primarySpace.name" />
-                                </Link>
-                        </div>
-                        <div class="text-sm text-muted fw-semibold">
-                            {{ "@" + usePage<any>().props.user.username }}
-                        </div>
-                    </div>
-                </template>
-                <template #bannerDescription>
-                    <span class="text-muted text-wrap text-truncate fw-semibold">
-                        {{ usePage<any>().props.user.status ?? 'This user does not have a status.' }}
-                    </span>
-                </template>
-                <template #bannerButtons>
-                    <div v-if="usePage<any>().props.auth.user && usePage<any>().props.user.id != usePage<any>().props.auth.user.id"
-                        class="min-w-0 gap-2 mt-2 mb-3 flex-container">
-                        <button :class="['text-xl', 'squish', following ? 'text-danger' : 'text-info']"
-                            @click="toggleFollow(usePage<any>().props.user.id)"
-                            :content="following ? 'Unfollow' : 'Follow'" v-tippy="{ placement: 'bottom' }">
-                            <i :class="following ? 'fad fa-user-minus' : 'fad fa-user-plus'"></i>
-                        </button>
-
-                        <Link as="button" :href="route(`chat.messages`, { userID: usePage<any>().props.user.id })"
-                            class="text-xl text-success squish"
-                            :content="'Chat With ' + usePage<any>().props.user.display_name"
-                            v-tippy="{ placement: 'bottom' }">
-                        <i class="fad fa-message"></i>
-                        </Link>
-
-                        <a v-show="usePage<any>().props.auth.user.staff" as="button"
-                            :href="route(`admin.users.manage-user`, { id: usePage<any>().props.user.id })"
-                            class="text-xl text-danger squish" content="View in Panel"
-                            v-tippy="{ placement: 'bottom' }">
-                            <i class="fad fa-pen-to-square"></i>
-                        </a>
-                    </div>
-                </template>
-            </SuperBanner>
-        </template>
+        :superBanActive="false" :OfficialImageBackground="false">
         <div class="cell medium-3">
 
             <div class="mb-2 flex-container align-middle gap-1 fw-semibold">
@@ -228,9 +154,6 @@ watch(following, (newValue, oldValue) => {
                     <div v-if="showUserName" @mouseleave="showUserName = false" class="fw-semibold mb-1">
                         {{ "@" + usePage<any>().props.user.username }}
                     </div>
-                     <div class="fw-semibold mb-1 text-muted">
-                        {{ usePage<any>().props.user.status ?? 'This user does not have a status.' }}
-                     </div>
                 </div>
                 <i v-show="usePage<any>().props.user.staff" class="fad fa-gavel text-danger"></i>
                 <i v-show="usePage<any>().props.user.settings.beta_tester" class="fad fa-hard-hat text-success"></i>
@@ -245,7 +168,6 @@ watch(following, (newValue, oldValue) => {
                     src-placeholder="/assets/img/flags/other/pirate.svg" v-tippy="{ placement: 'bottom' }"
                     :content="usePage<any>().props.user.settings.primarySpace.name" />
                 </Link>
-                
             </div>
 
             <div class="card card-body mb-3" :style="usePage<any>().props.user.settings.calling_card_enabled
@@ -324,128 +246,155 @@ watch(following, (newValue, oldValue) => {
             </div>
         </div>
         <div class="cell medium-9">
-            <div>
-                <div class="flex-container align-justify align-middle mb-1">
-                    <div class="text-xl fw-semibold">Currently Wearing</div>
-                </div>
-                <div class="card card-body mb-3">
-                    <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)"
-                        class="grid-x grid-margin-x grid-padding-y">
-                        <template v-if="ItemLoading">
-                            <ItemCardSkeleton v-for="n in 6" :key="n" />
-                        </template>
-                        <div v-else class="cell large-3 medium-3 small-6" v-for="(item, index) in CurentlyWearingItems"
-                            :key="index">
-                            <Link :href="itemRoute(item.id)" class="d-block">
-                            <div class="p-2 mb-1 card card-item position-relative">
-                                <div style="
-                                    position: absolute;
-                                    bottom: 10px;
-                                    left: 10px;
-                                ">
-                                    <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
-                                        <i class="fad fa-calendar-star" style="width: 18px"></i>Event
-                                    </div>
-                                    <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                        <i class="fad fa-comet" style="width: 18px"></i>Rare
-                                    </div>
-                                    <div v-if="item.sale_ongoing" class="mb-1 badge badge-danger fw-semibold">
-                                        <i class="fad fa-badge-percent" style="width: 18px"></i>{{
-                                            item.percent_off + "%" }} off
-                                    </div>
-                                </div>
-                                <img :src="item.thumbnail" :id="item.thumbnail"
-                                    @error="onImgErrorSmall(item.thumbnail)" />
+            <div class="flex-container align-justify align-middle mb-1">
+                <div class="text-xl fw-semibold">Currently Wearing</div>
+            </div>
+            <div class="card card-body mb-3">
+                <div class="grid-x">
+                    <div class="cell medium-3 avatar-display-container">
+                        <div class="avatar-wrapper">
+                            <div class="avatar-head-wrapper">
+                                <button class="avatar-body-part" id="head" v-tippy
+                                    :content="'#' + AvatarProps.colors.head"
+                                    :style="{ backgroundColor: '#' + AvatarProps.colors.head }">
+                                    <VLazyImage :src="AvatarProps.current_face_url" :src-placeholder="DummyAvatar"
+                                        width="50" height="50" />
+                                </button>
                             </div>
-                            <div class="text-body fw-semibold text-truncate">
-                                {{ item.name }}
+                            <div class="avatar-torso-arms-wrapper">
+                                <button class="avatar-body-part" id="left_arm" v-tippy
+                                    :content="'#' + AvatarProps.colors.left_arm"
+                                    :style="{ backgroundColor: '#' + AvatarProps.colors.left_arm }"></button>
+                                <button class="avatar-body-part" id="torso" v-tippy
+                                    :content="'#' + AvatarProps.colors.torso"
+                                    :style="{ backgroundColor: '#' + AvatarProps.colors.torso }"></button>
+                                <button class="avatar-body-part" id="right_arm" v-tippy
+                                    :content="'#' + AvatarProps.colors.right_arm"
+                                    :style="{ backgroundColor: '#' + AvatarProps.colors.right_arm }"></button>
                             </div>
-                            </Link>
-                            <div class="text-xs fw-semibold text-truncate">
-                                <span class="text-muted">By:</span>&nbsp;
-                                <Link :href="creatorRoute(item.creator.username)">
-                                {{ "@" + item.creator.username
-                                }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
+                            <div class="avatar-legs-wrapper">
+                                <button class="avatar-body-part" id="left_leg" v-tippy
+                                    :content="'#' + AvatarProps.colors.left_leg"
+                                    :style="{ backgroundColor: '#' + AvatarProps.colors.left_leg }"></button>
+                                <button class="avatar-body-part" id="right_leg" v-tippy
+                                    :content="'#' + AvatarProps.colors.right_leg"
+                                    :style="{ backgroundColor: '#' + AvatarProps.colors.right_leg }"></button>
                             </div>
                         </div>
                     </div>
-                    <template v-else>
-                        <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
-                            <i class="text-5xl fad fa-person-fairy text-muted"></i>
-                            <div style="line-height: 16px">
-                                <div class="text-xs fw-bold text-muted text-uppercase">
-                                    No Items
+                    <div class="cell medium-9 vertical-border-left">
+                        <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)"
+                            class="grid-x grid-margin-x grid-padding-y">
+                            <template v-if="ItemLoading">
+                                <ItemCardSkeleton v-for="n in 6" :key="n" />
+                            </template>
+                            <div v-else class="cell large-3 medium-3 small-6"
+                                v-for="(item, index) in CurentlyWearingItems" :key="index">
+                                <Link :href="itemRoute(item.id)" class="d-block">
+                                <div class="p-2 mb-1 card card-item position-relative">
+                                    <div class="item-badges">
+                                        <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
+                                            <i class="fad fa-calendar-star" style="width: 18px"></i>Event
+                                        </div>
+                                        <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
+                                            <i class="fad fa-comet" style="width: 18px"></i>Rare
+                                        </div>
+                                        <div v-if="item.sale_ongoing" class="mb-1 badge badge-danger fw-semibold">
+                                            <i class="fad fa-badge-percent" style="width: 18px"></i>{{
+                                                item.percent_off + "%" }} off
+                                        </div>
+                                    </div>
+                                    <img :src="item.thumbnail" :id="item.thumbnail"
+                                        @error="onImgErrorSmall(item.thumbnail)" />
                                 </div>
-                                <div class="text-muted fw-semibold">
-                                    <p class="text-xs">
-                                        {{ usePage<any>().props.user.username }} isn't wearing anything.
-                                    </p>
+                                <div class="text-body fw-semibold text-truncate">
+                                    {{ item.name }}
+                                </div>
+                                </Link>
+                                <div class="text-xs fw-semibold text-truncate">
+                                    <span class="text-muted">By:</span>&nbsp;
+                                    <Link :href="creatorRoute(item.creator.username)">
+                                    {{ "@" + item.creator.username
+                                    }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
                                 </div>
                             </div>
                         </div>
-                    </template>
-                </div>
-                <div class="flex-container align-justify align-middle mb-1">
-                    <div class="text-xl fw-semibold">Inventory</div>
-                    <div class="mt-2 align-middle flex-container align-center">
-                        <Link as="button"
-                            :href="route('user.inventory', { username: usePage<any>().props.user.username })"
-                            class="btn btn-secondary btn-sm">View All</Link>
-                    </div>
-                </div>
-                <div class="card card-body mb-3">
-                    <div v-if="ItemLoading || (items && items.length > 0)" class="grid-x grid-margin-x grid-padding-y">
-                        <template v-if="ItemLoading">
-                            <ItemCardSkeleton v-for="n in 12" :key="n" />
-                        </template>
-                        <div v-else class="cell large-3 medium-3 small-6" v-for="(item, index) in items" :key="index">
-                            <Link :href="itemRoute(item.id)" class="d-block">
-                            <div class="p-2 mb-1 card card-item position-relative">
-                                <div style="
-                                    position: absolute;
-                                    bottom: 10px;
-                                    left: 10px;
-                                ">
-                                    <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
-                                        <i class="fad fa-calendar-star" style="width: 18px"></i>Event
-                                    </div>
-                                    <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
-                                        <i class="fad fa-comet" style="width: 18px"></i>Rare
-                                    </div>
-                                    <div v-if="item.sale_ongoing" class="mb-1 badge badge-danger fw-semibold">
-                                        <i class="fad fa-badge-percent" style="width: 18px"></i>{{
-                                            item.percent_off + "%" }} off
-                                    </div>
-                                </div>
-                                <img :src="item.thumbnail" :id="item.thumbnail"
-                                    @error="onImgErrorSmall(item.thumbnail)" />
-                            </div>
-                            <div class="text-body fw-semibold text-truncate">
-                                {{ item.name }}
-                            </div>
-                            </Link>
-                            <div class="text-xs fw-semibold text-truncate">
-                                <span class="text-muted">By:</span>&nbsp;
-                                <Link :href="creatorRoute(item.creator.username)">
-                                {{ "@" + item.creator.username
-                                }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-if="!items.length" class="">
-                        <div class="pb-0 card-body">
+                        <template v-else>
                             <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
-                                <i class="text-5xl fad fa-crate-empty text-muted"></i>
+                                <i class="text-5xl fad fa-person-fairy text-muted"></i>
                                 <div style="line-height: 16px">
                                     <div class="text-xs fw-bold text-muted text-uppercase">
                                         No Items
                                     </div>
                                     <div class="text-muted fw-semibold">
                                         <p class="text-xs">
-                                            {{ usePage<any>().props.user.username }} has no items in their
-                                                inventory.
+                                            {{ usePage<any>().props.user.username }} isn't wearing anything.
                                         </p>
                                     </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-container align-justify align-middle mb-1">
+                <div class="text-xl fw-semibold">Inventory</div>
+                <div class="mt-2 align-middle flex-container align-center">
+                    <Link as="button" :href="route('user.inventory', { username: usePage<any>().props.user.username })"
+                        class="btn btn-secondary btn-sm">View All</Link>
+                </div>
+            </div>
+            <div class="card card-body mb-3">
+                <div v-if="ItemLoading || (items && items.length > 0)" class="grid-x grid-margin-x grid-padding-y">
+                    <template v-if="ItemLoading">
+                        <ItemCardSkeleton v-for="n in 12" :key="n" />
+                    </template>
+                    <div v-else class="cell large-3 medium-3 small-6" v-for="(item, index) in items" :key="index">
+                        <Link :href="itemRoute(item.id)" class="d-block">
+                        <div class="p-2 mb-1 card card-item position-relative">
+                            <div style="
+                                    position: absolute;
+                                    bottom: 10px;
+                                    left: 10px;
+                                ">
+                                <div v-if="item.in_event" class="mb-1 badge badge-warning fw-semibold">
+                                    <i class="fad fa-calendar-star" style="width: 18px"></i>Event
+                                </div>
+                                <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
+                                    <i class="fad fa-comet" style="width: 18px"></i>Rare
+                                </div>
+                                <div v-if="item.sale_ongoing" class="mb-1 badge badge-danger fw-semibold">
+                                    <i class="fad fa-badge-percent" style="width: 18px"></i>{{
+                                        item.percent_off + "%" }} off
+                                </div>
+                            </div>
+                            <img :src="item.thumbnail" :id="item.thumbnail" @error="onImgErrorSmall(item.thumbnail)" />
+                        </div>
+                        <div class="text-body fw-semibold text-truncate">
+                            {{ item.name }}
+                        </div>
+                        </Link>
+                        <div class="text-xs fw-semibold text-truncate">
+                            <span class="text-muted">By:</span>&nbsp;
+                            <Link :href="creatorRoute(item.creator.username)">
+                            {{ "@" + item.creator.username
+                            }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!items.length" class="">
+                    <div class="pb-0 card-body">
+                        <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
+                            <i class="text-5xl fad fa-crate-empty text-muted"></i>
+                            <div style="line-height: 16px">
+                                <div class="text-xs fw-bold text-muted text-uppercase">
+                                    No Items
+                                </div>
+                                <div class="text-muted fw-semibold">
+                                    <p class="text-xs">
+                                        {{ usePage<any>().props.user.username }} has no items in their
+                                            inventory.
+                                    </p>
                                 </div>
                             </div>
                         </div>

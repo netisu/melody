@@ -14,6 +14,11 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 require __DIR__.'/../vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
+
+if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+  $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+}
+
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 

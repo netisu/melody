@@ -1,0 +1,88 @@
+/* Avatar Specific Styles */
+.avatar-display-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar-wrapper {
+    transform: scale(0.7);
+    margin-top: -25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-head-wrapper {
+    margin-bottom: 5px;
+}
+
+.avatar-torso-arms-wrapper,
+.avatar-legs-wrapper {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.avatar-body-part {
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+#head {
+    border-radius: 15px;
+    width: 60px;
+    height: 60px;
+    padding: 5px;
+    background-color: var(--primary-color, #3498db);
+}
+
+#head img {
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+
+#left_arm,
+#right_arm {
+    padding: 50px 0px;
+    width: 50px;
+}
+
+#torso {
+    padding: 50px;
+    width: 100px;
+}
+
+#left_leg,
+#right_leg {
+    padding: 50px 0px;
+    width: 50px;
+    /*
+    add when we add avatar spacing
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    */
+}
+
+
+/* Item Card Specific Styles */
+.item-badges {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 1;
+}
+
+.card-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}

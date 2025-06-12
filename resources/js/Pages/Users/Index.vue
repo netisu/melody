@@ -15,9 +15,9 @@ import VLazyImage from "v-lazy-image";
     <Sidebar>
         <div class="cell medium-3 small-12">
             <div class="text-3xl fw-semibold">Discover</div>
-            <div class="mb-2 text-md text-muted">Find new friends among {{ usePage<any>().props.user_count }}
-                    users.</div>
-
+            <div class="mb-2 text-md text-muted">
+                Find new friends among {{ usePage<any>().props.user_count }} users.
+            </div>
             <ul class="tabs flex-dir-column">
                 <li class="tab-item">
                     <a class="tab-link squish active">
@@ -61,8 +61,8 @@ import VLazyImage from "v-lazy-image";
                                 <div v-if="user.staff"
                                     :content='user.username + " works at " + usePage<any>().props.site.name' v-tippy
                                     class="badge badge-info" style="height:25px;">Staff</div>
-                                <div v-if="user.settings.beta_tester" :content='user.username + " is a beta tester"' v-tippy
-                                    class="badge badge-success" style="height:25px;">Tester
+                                <div v-if="user.settings.beta_tester" :content='user.username + " is a beta tester"'
+                                    v-tippy class="badge badge-success" style="height:25px;">Tester
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@ import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import Footer from "@/Components/LayoutParts/Footer.vue";
 import { route } from "ziggy-js";
 import SuperBanner from "@/Components/LayoutParts/SuperBanner.vue";
-
+import marketLogo from "@/Images/site-banners/market-title.png";
 import ItemCardSkeleton from "@/Components/ItemCardSkeleton.vue";
 import VLazyImage from "v-lazy-image";
 
@@ -121,7 +121,7 @@ provide("selectedSubCategory", selectedSubCategory);
                 <template #bannerName>
                     <div class="text-xl" style="line-height: 16px">
                         <v-lazy-image
-                            :src="usePage<any>().props.site.marketLogo"
+                            :src="marketLogo"
                             alt="Market"
                             style="width: auto; height: 50px"
                         />

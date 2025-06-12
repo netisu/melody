@@ -10,6 +10,7 @@ use App\Models\Followers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use App\Models\Item;
 
 class UserController extends Controller
 {
@@ -122,6 +123,32 @@ class UserController extends Controller
             });
         });
 
+        // Retrieve current body colors directly from the avatar model's JSON column
+        $currentBodyColors = $avatar->colors ?? [
+            'head' => 'd3d3d3',
+            'torso' => '055e96',
+            'left_arm' => 'd3d3d3',
+            'right_arm' => 'd3d3d3',
+            'left_leg' => 'd3d3d3',
+            'right_leg' => 'd3d3d3',
+        ];
+
+        // Derive current_face_url directly from the 'face' JSON column for the initial prop
+        $faceItemHash = 'none';
+        $faceSlotData = $user->avatar()->face;
+
+        if (is_array($faceSlotData) && isset($faceSlotData['item_id']) && !is_null($faceSlotData['item_id'])) {
+            $faceItem = Item::find($faceSlotData['item_id']);
+            if ($faceItem) {
+                $faceItemHash = $faceItem->hash;
+            }
+        }
+
+        $currentFaceUrl = config('app.storage.url') . (
+            $faceItemHash !== 'none'
+            ? '/uploads/' . $faceItemHash . ".png"
+            : '/assets/default.png'
+        );
 
 
 
@@ -149,15 +176,8 @@ class UserController extends Controller
                 'status' => $user->status,
                 'online' => $user->online(),
                 'avatar' => [
-                    'color_head' => $user->avatar()->color_head ?? 'ffffff',
-                    'color_left_arm' => $user->avatar()->color_left_arm ?? 'ffffff',
-                    'color_torso' => $user->avatar()->color_torso ?? '055e96',
-                    'color_right_arm' => $user->avatar()->color_right_arm ?? 'ffffff',
-                    'color_left_leg' => $user->avatar()->color_left_leg ?? 'ffffff',
-                    'color_right_leg' => $user->avatar()->color_right_leg ?? 'ffffff',
-                    'current_face' => config('app.storage.url') . (
-                        $user->avatar()->face ? '/uploads/' . getItemHash($user->avatar()->face) . ".png" : '/assets/default.png'
-                    ),
+                    'colors' => $currentBodyColors,
+                    'current_face_url' => $currentFaceUrl,
                 ],
                 'settings' => [
                     "verified" => $user->settings?->is_verified ?? false,
