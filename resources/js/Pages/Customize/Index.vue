@@ -13,7 +13,7 @@ import JsonPagination from "@/Components/JsonPagination.vue";
 import { usePage } from "@inertiajs/vue3";
 import VLazyImage from "v-lazy-image";
 
-interface AvatarProps {
+interface userAvatar {
     thumbnail: string;
     colors: {
         // This is the entire colors object as passed
@@ -68,28 +68,28 @@ const wearingHats = ref([]);
 const SelectedItemID = ref<Number>();
 const slotValue = ref<Number>();
 const selectHatSlot = ref(false);
-const initialAvatarProps = usePage<any>().props.avatar as AvatarProps;
+const initialuserAvatar = usePage<any>().props.avatar as userAvatar;
 
 const userAvatar = reactive({
     // --- Properties directly from Inertia Page Props ---
     colors: reactive<AvatarColors>({
         // Make 'colors' itself a reactive object
-        head: initialAvatarProps?.colors?.head || "d3d3d3",
-        torso: initialAvatarProps?.colors?.torso || "055e96",
-        left_arm: initialAvatarProps?.colors?.left_arm || "d3d3d3",
-        right_arm: initialAvatarProps?.colors?.right_arm || "d3d3d3",
-        left_leg: initialAvatarProps?.colors?.left_leg || "d3d3d3",
-        right_leg: initialAvatarProps?.colors?.right_leg || "d3d3d3",
+        head: initialuserAvatar?.colors?.head || "d3d3d3",
+        torso: initialuserAvatar?.colors?.torso || "055e96",
+        left_arm: initialuserAvatar?.colors?.left_arm || "d3d3d3",
+        right_arm: initialuserAvatar?.colors?.right_arm || "d3d3d3",
+        left_leg: initialuserAvatar?.colors?.left_leg || "d3d3d3",
+        right_leg: initialuserAvatar?.colors?.right_leg || "d3d3d3",
     }),
 
     // Thumbnail URL from props
     image: computed<string>(
-        () => initialAvatarProps?.thumbnail || "/assets/default_thumbnail.png"
+        () => initialuserAvatar?.thumbnail || "/assets/default_thumbnail.png"
     ),
 
     // Current face URL from props
     current_face: computed<string>(
-        () => initialAvatarProps?.current_face_url || "/assets/default.png"
+        () => initialuserAvatar?.current_face_url || "/assets/default.png"
     ),
 });
 
@@ -578,6 +578,96 @@ onMounted(() => {
                         </div>
                     </template>
                     <template v-else>
+                        <div class="card card-body mb-3">
+                            <div class="grid-x">
+                                <div class="cell medium-3 avatar-display-container">
+                                    <div class="avatar-wrapper">
+                                        <div class="avatar-head-wrapper">
+                                            <button class="avatar-body-part" id="head" @click="
+                                                handlePartSelection('head')
+                                                " :style="{ backgroundColor: '#' + userAvatar.colors.head }">
+                                                <VLazyImage :src="userAvatar.current_face"
+                                                    :src-placeholder="DummyAvatar" width="50" height="50" />
+                                            </button>
+                                        </div>
+                                        <div class="avatar-torso-arms-wrapper">
+                                            <button class="avatar-body-part" id="left_arm" @click="
+                                                handlePartSelection('left_arm')
+                                                " :style="{ backgroundColor: '#' + userAvatar.colors.left_arm }"></button>
+                                            <button class="avatar-body-part" id="torso" @click="
+                                                handlePartSelection('torso')
+                                                " :style="{ backgroundColor: '#' + userAvatar.colors.torso }"></button>
+                                            <button class="avatar-body-part" id="right_arm" @click="
+                                                handlePartSelection('right_arm')
+                                                " :style="{ backgroundColor: '#' + userAvatar.colors.right_arm }"></button>
+                                        </div>
+                                        <div class="avatar-legs-wrapper">
+                                            <button class="avatar-body-part" id="left_leg" @click="
+                                                handlePartSelection('left_leg')
+                                                " :style="{ backgroundColor: '#' + userAvatar.colors.left_leg }"></button>
+                                            <button class="avatar-body-part" id="right_leg" @click="
+                                                handlePartSelection('right_leg')
+                                                " :style="{ backgroundColor: '#' + userAvatar.colors.right_leg }"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell medium-9 vertical-border-left">
+                                    <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)"
+                                        class="grid-x grid-margin-x grid-padding-y">
+                                        <template v-if="ItemLoading">
+                                            <ItemCardSkeleton v-for="n in 6" :key="n" />
+                                        </template>
+                                        <div v-else class="cell large-3 medium-3 small-6"
+                                            v-for="(item, index) in CurentlyWearingItems" :key="index">
+                                            <Link :href="itemRoute(item.id)" class="d-block">
+                                            <div class="p-2 mb-1 card card-item position-relative">
+                                                <div class="item-badges">
+                                                    <div v-if="item.in_event"
+                                                        class="mb-1 badge badge-warning fw-semibold">
+                                                        <i class="fad fa-calendar-star" style="width: 18px"></i>Event
+                                                    </div>
+                                                    <div v-if="item.rare" class="mb-1 badge badge-info fw-semibold">
+                                                        <i class="fad fa-comet" style="width: 18px"></i>Rare
+                                                    </div>
+                                                    <div v-if="item.sale_ongoing"
+                                                        class="mb-1 badge badge-danger fw-semibold">
+                                                        <i class="fad fa-badge-percent" style="width: 18px"></i>{{
+                                                            item.percent_off + "%" }} off
+                                                    </div>
+                                                </div>
+                                                <img :src="item.thumbnail" :id="item.thumbnail"
+                                                    @error="onImgErrorSmall(item.thumbnail)" />
+                                            </div>
+                                            <div class="text-body fw-semibold text-truncate">
+                                                {{ item.name }}
+                                            </div>
+                                            </Link>
+                                            <div class="text-xs fw-semibold text-truncate">
+                                                <span class="text-muted">By:</span>&nbsp;
+                                                <Link :href="creatorRoute(item.creator.username)">
+                                                {{ "@" + item.creator.username
+                                                }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <template v-else>
+                                        <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
+                                            <i class="text-5xl fad fa-person-fairy text-muted"></i>
+                                            <div style="line-height: 16px">
+                                                <div class="text-xs fw-bold text-muted text-uppercase">
+                                                    No Items
+                                                </div>
+                                                <div class="text-muted fw-semibold">
+                                                    <p class="text-xs">
+                                                        You are not wearing anything.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                         <div class="text-center cell medium-3 align-left">
                             <div class="text-center flex-container align-center">
                                 <div class="text-center" style="
