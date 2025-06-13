@@ -516,8 +516,8 @@ onMounted(() => {
                 </div>
             </div>
             <div class="mb-3">
-                <div class="grid-x">
-                    <template v-if="selectHatSlot === true" class="text-center cell medium-12">
+                <template v-if="selectHatSlot === true" class="grid-x">
+                    <div class="text-center cell medium-12">
                         <div class="grid-x grid-margin-x grid-padding-y">
                             <template v-for="n in 6" :key="n" :value="n">
                                 <div class="cell large-3 medium-3 small-6" v-if="wearingHats[n - 1]">
@@ -576,50 +576,52 @@ onMounted(() => {
                                 </div>
                             </template>
                         </div>
-                    </template>
-                    <template v-else>
-                        <div class="card card-body mb-3">
-                            <div class="grid-x">
-                                <div class="cell medium-3 avatar-display-container">
-                                    <div class="avatar-wrapper">
-                                        <div class="avatar-head-wrapper">
-                                            <button class="avatar-body-part" id="head" @click="
-                                                handlePartSelection('head')
-                                                " :style="{ backgroundColor: '#' + userAvatar.colors.head }">
-                                                <VLazyImage :src="userAvatar.current_face"
-                                                    :src-placeholder="DummyAvatar" width="50" height="50" />
-                                            </button>
-                                        </div>
-                                        <div class="avatar-torso-arms-wrapper">
-                                            <button class="avatar-body-part" id="left_arm" @click="
-                                                handlePartSelection('left_arm')
-                                                " :style="{ backgroundColor: '#' + userAvatar.colors.left_arm }"></button>
-                                            <button class="avatar-body-part" id="torso" @click="
-                                                handlePartSelection('torso')
-                                                " :style="{ backgroundColor: '#' + userAvatar.colors.torso }"></button>
-                                            <button class="avatar-body-part" id="right_arm" @click="
-                                                handlePartSelection('right_arm')
-                                                " :style="{ backgroundColor: '#' + userAvatar.colors.right_arm }"></button>
-                                        </div>
-                                        <div class="avatar-legs-wrapper">
-                                            <button class="avatar-body-part" id="left_leg" @click="
-                                                handlePartSelection('left_leg')
-                                                " :style="{ backgroundColor: '#' + userAvatar.colors.left_leg }"></button>
-                                            <button class="avatar-body-part" id="right_leg" @click="
-                                                handlePartSelection('right_leg')
-                                                " :style="{ backgroundColor: '#' + userAvatar.colors.right_leg }"></button>
-                                        </div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="card card-body mb-3">
+                        <div class="grid-x">
+                            <div class="cell medium-3 avatar-display-container">
+                                <div class="avatar-wrapper">
+                                    <div class="avatar-head-wrapper">
+                                        <button class="avatar-body-part" id="head" @click="
+                                            handlePartSelection('head')
+                                            " :style="{ backgroundColor: '#' + userAvatar.colors.head }">
+                                            <VLazyImage :src="userAvatar.current_face" :src-placeholder="DummyAvatar"
+                                                width="50" height="50" />
+                                        </button>
+                                    </div>
+                                    <div class="avatar-torso-arms-wrapper">
+                                        <button class="avatar-body-part" id="left_arm" @click="
+                                            handlePartSelection('left_arm')
+                                            "
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.left_arm }"></button>
+                                        <button class="avatar-body-part" id="torso" @click="
+                                            handlePartSelection('torso')
+                                            " :style="{ backgroundColor: '#' + userAvatar.colors.torso }"></button>
+                                        <button class="avatar-body-part" id="right_arm" @click="
+                                            handlePartSelection('right_arm')
+                                            "
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.right_arm }"></button>
+                                    </div>
+                                    <div class="avatar-legs-wrapper">
+                                        <button class="avatar-body-part" id="left_leg" @click="
+                                            handlePartSelection('left_leg')
+                                            "
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.left_leg }"></button>
+                                        <button class="avatar-body-part" id="right_leg" @click="
+                                            handlePartSelection('right_leg')
+                                            "
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.right_leg }"></button>
                                     </div>
                                 </div>
-                                <div class="cell medium-9 vertical-border-left">
-                                    <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)"
-                                        class="grid-x grid-margin-x grid-padding-y">
-                                        <template v-if="ItemLoading">
-                                            <ItemCardSkeleton v-for="n in 6" :key="n" />
-                                        </template>
-                                        <div v-else class="cell large-3 medium-3 small-6"
-                                            v-for="(item, index) in CurentlyWearingItems" :key="index">
-                                            <Link :href="itemRoute(item.id)" class="d-block">
+                            </div>
+                            <div class="cell medium-9 vertical-border-left">
+                                <div v-if="ItemLoading || (wearingItems && wearingItems.length > 0)"
+                                    class="grid-x grid-margin-x grid-padding-y">
+                                    <div class="cell large-3 medium-3 small-6" v-for="(item, index) in wearingItems"
+                                        :key="index">
+                                        <div class="d-block">
                                             <div class="p-2 mb-1 card card-item position-relative">
                                                 <div class="item-badges">
                                                     <div v-if="item.in_event"
@@ -635,160 +637,47 @@ onMounted(() => {
                                                             item.percent_off + "%" }} off
                                                     </div>
                                                 </div>
-                                                <img :src="item.thumbnail" :id="item.thumbnail"
+                                                <img @click="
+                                                    SortItemByType(
+                                                        item.id,
+                                                        item.item_type,
+                                                        'remove'
+                                                    )
+                                                    " :src="item.thumbnail" :id="item.thumbnail"
                                                     @error="onImgErrorSmall(item.thumbnail)" />
                                             </div>
-                                            <div class="text-body fw-semibold text-truncate">
-                                                {{ item.name }}
-                                            </div>
+                                            <Link :href="route(`store.item`, { id: item.id })"
+                                                class="text-body fw-semibold text-truncate">
+                                            {{ item.name }}
                                             </Link>
-                                            <div class="text-xs fw-semibold text-truncate">
-                                                <span class="text-muted">By:</span>&nbsp;
-                                                <Link :href="creatorRoute(item.creator.username)">
-                                                {{ "@" + item.creator.username
-                                                }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
+                                        </div>
+                                        <div class="text-xs fw-semibold text-truncate">
+                                            <span class="text-muted">By:</span>&nbsp;
+                                            <Link :href="route(`user,profile`, { username: item.creator.username })">
+                                            {{ "@" + item.creator.username
+                                            }}<i class="fas fa-shield-check text-success ms-1"></i></Link>
+                                        </div>
+                                    </div>
+                                </div>
+                                <template v-else>
+                                    <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
+                                        <i class="text-5xl fad fa-person-fairy text-muted"></i>
+                                        <div style="line-height: 16px">
+                                            <div class="text-xs fw-bold text-muted text-uppercase">
+                                                No Items
+                                            </div>
+                                            <div class="text-muted fw-semibold">
+                                                <p class="text-xs">
+                                                    You are not wearing anything.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <template v-else>
-                                        <div class="gap-3 mb-2 text-center flex-container flex-dir-column">
-                                            <i class="text-5xl fad fa-person-fairy text-muted"></i>
-                                            <div style="line-height: 16px">
-                                                <div class="text-xs fw-bold text-muted text-uppercase">
-                                                    No Items
-                                                </div>
-                                                <div class="text-muted fw-semibold">
-                                                    <p class="text-xs">
-                                                        You are not wearing anything.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
+                                </template>
                             </div>
                         </div>
-                        <div class="text-center cell medium-3 align-left">
-                            <div class="text-center flex-container align-center">
-                                <div class="text-center" style="
-                                        transform: scale(0.7);
-                                        margin-top: -25px;
-                                    ">
-                                    <div style="margin-bottom: 5px">
-                                        <button class="avatar-body-part" @click="handlePartSelection('head')" id="head"
-                                            :style="{
-                                                backgroundColor:
-                                                    '#' +
-                                                    userAvatar.colors.head,
-                                                padding: '5px',
-                                                borderRadius: '15px',
-                                                marginTop: '-1px',
-                                                width: '60',
-                                                height: '50',
-                                            }">
-                                            <VLazyImage :src="userAvatar.current_face" :src-placeholder="usePage<any>().props.site
-                                                .production.domains
-                                                .storage +
-                                                '/assets/default.png'
-                                                " width="50" height="50" />
-                                        </button>
-                                    </div>
-                                    <div style="
-                                            display: flex;
-                                            margin-bottom: 5px;
-                                        ">
-                                        <button class="avatar-body-part" @click="
-                                            handlePartSelection('left_arm')
-                                            " id="left_arm" :style="{
-                                                backgroundColor:
-                                                    '#' +
-                                                    userAvatar.colors.left_arm,
-                                                padding: '50px',
-                                                paddingRight: '0px',
-                                            }"></button>
-
-                                        <button class="avatar-body-part" @click="
-                                            handlePartSelection('torso')
-                                            " id="torso" :style="{
-                                                backgroundColor:
-                                                    '#' +
-                                                    userAvatar.colors.torso,
-                                                padding: '50px',
-                                            }"></button>
-
-                                        <button class="avatar-body-part" @click="
-                                            handlePartSelection('right_arm')
-                                            " id="right_arm" :style="{
-                                                backgroundColor:
-                                                    '#' +
-                                                    userAvatar.colors.right_arm,
-                                                padding: '50px',
-                                                paddingRight: '0px',
-                                            }"></button>
-                                    </div>
-                                    <div class="display: flex; margin-bottom: 5px">
-                                        <button class="avatar-body-part" @click="
-                                            handlePartSelection('left_leg')
-                                            " name="left_leg" :style="{
-                                                backgroundColor:
-                                                    '#' +
-                                                    userAvatar.colors.left_leg,
-                                                padding: '50px',
-                                                paddingRight: '0px',
-                                                paddingLeft: '47px',
-                                            }"></button>
-
-                                        <button class="avatar-body-part" @click="
-                                            handlePartSelection('right_leg')
-                                            " name="right_leg" :style="{
-                                                backgroundColor:
-                                                    '#' +
-                                                    userAvatar.colors.right_leg,
-                                                padding: '50px',
-                                                paddingRight: '0px',
-                                                borderBottom: '15px',
-                                                paddingLeft: '47px',
-                                            }"></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center cell medium-9">
-                            <div class="grid-x grid-margin-x grid-padding-y">
-                                <div class="cell large-3 medium-3 small-6" v-for="(item, index) in wearingItems"
-                                    :key="index">
-                                    <div class="d-block" @click="
-                                        SortItemByType(
-                                            item.id,
-                                            item.item_type,
-                                            'remove'
-                                        )
-                                        ">
-                                        <div class="p-2 mb-1 card card-item position-relative">
-                                            <img :src="item.thumbnail" :id="item.thumbnail" @error="
-                                                onImgErrorSmall(
-                                                    item.thumbnail
-                                                )
-                                                " />
-                                        </div>
-                                        <Link as="p" style="cursor: pointer" :href="route(`store.item`, {
-                                            id: item.id,
-                                        })
-                                            " class="text-body text-center fw-semibold text-truncate">
-                                        {{ item.name }}
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-if="!wearingItems.length" class="gap-3 text-start flex-container flex-dir-column">
-                                <div class="text-md text-muted fw-semibold">
-                                    You are not wearing any items.
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="cell medium-3 mb-5">

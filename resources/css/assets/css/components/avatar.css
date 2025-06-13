@@ -6,8 +6,7 @@
 }
 
 .avatar-wrapper {
-    transform: scale(0.7);
-    margin-top: -25px;
+    margin-top: -10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,6 +19,7 @@
 .avatar-torso-arms-wrapper,
 .avatar-legs-wrapper {
     display: flex;
+    gap: 3px;
     margin-bottom: 5px;
 }
 
@@ -31,12 +31,16 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 0; /* Prevent shrinking */
+    padding: 0px;
 }
 
 #head {
-    border-radius: 15px;
-    width: 60px;
-    height: 60px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    width: 36px;
+    height: 36px;
     padding: 5px;
     background-color: var(--primary-color, #3498db);
 }
@@ -44,31 +48,38 @@
 #head img {
     border-radius: 10px;
     object-fit: contain;
+    width: 100%; /* Ensure image fills the button */
+    height: 100%; /* Ensure image fills the button */
 }
-
 
 #left_arm,
 #right_arm {
-    padding: 50px 0px;
-    width: 50px;
+    width: 28px;
+    height: 64px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 #torso {
-    padding: 50px;
-    width: 100px;
+    width: 64px;
+    height: 64px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 #left_leg,
 #right_leg {
-    padding: 50px 0px;
-    width: 50px;
-    /*
-    add when we add avatar spacing
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-    */
+    width: 28px;
+    height: 64px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
-
 
 /* Item Card Specific Styles */
 .item-badges {

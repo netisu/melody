@@ -21,10 +21,10 @@
         justify-content: center !important;
     }
     .vertical-border-left {
-        border-top: 2px dashed var(--section-border-color) !important;
-        padding-top: 20px !important;
-        border-left: none !important;
-        padding-left: 0px !important;
+        border-left: none;
+        border-top: 2px dashed var(--section-border-color);
+        padding-left: 0rem;
+        padding-top: 20px;
     }
 }
 
@@ -264,8 +264,8 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    user-select: none;
     -webkit-user-select: none;
+    user-select: none;
 }
 .theme-selection.active {
     background: rgb(var(--sidebar-active-bg));
