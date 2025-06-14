@@ -8,13 +8,11 @@
 .footer:hover {
     animation: 4s infinite netisu-glow;
     animation-fill-mode: forwards;
+    animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-duration: alternate;
 }
 @keyframes netisu-glow {
-    0% {
-        border-color: var(--section-border-color);
-    }
     25% {
         border-color: var(--info-600);
     }

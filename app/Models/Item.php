@@ -92,7 +92,8 @@ class Item extends Model
     public function owners()
     {
         return Inventory::where([
-            ['item_id', '=', $this->id]
+            ['ownable_id', '=', $this->id],
+            ['ownable_type', '=', Item::class],
         ]);
     }
 

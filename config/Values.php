@@ -7,7 +7,7 @@ return [
     'minimum_age_without_consent' => 13,
 
     'in_event' => true,
-    'system_account_id' => 2,
+    'system_account_id' => 1,
     'in_testing_phase' => false,
 
     'version' => "melody",

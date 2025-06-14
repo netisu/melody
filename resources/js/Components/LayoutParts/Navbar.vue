@@ -482,17 +482,6 @@ export default {
                 element.classList.toggle("active");
             }
         },
-        sidebarOpen(): void {
-            const sidebar = document.getElementById("sidebar");
-            if (sidebar) {
-                if (sidebar.classList.contains("show-for-large")) {
-                    sidebar.classList.remove("show-for-large");
-                    sidebar.classList.add("hide-for-large");
-                } else {
-                    sidebar.classList.add("show-for-large");
-                }
-            }
-        },
         addActiveClassSSInput(elementId: string): void {
             const element = document.getElementById(
                 elementId

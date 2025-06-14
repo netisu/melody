@@ -397,16 +397,12 @@ class ItemApiController extends Controller
             ]);
 
             // Create inventory record
-            $inventory = new Inventory;
-
-            $inventory->create([
-                "user_id" => Auth::user()->id,
-                "item_id" => $item->id,
+            $item->inventories()->create([
+                'user_id' => Auth::user()->id,
             ]);
 
             // Create purchase record
             $purchaseRecord = new ItemPurchase;
-
             $purchaseRecord->create([
                 "seller_id" => $seller->id,
                 "buyer_id" => Auth::user()->id,

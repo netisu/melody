@@ -260,12 +260,13 @@ class AdminController extends Controller
             'cost_sparkles' => $request->sparkles,
             'cost_stars' => $request->stars,
             'avatar_preview' => $previewName,
+            'in_event' => false,
+            'event_id' => null,
             'onsale' => true,
         ]);
 
-        $user = User::where('id',  Auth::id())->first();
         $item->inventories()->create([
-            'ownable_type' => Item::class,
+            'user_id' => Auth::user()->id,
         ]);
 
         if ($request->type !== 'face') {

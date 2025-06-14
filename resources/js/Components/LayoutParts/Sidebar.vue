@@ -205,7 +205,8 @@ watch(
                     <i class="text-lg far fa-triangle-exclamation pe-2"></i>
                 </div>
             </div>
-            <div v-show="props.site_config.in_maintenance" class="py-2 mb-4 text-center text-white alert alert-maintenance">
+            <div v-show="props.site_config.in_maintenance"
+                class="py-2 mb-4 text-center text-white alert alert-maintenance">
                 <div class="gap-2 align-middle flex-container align-justify">
                     <i class="text-lg fad fa-hammer pe-2"></i>
                     <div>

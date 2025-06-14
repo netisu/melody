@@ -7,13 +7,13 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 function getCsrfToken() {
-  return axios.get(`/sanctum/csrf-cookie`);
+    return axios.get(`/sanctum/csrf-cookie`);
 }
 
 function postEmail() {
-  return axios.post(route(`verification.send`)).then(
-    setTimeout(function() {window.location.reload()}, 2000)
-  );
+    return axios.post(route(`verification.send`)).then(
+        setTimeout(function () { window.location.reload() }, 2000)
+    );
 }
 
 
@@ -33,8 +33,8 @@ const sendEmail = () => {
                     <i class="mb-3 fad fa-envelope-open-text text-muted" style="font-size:80px;"></i>
                     <h3>Email Verification</h3>
                     <p class="text-muted text-sm">This will take less than 5 minutes.</p>
-                                            <form @submit.prevent="sendEmail">
-<div class="min-w-0 gap-1 mt-3 flex-container align-center">
+                    <form @submit.prevent="sendEmail">
+                        <div class="min-w-0 gap-1 mt-3 flex-container align-center">
                             <button type="submit" class="btn btn-xs btn-success">
                                 <i class="fad fa-badge-check"></i>
                                 Verify
@@ -43,8 +43,8 @@ const sendEmail = () => {
                                 <i class="fad fa-right-from-bracket"></i>
                                 Logout
                             </button>
-                    </div> 
-                                       </form>
+                        </div>
+                    </form>
 
                 </div>
             </div>

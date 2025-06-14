@@ -21,6 +21,7 @@ use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Vite;
 
 class AuthController extends Controller
 {
@@ -36,7 +37,7 @@ class AuthController extends Controller
     public function ProvidersIndex() {
         return Inertia::render('Authentication/Providers');
     }
-    
+
     public function confirmPassword(Request $request)
     {
         $request->validate([
@@ -85,6 +86,8 @@ class AuthController extends Controller
                 $user->save();
             }
 
+            Auth::login($user);
+
             return redirect()->route('my.dashboard.page');
         };
     }
@@ -115,7 +118,7 @@ class AuthController extends Controller
             }),
             'tester' => [
                 'username' => $tester->username ?? "Aeo",
-                'avatar' => $tester ? $tester->thumbnail() : "/assets/img/earl_placeholder.png",
+                'avatar' => $tester ? $tester->thumbnail() : Vite::asset("resources/js/images/earl_placeholder.png"),
             ],
             'countries' => $countries,
 

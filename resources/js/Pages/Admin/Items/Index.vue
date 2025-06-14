@@ -2,75 +2,74 @@
 import { route } from 'ziggy-js';
 
 import { usePage } from "@inertiajs/vue3";
-import Navbar from "@/Components/LayoutParts/Admin/AdminNav.vue";
+import AdminNav from "@/Components/LayoutParts/Admin/AdminNav.vue";
 import AppHead from "@/Components/AppHead.vue";
 import Pagination from "@/Components/Pagination.vue";
-
+import Navbar from "@/Components/LayoutParts/Navbar.vue";
+import Footer from "@/Components/LayoutParts/Footer.vue";
+import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 </script>
 
 <template>
     <AppHead pageTitle="Item Index" :description="usePage<any>().props.site.name + ' Administration'"
         :url="route('admin.items.page')" />
-    <Navbar>
-        <div class="card">
-            <div class="card-content">
-                <div class="columns">
-                    <div class="column is-3">
-                        <div class="select title is-6 is-fullwidth">
-                            <select>
-                                <option>Username</option>
-                                <option>Email</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="column is-7">
-                        <input class="input" type="Search" placeholder="Search" />
-                    </div>
-                    <div class="column">
-                        <a class="button is-fullwidth" href="">Search</a>
-                    </div>
+    <Navbar />
+    <Sidebar>
+        <div class="cell medium-3">
+            <AdminNav />
+        </div>
+        <div class="cell medium-9">
+            <div class="flex-container align-justify align-middle mb-1">
+                <div class="text-xl fw-semibold">
+                    Items
+                </div>
+                <div class="mt-2 align-middle flex-container align-center">
+                    <Link as="button" :href="route(`admin.items.create.create-item`)" class="btn btn-info btn-sm">
+                        New Item
+                    </Link>
                 </div>
             </div>
-        </div>
-
-        <br />
-        <div class="card">
-            <div class="card-content">
-                <div class="column is-3">
-                    <p class="title is-4">Official Items:</p>
+            <div class="card-body">
+                <div class="grid-x grid-margin-x" v-if="usePage<any>().props.items?.['data']?.['length']">
+                    <template>
+                        <div v-for="item in usePage<any>().props.items.data" class="cell large-2 medium-3 small-6">
+                            <div class="d-block" :href="route(`admin.items.manage-item`, { id: item.id })">
+                                <Link class="p-2 mb-1 card card-inner position-relative">
+                                    <img :src="item.thumbnail" />
+                                </Link>
+                                <p class="text-body text-md fw-semibold text-truncate">
+                                    {{ item.name }}
+                                </p>
+                                <p class="text-md text-muted text-truncate">
+                                    {{ item.description ? item.description : "This item does not have an description" }}
+                                </p>
+                                <p v-if="item.isOffsale" class="text-sm text-danger text-truncate">
+                                    This item is offsale.
+                                </p>
+                            </div>
+                        </div>
+                    </template>
                 </div>
-                <div class="column">
-                    <Link :href="route(`admin.items.create.create-item`)" class="button is-fullwidth">New Item</Link>
-                </div>
-                <br />
-                <article class="media" v-for="(item, index) in usePage<any>().props.items.data" :key="index">
-                    <figure class="media-left">
-                        <p class="image is-128x128">
-                            <img :src="item.thumbnail" />
-                        </p>
-                    </figure>
-                    <div class="media-content">
-                        <div class="content">
-                            <br />
-                            <div class="title is-4">
-                                <span class="mb-4">{{ item.name }}</span>
-                                <div class="mt-4 tags">
-                                    <span v-if="item.isOffsale" class="tag is-dark">This item is offsale</span>
+                <Pagination v-if="usePage<any>().props.items?.['data']?.['length']"
+                    v-bind:pagedata="usePage<any>().props.items">
+                </Pagination>
+                <div v-else>
+                    <div class="pb-0 card-body">
+                        <div class="gap-2 mb-2 text-center flex-container flex-dir-column">
+                            <i class="text-5xl fas fa-person-fairy text-info"></i>
+                            <div style="line-height: 16px">
+                                <div class="text-xs fw-bold text-info">
+                                    No items
+                                </div>
+                                <div class="text-info fw-semibold">
+                                    <p class="text-xs">There are no items.</p>
                                 </div>
                             </div>
-                            <p class="subtitle is-6">{{ item.description ?? "This item does not have an description" }}
-                            </p>
-                            <Link class="button" :href="route(`admin.items.manage-item`, { id: item.id })">Manage Item
-                            </Link>
                         </div>
                     </div>
-                    <div class="media-right"></div>
-                </article>
-                <Pagination :pagedata="usePage<any>().props.items"></Pagination>
-                <div v-if="!usePage<any>().props.items.data.length">
-                    No items found
                 </div>
             </div>
         </div>
-    </Navbar>
+    </Sidebar>
+    <Footer />
 </template>

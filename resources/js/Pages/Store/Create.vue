@@ -39,7 +39,7 @@ const AttemptUpload = () => {
     <AppHead pageTitle="Create" description="create your dream item here" :url="route(`store.create.page`)" />
     <Navbar />
     <Sidebar>
-        <div class="cell medium-5 px-4">
+        <div class="cell medium-6 px-4">
             <div class="mb-2">
                 <div class="text-2xl fw-semibold">Create Item</div>
                 <div class="text-sm text-danger fw-semibold" v-show="usePage<any>().props.auth.user.staff">
@@ -72,7 +72,7 @@ const AttemptUpload = () => {
                     <div class="mb-2">
                         <div :class="{ 'text-danger': form.errors.name }"
                             class="text-xs fw-bold text-muted text-uppercase">
-                            Item Name
+                            Name
                         </div>
                         <input type="text" v-model="form.name" class="form" placeholder="Item Name..." />
                         <div v-if="form.errors.name" class="text-xs text-danger fw-semibold">
@@ -84,7 +84,7 @@ const AttemptUpload = () => {
                             class="text-xs fw-bold text-muted text-uppercase">
                             Description
                         </div>
-                        <textarea  v-model="form.description" class="mb-2 form pe-5" rows="3"
+                        <textarea v-model="form.description" class="mb-2 form pe-5" rows="3"
                             placeholder="Description...."></textarea>
                         <div v-if="form.errors.description" class="text-xs text-danger fw-semibold">
                             {{ form.errors.description }}

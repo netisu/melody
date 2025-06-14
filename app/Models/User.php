@@ -14,6 +14,7 @@ use Illuminate\{
     Contracts\Auth\MustVerifyEmail,
     Contracts\Auth\CanResetPassword,
     Support\Str,
+    Support\Facades\Vite
 };
 
 use App\Models\{
@@ -462,6 +463,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function headshot(): mixed
     {
+        $siteIcon = config(key: 'Values.icon');
         if (config('app.env') != 'local') {
             $url = config('app.storage.url');
             if ($this->settings && $this->settings->profile_picture_pending != true && $this->settings->profile_picture_enabled != false) {
@@ -477,13 +479,13 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
             } else {
                 $image = ($this->avatar()?->image === 'default') ? config('app.default_avatar_file') : $this->avatar()?->image;
                 if ($this->avatar()?->image === 'default') {
-                    return "{$image}_headshot.png";
+                    return Vite::asset("resources/js/Images/{$image}_headshot.png");
                 } else {
                     return "{$url}/thumbnails/{$image}_headshot.png";
                 }
             }
         } else {
-            return config(key: 'Values.icon');
+            return Vite::asset("resources/js/Images/{$siteIcon}");
         }
     }
 

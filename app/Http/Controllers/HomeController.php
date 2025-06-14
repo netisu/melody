@@ -66,9 +66,9 @@ class HomeController extends Controller
         return inertia('Welcome', [
             'landing' => [
                 'user' => [
-                    'username' => $landingUser->username,
-                    'displayname' => $landingUser->display_name,
-                    'avatar' => $landingUser->thumbnail(),
+                    'username' => $landingUser->username ?? null,
+                    'displayname' => $landingUser->display_name ?? null,
+                    'avatar' => $landingUser ? $landingUser->thumbnail() : null,
                 ],
                 'items' => $landingItems,
                 'posts' => $landingPosts,
@@ -115,7 +115,7 @@ class HomeController extends Controller
             $seconds = RateLimiter::availableIn($key);
 
             return response()->json([
-                'message' => 'Too many requests. You may try again in '.$seconds.' seconds.',
+                'message' => 'Too many requests. You may try again in ' . $seconds . ' seconds.',
                 'type' => 'error'
             ], 429);
         }
@@ -136,8 +136,8 @@ class HomeController extends Controller
             Auth::user()->addPoints(3);
 
             return response()->json([
-                    'message' => 'Your status has been changed.',
-                    'type' => 'success'
+                'message' => 'Your status has been changed.',
+                'type' => 'success'
             ], 200);
         }
     }

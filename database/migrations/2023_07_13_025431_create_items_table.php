@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('thumbnail_hash')->nullable();
             $table->boolean('rare')->default(false);
             $table->boolean('in_event')->default(false);
-            $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
+            $table->foreignId('event_id')->nullable()->constrained('events')->onDelete('cascade');
             $table->boolean('onsale');
             $table->integer('initial_stock')->default(0);
             $table->integer('remaining_stock')->default(0);
