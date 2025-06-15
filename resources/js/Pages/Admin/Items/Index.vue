@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { route } from 'ziggy-js';
-
 import { usePage } from "@inertiajs/vue3";
+
 import AdminNav from "@/Components/LayoutParts/Admin/AdminNav.vue";
 import AppHead from "@/Components/AppHead.vue";
 import Pagination from "@/Components/Pagination.vue";

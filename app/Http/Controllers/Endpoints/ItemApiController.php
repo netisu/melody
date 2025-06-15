@@ -87,6 +87,7 @@ class ItemApiController extends Controller
             // Get items for the specific category
             $items = Item::where(['item_type' => $category, 'status' => 'approved', 'public_view' => true])->with('creator')->orderBy('updated_at')->get();
         }
+
         return response()->json(
             $items->map(function ($item) {
                 return [
@@ -105,6 +106,7 @@ class ItemApiController extends Controller
                 ];
             })
         );
+        
     }
     public function reRenderItem($itemID)
     {
@@ -130,7 +132,6 @@ class ItemApiController extends Controller
     private function getCategoryData()
     {
         $data = config('ItemCategories');
-
 
         // Check if data is an array (optional)
         if (!is_array($data)) {

@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 12.16.0.
+ * Generated for Laravel 12.18.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1620,15 +1620,11 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
-         * Finds an entry of the container by its identifier and returns it.
+         * {@inheritdoc}
          *
          * @template TClass of object
          * @param string|class-string<TClass> $id
          * @return ($id is class-string<TClass> ? TClass : mixed)
-         * @param string $id Identifier of the entry to look for.
-         * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
-         * @throws ContainerExceptionInterface Error while retrieving the entry.
-         * @return mixed Entry.
          * @static 
          */
         public static function get($id)
@@ -10019,6 +10015,8 @@ namespace Illuminate\Support\Facades {
      * @method static \Illuminate\Http\Client\PendingRequest stub(callable $callback)
      * @method static \Illuminate\Http\Client\PendingRequest async(bool $async = true)
      * @method static \GuzzleHttp\Promise\PromiseInterface|null getPromise()
+     * @method static \Illuminate\Http\Client\PendingRequest truncateExceptionsAt(int $length)
+     * @method static \Illuminate\Http\Client\PendingRequest dontTruncateExceptions()
      * @method static \Illuminate\Http\Client\PendingRequest setClient(\GuzzleHttp\Client $client)
      * @method static \Illuminate\Http\Client\PendingRequest setHandler(callable $handler)
      * @method static array getOptions()
@@ -12504,6 +12502,19 @@ namespace Illuminate\Support\Facades {
         {
             /** @var \Illuminate\Queue\QueueManager $instance */
             $instance->failing($callback);
+        }
+
+        /**
+         * Register an event listener for the daemon queue starting.
+         *
+         * @param mixed $callback
+         * @return void 
+         * @static 
+         */
+        public static function starting($callback)
+        {
+            /** @var \Illuminate\Queue\QueueManager $instance */
+            $instance->starting($callback);
         }
 
         /**
@@ -23928,50 +23939,6 @@ namespace Illuminate\Support {
             return \Illuminate\Support\Collection::debug();
         }
 
-        /**
-         * 
-         *
-         * @see \App\Models\User::touch()
-         * @static 
-         */
-        public static function searchable()
-        {
-            return \Illuminate\Support\Collection::searchable();
-        }
-
-        /**
-         * 
-         *
-         * @see \App\Models\User::withoutRecursion()
-         * @static 
-         */
-        public static function unsearchable()
-        {
-            return \Illuminate\Support\Collection::unsearchable();
-        }
-
-        /**
-         * 
-         *
-         * @see \App\Models\User::resolveObserveAttributes()
-         * @static 
-         */
-        public static function searchableSync()
-        {
-            return \Illuminate\Support\Collection::searchableSync();
-        }
-
-        /**
-         * 
-         *
-         * @see \App\Models\User::resolveObserveAttributes()
-         * @static 
-         */
-        public static function unsearchableSync()
-        {
-            return \Illuminate\Support\Collection::unsearchableSync();
-        }
-
             }
     }
 
@@ -24222,30 +24189,6 @@ namespace Illuminate\Database\Eloquent\Relations {
             return \Illuminate\Database\Eloquent\Relations\BelongsToMany::jsonPaginate($maxResults, $defaultSize, $totalResults);
         }
 
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function searchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\BelongsToMany::searchable($chunk);
-        }
-
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function unsearchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\BelongsToMany::unsearchable($chunk);
-        }
-
             }
     /**
      * 
@@ -24270,30 +24213,6 @@ namespace Illuminate\Database\Eloquent\Relations {
             return \Illuminate\Database\Eloquent\Relations\Relation::jsonPaginate($maxResults, $defaultSize, $totalResults);
         }
 
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function searchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\Relation::searchable($chunk);
-        }
-
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function unsearchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\Relation::unsearchable($chunk);
-        }
-
             }
     /**
      * 
@@ -24316,30 +24235,6 @@ namespace Illuminate\Database\Eloquent\Relations {
         public static function jsonPaginate($maxResults = null, $defaultSize = null, $totalResults = null)
         {
             return \Illuminate\Database\Eloquent\Relations\HasManyThrough::jsonPaginate($maxResults, $defaultSize, $totalResults);
-        }
-
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function searchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\HasManyThrough::searchable($chunk);
-        }
-
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function unsearchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\HasManyThrough::unsearchable($chunk);
         }
 
             }
@@ -24367,30 +24262,6 @@ namespace Illuminate\Database\Eloquent\Relations {
             return \Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough::jsonPaginate($maxResults, $defaultSize, $totalResults);
         }
 
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function searchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough::searchable($chunk);
-        }
-
-        /**
-         * 
-         *
-         * @see \Laravel\Scout\SearchableScope::extend()
-         * @param mixed $chunk
-         * @static 
-         */
-        public static function unsearchable($chunk = null)
-        {
-            return \Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough::unsearchable($chunk);
-        }
-
             }
     }
 
@@ -24409,50 +24280,6 @@ namespace PHPOpenSourceSaver\JWTAuth\Claims {
         public static function debug()
         {
             return \PHPOpenSourceSaver\JWTAuth\Claims\Collection::debug();
-        }
-
-        /**
-         * 
-         *
-         * @see \App\Models\User::touch()
-         * @static 
-         */
-        public static function searchable()
-        {
-            return \PHPOpenSourceSaver\JWTAuth\Claims\Collection::searchable();
-        }
-
-        /**
-         * 
-         *
-         * @see \App\Models\User::withoutRecursion()
-         * @static 
-         */
-        public static function unsearchable()
-        {
-            return \PHPOpenSourceSaver\JWTAuth\Claims\Collection::unsearchable();
-        }
-
-        /**
-         * 
-         *
-         * @see \App\Models\User::resolveObserveAttributes()
-         * @static 
-         */
-        public static function searchableSync()
-        {
-            return \PHPOpenSourceSaver\JWTAuth\Claims\Collection::searchableSync();
-        }
-
-        /**
-         * 
-         *
-         * @see \App\Models\User::resolveObserveAttributes()
-         * @static 
-         */
-        public static function unsearchableSync()
-        {
-            return \PHPOpenSourceSaver\JWTAuth\Claims\Collection::unsearchableSync();
         }
 
             }
@@ -28259,6 +28086,19 @@ namespace  {
         {
             /** @var \Illuminate\Database\Query\Builder $instance */
             return $instance->reorder($column, $direction);
+        }
+
+        /**
+         * Add descending "reorder" clause to the query.
+         *
+         * @param \Closure|\Illuminate\Database\Query\Builder|\Illuminate\Contracts\Database\Query\Expression|string|null $column
+         * @return \Illuminate\Database\Eloquent\Builder<static> 
+         * @static 
+         */
+        public static function reorderDesc($column)
+        {
+            /** @var \Illuminate\Database\Query\Builder $instance */
+            return $instance->reorderDesc($column);
         }
 
         /**
