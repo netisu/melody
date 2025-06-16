@@ -7,6 +7,14 @@ import { usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import StarsBg from "@/Images/site-banners/stars-bg.png";
 
+const defaultAvatar = StarsBg;
+
+const handleImageError = (event) => {
+    if (event.target.src !== StarsBg) {
+        event.target.src = StarsBg;
+    }
+};
+
 const site = computed<any>(() => usePage<any>().props.site);
 
 defineProps({
@@ -28,7 +36,8 @@ function onImgErrorSmall(id) {
         :url="route(`welcome.page`)" />
     <Navbar :landing="true">
         <header class="masthead-landing p-4 pt-4">
-            <img :src="landing.user.avatar ?? StarsBg" @error="StarsBg" style="z-index: 1" alt="background" />
+            <img :src="landing?.['user']?.['avatar'] ?? defaultAvatar" @error="handleImageError" style="z-index: 1"
+                alt="background" />
             <div class="cell large-4" style="position: relative; z-index: 3">
                 <div class="min-w-0 gap-4 ml-4 flex-container row-landing">
                     <div class="row-landing">
@@ -75,10 +84,10 @@ function onImgErrorSmall(id) {
 
                 <div class="cell large-12">
                     <div v-if="
-                        landing.items?.['data'] &&
-                        landing.items?.['data'].length > 5
+                        landing?.['items']?.['data'] &&
+                        landing?.['items']?.['data'].length > 5
                     " class="grid-x grid-margin-x grid-padding-y">
-                        <div class="cell large-2 medium-4 small-6" v-for="item in landing.items?.['data']">
+                        <div class="cell large-2 medium-4 small-6" v-for="item in landing?.['items']?.['data']">
                             <Link :href="route(`store.item`, { id: item.id })" class="d-block">
                             <div class="p-2 mb-1 card card-item position-relative">
                                 <img :src="item.thumbnail" :id="item.name" :alt="item.name" class="img-fluid"
@@ -134,10 +143,10 @@ function onImgErrorSmall(id) {
                 <div class="cell large-12">
 
                     <div v-if="
-                        landing.posts?.['data'] &&
-                        landing.posts?.['data'].length
+                        landing?.['posts']?.['data'] &&
+                        landing?.['posts']?.['data'].length
                     " class="grid-x grid-margin-x grid-padding-y">
-                        <div class="mb-1 cell large-3 medium-6 small-6" v-for="post in landing.posts?.['data']">
+                        <div class="mb-1 cell large-3 medium-6 small-6" v-for="post in landing?.['posts']?.['data']">
                             <div class="gap-2 mb-3 card card-body flex-container flex-dir-column">
                                 <div class="gap-2 flex-container">
                                     <div class="gap-2 flex-container">

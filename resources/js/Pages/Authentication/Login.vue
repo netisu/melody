@@ -79,100 +79,68 @@ watch(
 }
 </style>
 <template>
-    <AppHead
-        pageTitle="Login"
-        :description="'Login to ' + usePage<any>().props.site.name + ''"
-        :url="route('auth.login.page')"
-    />
+    <AppHead pageTitle="Login" :description="'Login to ' + usePage<any>().props.site.name + ''"
+        :url="route('auth.login.page')" />
     <Navbar />
     <Sidebar>
         <FlashMessages />
         <div class="cell large-4 medium-6 small-12">
             <div class="align-middle flex-container align-center">
                 <div class="gap-2 mb-4 text-center align-center">
-                    <v-lazy-image
-                        :src="userImageUrl"
-                        class="space-image mb-2"
-                        width="150"
-                        alt="Headshot"
-                        :src-placeholder="DummyHeadshot"
-                    />
-                    <div
-                        class="text-center text-2xl fw-semibold"
-                        style="line-height: 16px"
-                    >
+                    <v-lazy-image :src="userImageUrl" class="space-image mb-2" width="150" alt="Headshot"
+                        :src-placeholder="DummyHeadshot" />
+                    <div class="text-center text-2xl fw-semibold" style="line-height: 16px">
                         <span> {{ form.username }} </span>
                     </div>
                 </div>
             </div>
-            <form @submit.prevent="submit">
-                <div class="mb-2">
-                    <div
-                        :class="{ 'text-danger': form.errors.username }"
-                        class="text-xs fw-bold text-muted text-uppercase"
-                    >
-                        Username
-                    </div>
-                    <input
-                        type="text"
-                        v-model="form.username"
-                        class="form"
-                        placeholder="Username..."
-                    />
-                    <div
-                        v-if="form.errors.username"
-                        class="text-xs text-danger fw-semibold"
-                    >
-                        {{ form.errors.username }}
-                    </div>
+            <div class="mb-2">
+                <div class="text-2xl fw-semibold">Log In</div>
+                <div class="text-sm text-muted fw-semibold">
+                    Don't have an account?
+                    <Link :href="route(`auth.register.page`)" class="d-inline-block squish">Sign Up</Link>
                 </div>
-                <div class="mb-2">
-                    <div
-                        :class="{ 'text-danger': form.errors.password }"
-                        class="text-xs fw-bold text-muted text-uppercase"
-                    >
-                        Password
-                    </div>
-                    <div class="gap-2 align-middle flex-container-lg">
-                        <input
-                            type="password"
-                            v-model="form.password"
-                            class="mb-2 form"
-                            placeholder="Password..."
-                        />
-                        <div
-                            v-if="form.errors.password"
-                            class="text-xs text-danger fw-semibold"
-                        >
-                            {{ form.errors.password }}
+            </div>
+            <div class="card card-body">
+                <form @submit.prevent="submit">
+                    <div class="mb-2">
+                        <div :class="{ 'text-danger': form.errors.username }"
+                            class="text-xs fw-bold text-muted text-uppercase">
+                            Username
                         </div>
-                        <div class="mb-2 flex-container flex-child-grow">
-                            <button
-                                type="submit"
-                                class="btn btn-circle btn-info"
-                                v-bind:class="{ 'is-loading': ConfirmingAuth }"
-                                :disabled="form.processing"
-                                @click="ConfirmUserAuth"
-                                value="Log In"
-                            >
-                                <i
-                                    class="fa-duotone fa-solid fa-arrow-right"
-                                ></i>
-                            </button>
+                        <input type="text" v-model="form.username" class="form" placeholder="Username..." />
+                        <div v-if="form.errors.username" class="text-xs text-danger fw-semibold">
+                            {{ form.errors.username }}
                         </div>
                     </div>
-                </div>
-                <div class="mx-1 my-3 divider"></div>
+                    <div class="mb-2">
+                        <div :class="{ 'text-danger': form.errors.password }"
+                            class="text-xs fw-bold text-muted text-uppercase">
+                            Password
+                        </div>
+                        <div class="gap-2 align-middle flex-container-lg">
+                            <input type="password" v-model="form.password" class="mb-2 form"
+                                placeholder="Password..." />
+                            <div v-if="form.errors.password" class="text-xs text-danger fw-semibold">
+                                {{ form.errors.password }}
+                            </div>
+                            <div class="mb-2 flex-container flex-child-grow">
+                                <button type="submit" class="btn btn-circle btn-info"
+                                    v-bind:class="{ 'is-loading': ConfirmingAuth }" :disabled="form.processing"
+                                    @click="ConfirmUserAuth" value="Log In">
+                                    <i class="fa-duotone fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mx-1 my-3 divider"></div>
 
-                <div class="align-middle flex-container align-center">
-                    <Link
-                        as="button"
-                        :href="route('auth.forgot.page')"
-                        class="btn btn-info btn-sm text-sm fw-semibold squish"
-                        >Forgot Password?</Link
-                    >
-                </div>
-            </form>
+                    <Link as="button" :href="route('auth.forgot.page')"
+                        class="btn btn-info btn-sm text-sm fw-semibold squish">Forgot Password?</Link>
+                    <Link as="button" :href="route('auth.providers')"
+                        class="btn btn-info btn-sm text-sm fw-semibold squish">Authentication Providers</Link>
+                </form>
+            </div>
         </div>
     </Sidebar>
     <Footer />

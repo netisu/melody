@@ -80,12 +80,25 @@ class HomeController extends Controller
     public function DashboardIndex()
     {
         // Retrieve recommendations with caching
-        $recommendations = Cache::remember('daily-recomendations:' . Auth::id(), now()->addHours(6), function () {
+        $recommendations = Cache::remember('daily-recommendations:' . Auth::id(), now()->addHours(6), function () {
+            $ownedItemIds = [];
+            $ownedItemIds = Auth::user()->inventories()
+                ->where('ownable_type', Item::class)
+                ->pluck('ownable_id')
+                ->toArray();
+
+            // Fetch recommendations, excluding owned items
             return Item::where([
                 ['public_view', true],
                 ['status', 'approved'],
-            ])->with('creator')->inRandomOrder()->take(12)->get();
+            ])
+                ->whereNotIn('id', $ownedItemIds) // Exclude items the user owns
+                ->with('creator')
+                ->inRandomOrder()
+                ->take(12)
+                ->get();
         });
+
 
         foreach ($recommendations as $recommendation) {
             $thumbnail = $recommendation->thumbnail();

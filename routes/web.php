@@ -180,7 +180,7 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
         });
 
         // --- Authentication Routes ---
-        Route::group(['as' => 'auth.'], function () {
+        Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
 
             Route::get('/logout', [AuthController::class, 'UserExit'])->name('logout');
             Route::get('/auth-providers', [AuthController::class, 'ProvidersIndex'])->name('providers');
@@ -216,13 +216,13 @@ Route::domain(config('app.env') === 'production' ? config('Values.production.dom
                     Route::post('/validate/meta-mask-api', [Web3LoginController::class, 'verify'])->name('metamask.validation');
                 });
 
-                Route::group(['as' => 'register.', 'prefix' => 'register'], function () {
+                Route::group(['as' => 'register.', 'prefix' => 'get-started'], function () {
 
                     Route::get('/', [AuthController::class, 'RegisterIndex'])->name('page');
                     Route::post('/validate', [AuthController::class, 'RegisterVal'])->name('validate');
                 });
 
-                Route::group(['as' => 'forgot.', 'prefix' => 'forgot'], function () {
+                Route::group(['as' => 'forgot.', 'prefix' => 'forgot-password'], function () {
                     Route::get('/', [AuthController::class, 'ForgotIndex'])->name('page');
 
                     Route::get('/reset-password/{token}', function (string $token) {

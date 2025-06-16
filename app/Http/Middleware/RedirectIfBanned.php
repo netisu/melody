@@ -28,8 +28,10 @@ class RedirectIfBanned
         $route = $request->route()->getName();
         $user = Auth::user();
 
+        $maintenence = siteSetting('site_maintenance');
+        
         // Check if user is logged in, banned, and accessing a non-allowed route
-        if (Auth::check() && $user->hasActiveBan() && !in_array($route, self::ALLOWED_ROUTES)) {
+        if (Auth::check() && $user->hasActiveBan() && !in_array($route, self::ALLOWED_ROUTES) && !$maintenence) {
             $ban = UserBan::where('user_id', $user->id)
                 ->where('active', true)
                 ->orderByDesc('created_at')

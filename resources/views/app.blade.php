@@ -19,7 +19,9 @@
     <meta name="msapplication-config" content="{{ asset('browserconfig.ae3u4gn3.xml') }}" />
     <link rel="manifest" href="{{ asset('Aeow2mf3.webmanifest') }}" crossorigin="use-credentials" />
     <meta name="google-adsense-account" content="ca-pub-2113156566128044">
-
+    <meta http-equiv='cache-control' content="no-cache, no-store, must-revalidate">
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
     <!-- Fonts -->
     <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v6.1.2/css/pro.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,7 +39,6 @@
     @inertia
 </body>
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.slim.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script>

@@ -13,8 +13,6 @@ import * as z from 'zod';
 import { toTypedSchema } from '@vee-validate/zod';
 import { Field, ErrorMessage, useForm } from 'vee-validate';
 
-import { router } from '@inertiajs/vue3'
-
 const registerFormSchema = toTypedSchema(z.object({
     username: z
         .string()
@@ -95,26 +93,23 @@ const { handleSubmit, setFieldValue, values, errors, setErrors } = useForm({
             month: generateRandomNumber(1, 12),
             day: generateRandomNumber(1, 25),
             year: generateRandomNumber(1925, 2025),
-        },
-        starter_item: '', // not used atm in the form?
+        }
     },
 });
 
-   const handleCountryChange = (event) => {
-        setFieldValue('country', event.target.value);
-    }
+const handleCountryChange = (event) => {
+    setFieldValue('country', event.target.value);
+}
 
 const submit = handleSubmit(async (formValues) => {
     try {
         await axios.post(route('auth.register.validate'), formValues);
-        router.visit(route('my.dashboard.page'));
     } catch (error: any) {
         if (error.response && error.response.status === 422) {
             setErrors(error.response.data.errors);
             return 'There were errors in your registration.';
         } else {
-            return 'An unexpected error occurred during registration.';
-            console.error('Registration error:', error);
+            return console.error('Registration error:', error);
         }
     }
 });
@@ -154,7 +149,7 @@ const getProgressWidth = () => {
 
 const getStepText = () => {
     if (currentStep.value === 1) {
-        return `My Name is ${usePage<any>().props.tester.username} and I will be guiding you through the sign-up process!`;
+        return `Welcome to ${usePage<any>().props.site.name}!`;
     } else if (currentStep.value === 2) {
         return "Great! Now, what should we call you?";
     } else if (currentStep.value === 3) {
@@ -166,31 +161,37 @@ const getStepText = () => {
     } else if (currentStep.value === 6) {
         return "Choose a website theme.";
     } else if (currentStep.value === 7) {
-        return 'By clicking the "Sign Me Up!" button below, you agree to our Terms of Service and Privacy Policy.';
+        return 'Legal Mumbo Jumbo™'
     }
 };
 
 const getStepDesc = () => {
     if (currentStep.value === 1) {
-        return "For starters, what is your email? We need this so we can contact you!";
+        return `I am ${usePage<any>().props.tester.username}! I will be guiding you through the sign-up process.`;
     } else if (currentStep.value === 2) {
         return `Your username is how ${usePage<any>().props.site.name} players will be able to identify you.`;
     } else if (currentStep.value === 3) {
         return "Your password is the way you will be able to access your account and change your settings, please use a password you do not use anywhere else.";
-    } else if (currentStep.value === 6) {
-        return "Choose a theme that is comfortable for your viewing experience, this can be changed anytime later from your account settings.";
-    } else if (currentStep.value === 7) {
-        return "You can review our Terms of Service and/or Privacy Policy below.";
-    }
-};
-
-const getStepSdesc = () => {
-    if (currentStep.value === 3) {
-        return "Do not share your password with anybody.";
     } else if (currentStep.value === 4) {
         return "This helps us tailor your experience.";
     } else if (currentStep.value === 5) {
         return "We need this piece of information to ensure your privacy and safety on our platform.";
+    } else if (currentStep.value === 6) {
+        return "Choose a theme that is comfortable for your viewing experience, this can be changed anytime later from your account settings.";
+    } else if (currentStep.value === 7) {
+        return 'By clicking the "Sign Me Up!" button below, you agree to our Terms of Service and Privacy Policy.';
+    }
+};
+
+const getStepSdesc = () => {
+    if (currentStep.value === 1) {
+        return "For starters, what is your email? We need this so we can contact you!";
+    } else if (currentStep.value === 2) {
+        return "You can change this anytime later for free from your account settings.";
+    } else if (currentStep.value === 3) {
+        return "Do not share your password with anybody.";
+    }else if (currentStep.value === 7) {
+        return "You can review our Terms of Service and/or Privacy Policy below.";
     }
 };
 
@@ -266,12 +267,9 @@ if (values.birthdate.month) {
                         </div>
                         <div class="cell medium-9">
                             <div class="text-2xl fw-semibold">
-                                Welcome to {{ usePage<any>().props.site.name }}!
+                                {{ getStepText() }}
                             </div>
                             <div class="gap-1 mb-2 flex-container flex-dir-column">
-                                <div class="text-sm text-muted fw-semibold">
-                                    {{ getStepText() }}
-                                </div>
                                 <div class="text-sm text-muted fw-semibold">
                                     {{ getStepDesc() }}
                                 </div>
@@ -340,24 +338,15 @@ if (values.birthdate.month) {
                                     </div>
                                 </div>
                                 <div v-show="currentStep === 4">
-                                <Field
-      as="select"
-      id="country"
-      name="country"
-      v-model="values.country"  class="form form-select"
-      @change="handleCountryChange"
-    >
-      <option value="" disabled>Select a country</option>
-      <option
-        v-for="countryItem in countries"
-        :key="countryItem.code"
-        :value="countryItem.code"
-      >
-        {{ countryItem.name }}
-      </option>
-    </Field>
-                                     <ErrorMessage name="values.country"
-                                                class="text-xs text-danger fw-semibold" />
+                                    <Field as="select" id="country" name="country" v-model="values.country"
+                                        class="form form-select" @change="handleCountryChange">
+                                        <option value="" disabled>Select a country</option>
+                                        <option v-for="countryItem in countries" :key="countryItem.code"
+                                            :value="countryItem.code">
+                                            {{ countryItem.name }}
+                                        </option>
+                                    </Field>
+                                    <ErrorMessage name="values.country" class="text-xs text-danger fw-semibold" />
                                 </div>
                                 <div v-show="currentStep === 5">
                                     <!-- Fourth section content -->
@@ -472,8 +461,9 @@ theme, index
                                 <!-- Add more sections as needed -->
                                 <div v-show="currentStep === 1">
                                     <div class="gap-1 mt-2 mb-2 flex-container flex-dir-column">
-                                        <Link as="a" :href="route('auth.providers')" class="text-xs text-info fw-semibold">
-                                            Looking to use your Google or Discord account to sign up?
+                                        <Link as="a" :href="route('auth.providers')"
+                                            class="text-xs text-info fw-semibold">
+                                        Looking to use your Google or Discord account to sign up?
                                         </Link>
                                     </div>
                                 </div>

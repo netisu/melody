@@ -443,8 +443,8 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
 
     public function thumbnail(): string
     {
+        $siteIcon = config(key: 'Values.icon');
         if (config('app.env') != 'local') {
-
             $url = config('app.storage.url');
             $image = ($this->avatar()?->image === 'default') ? config('app.default_avatar_file') : $this->avatar()?->image;
             if ($this->avatar()?->image === 'default') {
@@ -453,7 +453,7 @@ class User extends AeoAuthenticatable implements MustVerifyEmail, CanResetPasswo
                 return "{$url}/thumbnails/{$image}.png";
             }
         } else {
-            return config(key: 'Values.icon');
+            return Vite::asset("resources/js/Images/{$siteIcon}");
         }
     }
     public function usernameHistory(): Collection

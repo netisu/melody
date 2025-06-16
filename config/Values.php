@@ -1,8 +1,8 @@
 <?php
 return [
     'name' => 'Netisu',
-    'logo' => '/assets/img/netisu-logo2.svg',
-    'icon' => '/assets/img/logo.svg',
+    'logo' => 'netisu-logo2.svg', // Located in resources/js/Images
+    'icon' => 'netisu-icon.svg', // Located in resources/js/Images
     'marketLogo' => '/assets/img/site-banners/market-title-new.svg',
     'minimum_age_without_consent' => 13,
 

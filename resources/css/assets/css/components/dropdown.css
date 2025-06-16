@@ -9,7 +9,7 @@
     line-height: 1.5rem;
     list-style: none;
     background: var(--section-bg);
-    border: 1px solid var(--section-border-color);
+    border: 1px dashed var(--section-border-color);
     box-shadow: 0 1px 2px rgb(var(--section-shadow), 0.1);
     border-radius: var(--rounded-lg);
     position: absolute;
