@@ -118,7 +118,7 @@ class AuthController extends Controller
             }),
             'tester' => [
                 'username' => $tester->username ?? "Aeo",
-                'avatar' => $tester ? $tester->thumbnail() : Vite::asset("resources/js/images/earl_placeholder.png"),
+                'avatar' => $tester ? $tester->thumbnail() : Vite::asset("resources/js/Images/earl_placeholder.png"),
             ],
             'countries' => $countries,
 

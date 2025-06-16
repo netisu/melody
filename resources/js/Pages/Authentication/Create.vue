@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
-import Navbar from "@/Components/LayoutParts/Navbar.vue";
-import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
-import { route } from 'ziggy-js';;
-
-import AppHead from "@/Components/AppHead.vue";
-import Footer from "@/Components/LayoutParts/Footer.vue";
 import axios from "axios";
-import VLazyImage from "v-lazy-image";
 import * as z from 'zod';
 import { toTypedSchema } from '@vee-validate/zod';
 import { Field, ErrorMessage, useForm } from 'vee-validate';
+import { route } from 'ziggy-js';
+
+import Navbar from "@/Components/LayoutParts/Navbar.vue";
+import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
+import EarlPlaceHolder from "@/Images/earl_placeholder.png";
+import AppHead from "@/Components/AppHead.vue";
+import Footer from "@/Components/LayoutParts/Footer.vue";
+
 
 const registerFormSchema = toTypedSchema(z.object({
     username: z
@@ -236,6 +237,14 @@ function updateDays() {
     );
 }
 
+const PlayerPlaceHolder = EarlPlaceHolder;
+
+const handleImageError = (event) => {
+    if (event.target.src !== EarlPlaceHolder) {
+        event.target.src = EarlPlaceHolder;
+    }
+};
+
 // Watch for changes in the selected month
 watch(() => values.birthdate.month, updateDays);
 
@@ -260,9 +269,9 @@ if (values.birthdate.month) {
                     <div class="mx-1 my-3 divider"></div>
                     <div class="grid-x grid-margin-x grid-padding-y">
                         <div class="text-center cell medium-3">
-                            <v-lazy-image :src="usePage<any>().props.tester.avatar" class="show-for-medium"
+                            <img :src="usePage<any>().props.tester.avatar ?? PlayerPlaceHolder" @error="handleImageError" class="show-for-medium"
                                 alt="earl" />
-                            <v-lazy-image :src="usePage<any>().props.tester.avatar" alt="earl" style="max-width: 180px"
+                            <img :src="usePage<any>().props.tester.avatar ?? PlayerPlaceHolder" @error="handleImageError" alt="earl" style="max-width: 180px"
                                 class="show-for-small-only" />
                         </div>
                         <div class="cell medium-9">

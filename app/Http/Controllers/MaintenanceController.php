@@ -43,8 +43,7 @@ class MaintenanceController extends Controller
         }
 
         Session::put('maintenance_password', $password);
-
-        return redirect(request()->url());
+        return response()->json(['success' => 'Authenticated.']);
     }
 
     public function Exit()

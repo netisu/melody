@@ -401,6 +401,9 @@ watch(following, (newValue, oldValue) => {
                     </div>
                 </div>
             </div>
+            <div class="flex-container align-justify align-middle mb-1">
+                <div class="text-xl fw-semibold">Posts</div>
+            </div>
             <div class="mb-3 card card-body">
                 <div v-if="!statuses?.['data']?.['length']" class="section">
                     <div class="gap-3 text-center flex-container flex-dir-column">
@@ -485,6 +488,13 @@ watch(following, (newValue, oldValue) => {
                 </div>
             </div>
             <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
+            <div class="flex-container align-justify align-middle mb-1">
+                <div class="text-xl fw-semibold">Spaces</div>
+                <div class="mt-2 align-middle flex-container align-center">
+                    <Link as="button" href="#"
+                        class="btn btn-secondary btn-sm">View All</Link>
+                </div>
+            </div>
             <div class="mb-3 card card-body">
                 <div class="gap-3 text-center flex-container flex-dir-column">
                     <i class="text-5xl fad fa-planet-ringed text-muted"></i>

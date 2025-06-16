@@ -150,7 +150,7 @@ export default {
             axios
                 .post(route(`maintenance.authenticate.password`), { password: this.password })
                 .then((response) => {
-                    router.visit(route('welcome.page'));
+                    window.location.reload();
                     if (response.data.error) {
                         this.errorMsg = response.data.error;
                         this.showError = true;
