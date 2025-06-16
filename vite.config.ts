@@ -156,15 +156,6 @@ export default {
                     plugins: [{ name: "removeViewBox", active: false }],
                 },
             }),
-        process.env?.["APP_ENV"] === "production" &&
-            compression({
-                algorithms: [
-                    "gzip",
-                    "brotliCompress",
-                    defineAlgorithm("deflate", { level: 9 }),
-                ],
-                threshold: 1024, // Only compress files larger than 1kb
-            }),
     ].filter(Boolean),
 
     resolve: resolveConfig,
