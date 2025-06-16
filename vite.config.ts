@@ -147,14 +147,13 @@ export default {
         */
 
         process.env?.["APP_ENV"] === "production" &&
-            viteImagemin({
-                // Ensure you have imagemin dependencies installed (imagemin-gifsicle, imagemin-jpegtran, etc.)
-                gifsicle: { optimizationLevel: 7, interlaced: false },
-                optipng: { optimizationLevel: 7 },
-                mozjpeg: { quality: 80 }, // Adjust quality as needed
-                svgo: {
-                    plugins: [{ name: "removeViewBox", active: false }],
-                },
+            compression({
+                algorithms: [
+                    "gzip",
+                    "brotliCompress",
+                    defineAlgorithm("deflate", { level: 9 }),
+                ],
+                threshold: 1024, // Only compress files larger than 1kb
             }),
     ].filter(Boolean),
 
