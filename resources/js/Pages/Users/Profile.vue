@@ -284,7 +284,7 @@ watch(following, (newValue, oldValue) => {
                     </div>
                     <div class="cell medium-9 vertical-border-left">
                         <div v-if="ItemLoading || (CurentlyWearingItems && CurentlyWearingItems.length > 0)"
-                            class="grid-x grid-margin-x grid-padding-y">
+                            class="grid-x grid-margin-x">
                             <template v-if="ItemLoading">
                                 <ItemCardSkeleton v-for="n in 6" :key="n" />
                             </template>
