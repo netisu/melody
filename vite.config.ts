@@ -119,7 +119,7 @@ export default {
                 // }
             },
         }),
-        basicSsl(), // For HTTPS in development
+        process.env?.["APP_ENV"] === "local" && basicSsl(), // For HTTPS in development
 
         // 2. Dev-only plugins (Conditional loading for production)
         process.env?.["APP_ENV"] === "local" && vueDevTools(), // Only load in development

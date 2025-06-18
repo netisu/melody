@@ -124,7 +124,7 @@ class UserController extends Controller
         });
 
         // Retrieve current body colors directly from the avatar model's JSON column
-        $currentBodyColors = $$user->avatar()->colors ?? [
+        $currentBodyColors = $user->avatar()->colors ?? [
             'head' => 'd3d3d3',
             'torso' => '055e96',
             'left_arm' => 'd3d3d3',
@@ -175,10 +175,7 @@ class UserController extends Controller
                 'DateHum' => $user->DateHum,
                 'status' => $user->status,
                 'online' => $user->online(),
-                'avatar' => [
-                    'colors' => $currentBodyColors,
-                    'current_face_url' => $currentFaceUrl,
-                ],
+                'avatar' => $user->avatar(),
                 'settings' => [
                     "verified" => $user->settings?->is_verified ?? false,
                     "beta_tester" => $user->settings?->beta_tester ?? false,

@@ -69,7 +69,7 @@
         "barryvdh/laravel-ide-helper": "^3.5",
         "fakerphp/faker": "^1.24",
         "laravel/breeze": "^2.3",
-        "laravel/pint": "^1.20",
+        "laravel/pint": "^1.22",
         "laravel/sail": "^1.40",
         "laravel/telescope": "^5.3",
         "mockery/mockery": "^1.6",

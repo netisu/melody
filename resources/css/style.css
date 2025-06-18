@@ -325,6 +325,20 @@ html.nprogress-busy {
     margin-top: -2px;
 }
 
+canvas {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100%;
+    height: 261.5px !important;
+    -ms-interpolation-mode: bicubic
+}
+
+.fa-beat, .fa-bounce, .fa-fade, .fa-beat-fade, .fa-flip, .fa-pulse, .fa-shake, .fa-spin, .fa-spin-pulse
+{
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
 * {
     -webkit-tap-highlight-color: transparent;
 }

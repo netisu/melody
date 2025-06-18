@@ -119,7 +119,7 @@ class RenderController extends Controller
         $editStyleData = null;
 
         if (isset($slotData->edit_style)) {
-            $editStyleHash = $slotData->edit_style->hash; // Hash from ItemEditStyle
+            $editStyleHash = (string) $slotData->edit_style->hash; // Hash from ItemEditStyle
             $isModel = (bool) $slotData->edit_style->is_model;
             $isTexture = (bool) $slotData->edit_style->is_texture;
 

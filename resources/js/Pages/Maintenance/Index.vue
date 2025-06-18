@@ -101,9 +101,9 @@ export default {
             activation: 0,
             classOptions: [
                 "text-muted",
-                "text-upgrade",
+                "text-info",
                 "text-danger",
-                "text-success",
+                "text-upgrade",
                 "text-warning",
             ],
         };

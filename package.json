@@ -21,6 +21,7 @@
     ]
   },
   "devDependencies": {
+    "@types/three": "^0.177.0",
     "@vitejs/plugin-basic-ssl": "^2.0.0",
     "autoprefixer": "^10.4.21",
     "axios": "^1.10.0",
@@ -41,6 +42,7 @@
     "@inertiajs/core": "^2.0.12",
     "@inertiajs/vue3": "^2.0.12",
     "@popperjs/core": "^2.11.8",
+    "@tresjs/cientos": "^4.3.1",
     "@tresjs/core": "^4.3.6",
     "@types/node": "^24.0.1",
     "@vee-validate/zod": "^4.15.1",

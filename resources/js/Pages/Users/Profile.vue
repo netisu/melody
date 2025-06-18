@@ -9,6 +9,7 @@ import Footer from '@/Components/LayoutParts/Footer.vue';
 import Navbar from '@/Components/LayoutParts/Navbar.vue';
 import Sidebar from '@/Components/LayoutParts/Sidebar.vue';
 import AppHead from '@/Components/AppHead.vue';
+import ThreeAvatarRender from '@/Components/Loaders/ThreeAvatarRender.vue';
 import ItemCardSkeleton from '@/Components/ItemCardSkeleton.vue';
 import DummyAvatar from "@/Images/dummy.png";
 
@@ -179,9 +180,7 @@ watch(following, (newValue, oldValue) => {
                         'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
                 }
                 : null">
-                <v-lazy-image
-                    :src="usePage<any>().props.user.thumbnail ? usePage<any>().props.user.thumbnail : DummyAvatar"
-                    :src-placeholder="DummyAvatar" />
+                    <ThreeAvatarRender :avatar-config="usePage<any>().props.user.avatar" />
                 <div class="mt-2 text-sm text-center align-center text-info fw-semibold">
                     <div :class="usePage<any>().props.user.staff ? 'text-danger' : 'text-success'">
                         {{ usePage<any>().props.user.staff ? usePage<any>().props.user.position : 'Netizen' }}
@@ -345,7 +344,7 @@ watch(following, (newValue, oldValue) => {
                 </div>
             </div>
             <div class="card card-body mb-3">
-                <div v-if="ItemLoading || (items && items.length > 0)" class="grid-x grid-margin-x grid-padding-y">
+                <div v-if="ItemLoading || (items && items.length > 0)" class="grid-x grid-margin-x">
                     <template v-if="ItemLoading">
                         <ItemCardSkeleton v-for="n in 12" :key="n" />
                     </template>
