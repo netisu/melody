@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div class="section">
         <Skeletor width="200" height="130" class="mb-2 blog-thumbnail" />
         <div style="line-height: 18px">
             <div class="d-block fw-semibold text-body">

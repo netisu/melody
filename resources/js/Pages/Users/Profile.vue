@@ -401,93 +401,6 @@ watch(following, (newValue, oldValue) => {
                 </div>
             </div>
             <div class="flex-container align-justify align-middle mb-1">
-                <div class="text-xl fw-semibold">Posts</div>
-            </div>
-            <div class="mb-3 card card-body">
-                <div v-if="!statuses?.['data']?.['length']" class="section">
-                    <div class="gap-3 text-center flex-container flex-dir-column">
-                        <i class="text-5xl fad fa-face-sleeping text-muted"></i>
-                        <div style="line-height: 16px">
-                            <div class="text-xs fw-bold text-muted text-uppercase">
-                                No Posts
-                            </div>
-                            <div class="text-xs text-muted fw-semibold">
-                                {{ usePage<any>().props.user.username }} has not posted anything to their
-                                    feed.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-else v-for="status in statuses?.['data']"
-                    class="gap-3 section flex-container flex-dir-column-sm">
-                    <div class="mx-auto flex-child-grow" style="width: 100px">
-                        <a href="#" class="text-sm text-center d-block squish">
-                            <img :src="usePage<any>().props.user.headshot" class="mb-1 headshot" width="60" />
-                            <div style="line-height: 16px">
-                                <div class="text-membership text-truncate">
-                                    {{ status.dname }}
-                                </div>
-                                <div class="text-xs text-muted text-truncate">{{ '@' + status.name }}
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="card card-body card-inner w-100">
-                        <div class="align-middle flex-container align-justify">
-                            <div class="w-100">
-                                <div class="text-xs text-muted">
-                                    <i class="far fa-clock me-1"
-                                        style="vertical-align: middle;margin-top: -2.5px;font-size: 10px;"></i>
-                                    {{ status.DateHum }}
-                                </div>
-                                <div>
-                                    {{ status.message }}
-                                </div>
-                                <div class="text-sm" style="margin-left: -6px">
-                                    <button class="btn-like active squish">
-                                        <i class="far fa-heart"></i>1
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="dropdown ms-auto position-relative">
-                                <button class="btn-circle" style="margin-right: -10px">
-                                    <i class="fad fa-ellipsis-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li class="dropdown-item">
-                                        <a href="#" class="dropdown-link dropdown-link-has-icon">
-                                            <i class="fad fa-flag dropdown-icon"></i> Report
-                                        </a>
-                                    </li>
-                                    <div class="align-middle flex-container">
-                                        <div class="dropdown-title">Moderation</div>
-                                        <li class="divider flex-child-grow"></li>
-                                    </div>
-                                    <li class="dropdown-item">
-                                        <a href="#" class="dropdown-link dropdown-link-has-icon text-danger">
-                                            <i class="fad fa-trash text-danger dropdown-icon"></i>
-                                            Delete
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="my-2 align-middle flex-container">
-                            <div class="text-xs fw-bold text-muted text-uppercase">
-                                Comments
-                            </div>
-                            <div class="divider flex-child-grow"></div>
-                        </div>
-                        <div class="gap-2 mb-2 flex-container">
-                            <input type="text" class="form form-sm form-has-section-color"
-                                placeholder="What are your thoughts on this post?" />
-                            <input type="button" class="btn btn-success btn-sm" value="Post" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
-            <div class="flex-container align-justify align-middle mb-1">
                 <div class="text-xl fw-semibold">Spaces</div>
                 <div class="mt-2 align-middle flex-container align-center">
                     <Link as="button" href="#"
@@ -621,6 +534,93 @@ watch(following, (newValue, oldValue) => {
                 <Pagination v-if="usePage<any>().props.user.following?.['data']?.['length']"
                     v-bind:pagedata="usePage<any>().props.user.following">
                 </Pagination>
+                            <div class="flex-container align-justify align-middle mb-1">
+                <div class="text-xl fw-semibold">Comments</div>
+            </div>
+            <div class="mb-3 card card-body">
+                <div v-if="!statuses?.['data']?.['length']" class="section">
+                    <div class="gap-3 text-center flex-container flex-dir-column">
+                        <i class="text-5xl fad fa-face-sleeping text-muted"></i>
+                        <div style="line-height: 16px">
+                            <div class="text-xs fw-bold text-muted text-uppercase">
+                                No Posts
+                            </div>
+                            <div class="text-xs text-muted fw-semibold">
+                                {{ usePage<any>().props.user.username }} has not posted anything to their
+                                    feed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else v-for="status in statuses?.['data']"
+                    class="gap-3 section flex-container flex-dir-column-sm">
+                    <div class="mx-auto flex-child-grow" style="width: 100px">
+                        <a href="#" class="text-sm text-center d-block squish">
+                            <img :src="usePage<any>().props.user.headshot" class="mb-1 headshot" width="60" />
+                            <div style="line-height: 16px">
+                                <div class="text-membership text-truncate">
+                                    {{ status.dname }}
+                                </div>
+                                <div class="text-xs text-muted text-truncate">{{ '@' + status.name }}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="card card-body card-inner w-100">
+                        <div class="align-middle flex-container align-justify">
+                            <div class="w-100">
+                                <div class="text-xs text-muted">
+                                    <i class="far fa-clock me-1"
+                                        style="vertical-align: middle;margin-top: -2.5px;font-size: 10px;"></i>
+                                    {{ status.DateHum }}
+                                </div>
+                                <div>
+                                    {{ status.message }}
+                                </div>
+                                <div class="text-sm" style="margin-left: -6px">
+                                    <button class="btn-like active squish">
+                                        <i class="far fa-heart"></i>1
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="dropdown ms-auto position-relative">
+                                <button class="btn-circle" style="margin-right: -10px">
+                                    <i class="fad fa-ellipsis-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li class="dropdown-item">
+                                        <a href="#" class="dropdown-link dropdown-link-has-icon">
+                                            <i class="fad fa-flag dropdown-icon"></i> Report
+                                        </a>
+                                    </li>
+                                    <div class="align-middle flex-container">
+                                        <div class="dropdown-title">Moderation</div>
+                                        <li class="divider flex-child-grow"></li>
+                                    </div>
+                                    <li class="dropdown-item">
+                                        <a href="#" class="dropdown-link dropdown-link-has-icon text-danger">
+                                            <i class="fad fa-trash text-danger dropdown-icon"></i>
+                                            Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="my-2 align-middle flex-container">
+                            <div class="text-xs fw-bold text-muted text-uppercase">
+                                Comments
+                            </div>
+                            <div class="divider flex-child-grow"></div>
+                        </div>
+                        <div class="gap-2 mb-2 flex-container">
+                            <input type="text" class="form form-sm form-has-section-color"
+                                placeholder="What are your thoughts on this post?" />
+                            <input type="button" class="btn btn-success btn-sm" value="Post" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
             </div>
         </div>
     </Sidebar>

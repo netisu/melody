@@ -140,10 +140,8 @@ onMounted(() => {
                 <div class="text-sm text-danger fw-semibold" v-else-if="Feed.error">
                     {{ Feed.error }}
                 </div>
-                <div v-else class="grid-x grid-margin-x grid-padding-y">
-                    <NewsCard v-for="Bpost in Feed" :key="Bpost.link" :link="Bpost.link" :creator="Bpost.creator"
-                        :image="Bpost.image" :title="Bpost.title" :desc="Bpost.desc" :date="Bpost.date" />
-                </div>
+                <NewsCard v-else v-for="Bpost in Feed" :key="Bpost.link" :link="Bpost.link" :creator="Bpost.creator"
+                    :image="Bpost.image" :title="Bpost.title" :desc="Bpost.desc" :date="Bpost.date" />
             </div>
         </div>
         <div class="cell medium-9">

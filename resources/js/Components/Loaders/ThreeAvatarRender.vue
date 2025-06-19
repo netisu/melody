@@ -114,14 +114,24 @@ async function generateTresjsObjects() {
 
     try {
         // Load all base models
+        const [craniumModel, chesticleModel, armRightModel, armLeftModel, legLeftModel, legRightModel, teeModel] = await Promise.all([
+            loadOBJModel(`${ASSETS_PATH}cranium.obj`),
+            loadOBJModel(`${ASSETS_PATH}chesticle.obj`),
+            loadOBJModel(`${ASSETS_PATH}arm_right.obj`),
+            loadOBJModel(`${ASSETS_PATH}arm_left.obj`),
+            loadOBJModel(`${ASSETS_PATH}leg_left.obj`),
+            loadOBJModel(`${ASSETS_PATH}leg_right.obj`),
+            loadOBJModel(`${ASSETS_PATH}tee.obj`),
+        ]);
+
         const models: { [key: string]: THREE.Mesh } = {
-            cranium: await loadOBJModel(`${ASSETS_PATH}cranium.obj`),
-            chesticle: await loadOBJModel(`${ASSETS_PATH}chesticle.obj`),
-            armRight: await loadOBJModel(`${ASSETS_PATH}arm_right.obj`),
-            armLeft: await loadOBJModel(`${ASSETS_PATH}arm_left.obj`),
-            legLeft: await loadOBJModel(`${ASSETS_PATH}leg_left.obj`),
-            legRight: await loadOBJModel(`${ASSETS_PATH}leg_right.obj`),
-            tee: await loadOBJModel(`${ASSETS_PATH}tee.obj`),
+            cranium: craniumModel,
+            chesticle: chesticleModel,
+            armRight: armRightModel,
+            armLeft: armLeftModel,
+            legLeft: legLeftModel,
+            legRight: legRightModel,
+            tee: teeModel,
         };
 
         // Clear existing meshes from the reactive object
@@ -134,19 +144,19 @@ async function generateTresjsObjects() {
 
         // Process base parts
         const parts = [
-            { name: 'chesticle', model: models?.['chesticle'], color: config.colors.torso },
-            { name: 'armRight', model: models?.['armRight'], color: config.colors.right_arm },
-            { name: 'armLeft', model: models?.['armLeft'], color: config.colors.left_arm },
-            { name: 'legLeft', model: models?.['legLeft'], color: config.colors.left_leg },
-            { name: 'legRight', model: models?.['legRight'], color: config.colors.right_leg },
-            { name: 'cranium', model: models?.['cranium'], color: config.colors.head },
+            { name: 'chesticle', model: models['chesticle'], color: config.colors.torso },
+            { name: 'armRight', model: models['armRight'], color: config.colors.right_arm },
+            { name: 'armLeft', model: models['armLeft'], color: config.colors.left_arm },
+            { name: 'legLeft', model: models['legLeft'], color: config.colors.left_leg },
+            { name: 'legRight', model: models['legRight'], color: config.colors.right_leg },
+            { name: 'cranium', model: models['cranium'], color: config.colors.head },
         ];
 
-        parts.forEach(part => {
-            if (part.model) {
+        for (const part of parts) {
+            if (part.model && part.model.geometry) {
                 const material = new THREE.MeshPhongMaterial({ color: new THREE.Color(`#${part.color}`) });
                 const mesh = new THREE.Mesh(part.model.geometry, material);
-                mesh.name = part.name; // Set name for easy retrieval from tempAvatarGroup
+                mesh.name = part.name;
                 avatarMeshes[part.name] = {
                     geometry: mesh.geometry,
                     material: mesh.material,
@@ -154,14 +164,16 @@ async function generateTresjsObjects() {
                     rotation: mesh.rotation.toArray().slice(0, 3) as [number, number, number],
                 };
                 tempAvatarGroup.add(mesh);
+            } else if (part.model === null) {
+                console.warn(`Model for ${part.name} could not be loaded.`);
             }
-        });
+        }
 
         // --- Apply Textures & Accessories ---
-        const updateMeshAndGroup = async (meshName: string, modelMesh: THREE.Mesh | undefined, textureItem: string | null, defaultColor: string) => {
-            if (!modelMesh) return;
+        const updateMeshAndGroup = async (meshName: string, modelMesh: THREE.Mesh | undefined, textureItem: string | null | undefined, defaultColor: string) => {
+            if (!modelMesh || !modelMesh.geometry) return;
 
-            if (textureItem !== null || textureItem !== "none") {
+            if (textureItem) {
                 try {
                     const texture = await loadTexture(`${UPLOADS_PATH}${textureItem}.png`);
                     if (texture) {
@@ -193,22 +205,24 @@ async function generateTresjsObjects() {
             }
         };
 
-        // Use await for these texture loads to ensure they are done before bounding box calculation
-        await updateMeshAndGroup('chesticle', models?.['chesticle'], config.shirt?.item, config.colors.torso);
-        await updateMeshAndGroup('armRight', models?.['armRight'], config.shirt?.item, config.colors.right_arm);
-        await updateMeshAndGroup('armLeft', models?.['armLeft'], config.shirt?.item, config.colors.left_arm);
-        await updateMeshAndGroup('legLeft', models?.['legLeft'], config.pants?.item, config.colors.left_leg);
-        await updateMeshAndGroup('legRight', models?.['legRight'], config.pants?.item, config.colors.right_leg);
+        // Updated: We now await all texture/material updates before calculating bounding box
+        await Promise.all([
+            updateMeshAndGroup('chesticle', models['chesticle'], config.shirt?.item, config.colors.torso),
+            updateMeshAndGroup('armRight', models['armRight'], config.shirt?.item, config.colors.right_arm),
+            updateMeshAndGroup('armLeft', models['armLeft'], config.shirt?.item, config.colors.left_arm),
+            updateMeshAndGroup('legLeft', models['legLeft'], config.pants?.item, config.colors.left_leg),
+            updateMeshAndGroup('legRight', models['legRight'], config.pants?.item, config.colors.right_leg),
+        ]);
 
         // T-shirt handling
-        if (config.tshirt?.item !== null && config.tshirt?.item !== "none") {
+        if (config.tshirt && config.tshirt?.item !== "none" && models['tee'] && models['tee'].geometry) {
             try {
                 const tshirtTexture = await loadTexture(`${UPLOADS_PATH}${config.tshirt.item}.png`);
-                if (tshirtTexture && models.tee) {
+                if (tshirtTexture && models['tee']) {
                     const material = new THREE.MeshPhongMaterial({ map: tshirtTexture, transparent: true, alphaTest: 0.5 });
-                    const mesh = new THREE.Mesh(models?.['tee'].geometry, material);
+                    const mesh = new THREE.Mesh(models['tee'].geometry, material);
                     mesh.name = 'tee';
-                    avatarMeshes.tee = {
+                    avatarMeshes['tee'] = {
                         geometry: mesh.geometry,
                         material: mesh.material,
                         position: mesh.position.toArray() as [number, number, number],
@@ -218,20 +232,20 @@ async function generateTresjsObjects() {
                 }
             } catch (error) {
                 console.error(`Failed to load t-shirt texture:`, error);
-                if (avatarMeshes.tee) delete avatarMeshes.tee; // Remove if loading fails
+                if (avatarMeshes['tee']) delete avatarMeshes['tee']; // Remove if loading fails
             }
         } else {
-            if (avatarMeshes.tee) delete avatarMeshes.tee;
+            if (avatarMeshes['tee']) delete avatarMeshes['tee'];
         }
 
         // Face handling (with "default" check)
-        if (config.face !== null && config.face?.item !== null) {
+        if (config.face && config.face?.item !== "none" && models['cranium'] && models['cranium'].geometry) {
             try {
                 const faceTexture = await loadTexture(`${UPLOADS_PATH}${config.face?.item}.png`);
                 if (faceTexture) {
                     const material = new THREE.MeshPhongMaterial({ map: faceTexture, color: new THREE.Color(`#${config.colors.head}`), transparent: true, alphaTest: 0.5 });
-                    if (avatarMeshes?.['cranium']) {
-                        avatarMeshes.cranium.material = material;
+                    if (avatarMeshes['cranium']) {
+                        avatarMeshes['cranium'].material = material;
                         const tempMesh = tempAvatarGroup.getObjectByName('cranium');
                         if (tempMesh instanceof THREE.Mesh) tempMesh.material = material;
                     }
@@ -240,8 +254,8 @@ async function generateTresjsObjects() {
                     const DefaultfaceTexture = await loadTexture(`${ASSETS_PATH}default.png`);
                     if (DefaultfaceTexture) {
                         const material = new THREE.MeshPhongMaterial({ map: DefaultfaceTexture, color: new THREE.Color(`#${config.colors.head}`), transparent: true, alphaTest: 0.5 });
-                        if (avatarMeshes.cranium) {
-                            avatarMeshes.cranium.material = material;
+                        if (avatarMeshes['cranium']) {
+                            avatarMeshes['cranium'].material = material;
                             const tempMesh = tempAvatarGroup.getObjectByName('cranium');
                             if (tempMesh instanceof THREE.Mesh) tempMesh.material = material;
                         }
@@ -253,8 +267,8 @@ async function generateTresjsObjects() {
                 const DefaultfaceTexture = await loadTexture(`${ASSETS_PATH}default.png`);
                 if (DefaultfaceTexture) {
                     const material = new THREE.MeshPhongMaterial({ map: DefaultfaceTexture, color: new THREE.Color(`#${config.colors.head}`), transparent: true, alphaTest: 0.5 });
-                    if (avatarMeshes.cranium) {
-                        avatarMeshes.cranium.material = material;
+                    if (avatarMeshes['cranium']) {
+                        avatarMeshes['cranium'].material = material;
                         const tempMesh = tempAvatarGroup.getObjectByName('cranium');
                         if (tempMesh instanceof THREE.Mesh) tempMesh.material = material;
                     }
@@ -265,8 +279,8 @@ async function generateTresjsObjects() {
             const DefaultfaceTexture = await loadTexture(`${ASSETS_PATH}default.png`);
             if (DefaultfaceTexture) {
                 const material = new THREE.MeshPhongMaterial({ map: DefaultfaceTexture, color: new THREE.Color(`#${config.colors.head}`), transparent: true, alphaTest: 0.5 });
-                if (avatarMeshes.cranium) {
-                    avatarMeshes.cranium.material = material;
+                if (avatarMeshes['cranium']) {
+                    avatarMeshes['cranium'].material = material;
                     const tempMesh = tempAvatarGroup.getObjectByName('cranium');
                     if (tempMesh instanceof THREE.Mesh) tempMesh.material = material;
                 }
@@ -275,7 +289,6 @@ async function generateTresjsObjects() {
 
 
         // Hats and Addons
-        /*
         for (const hatItem of props.avatarConfig.hats || []) {
             if (hatItem?.item !== null && hatItem?.item !== "none") {
                 try {
@@ -324,7 +337,6 @@ async function generateTresjsObjects() {
                 }
             }
         }
-*/
         if (config.addon !== null && config.addon?.item !== null) { // Access directly from config.addon
             // For actual OBJ addons, loadOBJModel here and add to tempAvatarGroup
             const addonGeom = new THREE.SphereGeometry(0.5, 16, 16);
@@ -332,7 +344,7 @@ async function generateTresjsObjects() {
             const addonMesh = new THREE.Mesh(addonGeom, addonMat);
             addonMesh.name = 'addon';
             addonMesh.position.set(0, 7.5, -1);
-            avatarMeshes.addon = {
+            avatarMeshes['addon'] = {
                 geometry: addonMesh.geometry,
                 material: addonMesh.material,
                 position: addonMesh.position.toArray() as [number, number, number]
@@ -340,7 +352,11 @@ async function generateTresjsObjects() {
             tempAvatarGroup.add(addonMesh);
             console.warn(`Addon item '${config.addon?.item}' is a placeholder. Implement actual OBJ loading for addons.`);
         } else {
-            if (avatarMeshes.addon) delete avatarMeshes.addon;
+            if (avatarMeshes['addon']) delete avatarMeshes['addon'];
+        }
+
+        if (tempAvatarGroup.children.length === 0) {
+            throw new Error('No avatar parts loaded for bounding box calculation');
         }
 
         // --- Dynamic Camera Adjustment based on Bounding Box ---
@@ -502,17 +518,10 @@ watch(() => props.avatarConfig, (newConfig) => {
     justify-content: center;
     align-items: center;
     font-family: "Inter", sans-serif;
-    /* Add these styles to your canvas in your main CSS file/component, NOT here directly */
-    /* This ensures the outer container sizes correctly */
-    max-width: 100%;
     height: 261.5px !important;
-    /* The !important is from your example. Consider if it's strictly needed. */
     display: inline-block;
-    /* from your example */
     vertical-align: middle;
-    /* from your example */
     -ms-interpolation-mode: bicubic;
-    /* from your example, for image scaling, not directly for 3D */
 }
 
 #viewer-container {
@@ -522,8 +531,6 @@ watch(() => props.avatarConfig, (newConfig) => {
     justify-content: center;
     align-items: center;
     background-color: transparent;
-    /* Dark background */
     position: relative;
-    /* Needed for loading overlay */
 }
 </style>

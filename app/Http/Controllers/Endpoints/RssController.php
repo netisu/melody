@@ -26,8 +26,8 @@ class RssController extends Controller
             $rgx = '~src="([^"]*)"~is';
 
             foreach ($obj->channel->item as $item) {
-                $node['title'] = (string) $item->title;
-                $node['desc'] = (string) $item->description;
+                $node['title'] = (string) strip_tags($item->title);
+                $node['desc'] = (string) strip_tags($item->description);
                 $node['link'] = (string) $item->link;
                 $timestamp = strtotime($item->pubDate);
                 $formattedDate = date("d M, Y", $timestamp);
@@ -43,8 +43,7 @@ class RssController extends Controller
 
                 // Append the $node to the $feed array
                 $feed[] = $node;
-                if(++$i > 2) break;
-
+                if (++$i > 2) break;
             }
 
             return response()->json($feed);

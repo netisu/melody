@@ -11,7 +11,6 @@ import { VitePWA } from "vite-plugin-pwa";
 import { templateCompilerOptions } from "@tresjs/core"; // Keep for TresJS
 import path from "path";
 import basicSsl from "@vitejs/plugin-basic-ssl"; // Keep for HTTPS dev
-import viteImagemin from "vite-plugin-imagemin";
 import { compression, defineAlgorithm } from "vite-plugin-compression2";
 import vueDevTools from "vite-plugin-vue-devtools"; // Dev only, disable in production
 
