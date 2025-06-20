@@ -13,24 +13,60 @@ import ThreeAvatarRender from '@/Components/Loaders/ThreeAvatarRender.vue';
 import ItemCardSkeleton from '@/Components/ItemCardSkeleton.vue';
 import DummyAvatar from "@/Images/dummy.png";
 
-interface AvatarProps {
-    thumbnail: string;
-    colors: {
-        // This is the entire colors object as passed
-        head: string;
-        torso: string;
-        left_arm: string;
-        right_arm: string;
-        left_leg: string;
-        right_leg: string;
+interface AvatarApiResponse {
+    RenderType: string;
+    Hash: string;
+    RenderJson: RenderJson;
+}
+
+interface ItemRenderData {
+    item: string; // The hash of the item, or "none"
+    edit_style: {
+        hash: string;
+        is_model: boolean;
+        is_texture: boolean;
+    } | null;
+}
+
+interface RenderJson {
+    items: {
+        face: ItemRenderData;
+        hats: ItemRenderData[]; // Array of up to 6 hats
+        addon: ItemRenderData;
+        tool: ItemRenderData;
+        head: ItemRenderData;
+        pants: ItemRenderData;
+        shirt: ItemRenderData;
+        tshirt: ItemRenderData;
     };
-    current_face_url: string; // The URL for the current face
+    colors: {
+        Head: string; // Hex color without the #
+        Torso: string;
+        LeftLeg: string;
+        RightLeg: string;
+        LeftArm: string;
+        RightArm: string;
+    };
 }
 
 const showUserName = ref(false);
+const isLoading = ref(true)
+const AvatarProps = ref<AvatarApiResponse | null>(null);
 
 let following = ref(usePage<any>().props.is_following); // Initial follow status
-const AvatarProps = usePage<any>().props.user.avatar as AvatarProps;
+
+async function getAvatar() {
+    try {
+        const response = await axios.get(
+            route(`api.user.json-avatar`, { id: usePage<any>().props.user.id })
+        );
+        AvatarProps.value = response.data;
+        console.log(response.data);
+        isLoading.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 const toggleFollow = (id) => {
     if (following.value) {
@@ -123,7 +159,8 @@ const unfollowUser = (id) => {
 };
 
 onMounted(() => {
-    fetchItems(),
+    getAvatar(),
+        fetchItems(),
         fetchCurrentlyWearing()
 });
 
@@ -180,69 +217,77 @@ watch(following, (newValue, oldValue) => {
                         'inset 0 0 0 100vw rgba(var(--section-bg-rgb), 0.5)!important',
                 }
                 : null">
-                    <ThreeAvatarRender :avatar-config="usePage<any>().props.user.avatar" />
-                <div class="mt-2 text-sm text-center align-center text-info fw-semibold">
-                    <div :class="usePage<any>().props.user.staff ? 'text-danger' : 'text-success'">
-                        {{ usePage<any>().props.user.staff ? usePage<any>().props.user.position : 'Netizen' }}
+                <div class="full-screen-container">
+                    <div id="viewer-container">
+                    <div class="gap-3 text-center flex-container flex-dir-column"
+                        v-if="AvatarProps === null && isLoading">
+                        <i class="text-6xl fas fa-spin fa-spinner text-muted"></i>
                     </div>
-                </div>
-                <div class="mt-2 text-center">
-                    <div class="gap-3 text-sm flex-container align-center">
-                        <div class="min-w-0 px-0 text-center fw-semibold text-muted text-truncate">
-                            <span class="text-body">{{ usePage<any>().props.user.following_count }}</span>
-                            Following
-                        </div>
-                        <div class="min-w-0 px-0 text-center fw-semibold text-muted text-truncate">
-                            <span class="text-body">{{ followercount }}</span>
-                            Followers
-                        </div>
-                    </div>
-                    <div v-if="usePage<any>().props.user.followsYou" class="text-sm text-info fw-semibold">
-                        Follows you
-                    </div>
+                    <ThreeAvatarRender v-if="AvatarProps" :avatar-config="AvatarProps.RenderJson" />
                 </div>
             </div>
-            <Link v-if="usePage<any>().props.user.settings.secondarySpace"
-                :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.secondarySpace.id, slug: usePage<any>().props.user.settings.secondarySpace.slug })"
-                class="gap-2 p-2 mt-1 mb-2 align-middle card card-inner flex-container">
-            <img :src="usePage<any>().props.user.settings.secondarySpace.thumbnail" class="headshot" width="40" />
-            <div class="min-w-0" style="line-height: 14px">
-                <div class="text-xs text-truncate fw-bold text-muted text-uppercase">
-                    Secondary Space
-                </div>
-                <div class="text-sm text-truncate fw-semibold text-body">
-                    {{ usePage<any>().props.user.settings.secondarySpace.name }}
+            <div class="mt-2 text-sm text-center align-center text-info fw-semibold">
+                <div :class="usePage<any>().props.user.staff ? 'text-danger' : 'text-success'">
+                    {{ usePage<any>().props.user.staff ? usePage<any>().props.user.position : 'Netizen' }}
                 </div>
             </div>
-            </Link>
-            <div class="mb-1 text-xl fw-semibold">About Me</div>
-            <div class="card card-body card-top-heavy">
-                {{ usePage<any>().props.user.about_me }}
-            </div>
-            <div class="mb-3 card card-bottom-heavy padding-sm card-body">
-                <div class="gap-1 align-middle flex-container flex-dir-column">
-                    <div class="text-sm text-membership fw-semibold w-100">
-                        <i class="text-center fad fa-rocket-launch text-membership" style="width: 26px"></i>
-                        Premium Subscriber
+            <div class="mt-2 text-center">
+                <div class="gap-3 text-sm flex-container align-center">
+                    <div class="min-w-0 px-0 text-center fw-semibold text-muted text-truncate">
+                        <span class="text-body">{{ usePage<any>().props.user.following_count }}</span>
+                        Following
                     </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-medal text-muted" style="width: 26px"></i>
-                        {{ "Rank Lvl. " + usePage<any>().props.user.level }}
-                    </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-users-medical text-muted" style="width: 26px"></i>
-                        Joined on {{ usePage<any>().props.user.joindate }}
-                    </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-clock text-muted" style="width: 26px"></i>
-                        Last seen {{ usePage<any>().props.user.DateHum }}
-                    </div>
-                    <div class="text-sm w-100">
-                        <i class="text-center fad fa-messages text-muted" style="width: 26px"></i>
-                        {{ usePage<any>().props.user.posts }} Discussion Posts
+                    <div class="min-w-0 px-0 text-center fw-semibold text-muted text-truncate">
+                        <span class="text-body">{{ followercount }}</span>
+                        Followers
                     </div>
                 </div>
+                <div v-if="usePage<any>().props.user.followsYou" class="text-sm text-info fw-semibold">
+                    Follows you
+                </div>
             </div>
+        </div>
+        <Link v-if="usePage<any>().props.user.settings.secondarySpace"
+            :href="route(`spaces.view`, { id: usePage<any>().props.user.settings.secondarySpace.id, slug: usePage<any>().props.user.settings.secondarySpace.slug })"
+            class="gap-2 p-2 mt-1 mb-2 align-middle card card-inner flex-container">
+        <img :src="usePage<any>().props.user.settings.secondarySpace.thumbnail" class="headshot" width="40" />
+        <div class="min-w-0" style="line-height: 14px">
+            <div class="text-xs text-truncate fw-bold text-muted text-uppercase">
+                Secondary Space
+            </div>
+            <div class="text-sm text-truncate fw-semibold text-body">
+                {{ usePage<any>().props.user.settings.secondarySpace.name }}
+            </div>
+        </div>
+        </Link>
+        <div class="mb-1 text-xl fw-semibold">About Me</div>
+        <div class="card card-body card-top-heavy">
+            {{ usePage<any>().props.user.about_me }}
+        </div>
+        <div class="mb-3 card card-bottom-heavy padding-sm card-body">
+            <div class="gap-1 align-middle flex-container flex-dir-column">
+                <div class="text-sm text-membership fw-semibold w-100">
+                    <i class="text-center fad fa-rocket-launch text-membership" style="width: 26px"></i>
+                    Premium Subscriber
+                </div>
+                <div class="text-sm w-100">
+                    <i class="text-center fad fa-medal text-muted" style="width: 26px"></i>
+                    {{ "Rank Lvl. " + usePage<any>().props.user.level }}
+                </div>
+                <div class="text-sm w-100">
+                    <i class="text-center fad fa-users-medical text-muted" style="width: 26px"></i>
+                    Joined on {{ usePage<any>().props.user.joindate }}
+                </div>
+                <div class="text-sm w-100">
+                    <i class="text-center fad fa-clock text-muted" style="width: 26px"></i>
+                    Last seen {{ usePage<any>().props.user.DateHum }}
+                </div>
+                <div class="text-sm w-100">
+                    <i class="text-center fad fa-messages text-muted" style="width: 26px"></i>
+                    {{ usePage<any>().props.user.posts }} Discussion Posts
+                </div>
+            </div>
+        </div>
         </div>
         <div class="cell medium-9">
             <div class="flex-container align-justify align-middle mb-1">
@@ -251,33 +296,37 @@ watch(following, (newValue, oldValue) => {
             <div class="card card-body mb-3">
                 <div class="grid-x">
                     <div class="cell medium-3 avatar-display-container">
-                        <div class="avatar-wrapper">
+                        <div class="gap-3 text-center flex-container flex-dir-column"
+                            v-if="AvatarProps === null && isLoading">
+                            <i class="text-8xl fas fa-spin fa-spinner text-muted"></i>
+                        </div>
+                        <div class="avatar-wrapper" v-else>
                             <div class="avatar-head-wrapper">
                                 <button class="avatar-body-part" id="head" v-tippy
-                                    :content="'#' + AvatarProps.colors.head"
-                                    :style="{ backgroundColor: '#' + AvatarProps.colors.head }">
-                                    <VLazyImage :src="AvatarProps.current_face_url" :src-placeholder="DummyAvatar"
+                                    :content="'#' + AvatarProps.RenderJson.colors.Head"
+                                    :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.Head }">
+                                    <VLazyImage :src="AvatarProps.RenderJson.items.face" :src-placeholder="DummyAvatar"
                                         width="50" height="50" />
                                 </button>
                             </div>
                             <div class="avatar-torso-arms-wrapper">
                                 <button class="avatar-body-part" id="left_arm" v-tippy
-                                    :content="'#' + AvatarProps.colors.left_arm"
-                                    :style="{ backgroundColor: '#' + AvatarProps.colors.left_arm }"></button>
+                                    :content="'#' + AvatarProps.RenderJson.colors.LeftArm"
+                                    :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.LeftArm }"></button>
                                 <button class="avatar-body-part" id="torso" v-tippy
-                                    :content="'#' + AvatarProps.colors.torso"
-                                    :style="{ backgroundColor: '#' + AvatarProps.colors.torso }"></button>
+                                    :content="'#' + AvatarProps.RenderJson.colors.Torso"
+                                    :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.Torso }"></button>
                                 <button class="avatar-body-part" id="right_arm" v-tippy
-                                    :content="'#' + AvatarProps.colors.right_arm"
-                                    :style="{ backgroundColor: '#' + AvatarProps.colors.right_arm }"></button>
+                                    :content="'#' + AvatarProps.RenderJson.colors.RightArm"
+                                    :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.RightArm }"></button>
                             </div>
                             <div class="avatar-legs-wrapper">
                                 <button class="avatar-body-part" id="left_leg" v-tippy
-                                    :content="'#' + AvatarProps.colors.left_leg"
-                                    :style="{ backgroundColor: '#' + AvatarProps.colors.left_leg }"></button>
+                                    :content="'#' + AvatarProps.RenderJson.colors.LeftLeg"
+                                    :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.LeftLeg }"></button>
                                 <button class="avatar-body-part" id="right_leg" v-tippy
-                                    :content="'#' + AvatarProps.colors.right_leg"
-                                    :style="{ backgroundColor: '#' + AvatarProps.colors.right_leg }"></button>
+                                    :content="'#' + AvatarProps.RenderJson.colors.RightLeg"
+                                    :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.RightLeg }"></button>
                             </div>
                         </div>
                     </div>
@@ -403,8 +452,7 @@ watch(following, (newValue, oldValue) => {
             <div class="flex-container align-justify align-middle mb-1">
                 <div class="text-xl fw-semibold">Spaces</div>
                 <div class="mt-2 align-middle flex-container align-center">
-                    <Link as="button" href="#"
-                        class="btn btn-secondary btn-sm">View All</Link>
+                    <Link as="button" href="#" class="btn btn-secondary btn-sm">View All</Link>
                 </div>
             </div>
             <div class="mb-3 card card-body">
@@ -534,93 +582,93 @@ watch(following, (newValue, oldValue) => {
                 <Pagination v-if="usePage<any>().props.user.following?.['data']?.['length']"
                     v-bind:pagedata="usePage<any>().props.user.following">
                 </Pagination>
-                            <div class="flex-container align-justify align-middle mb-1">
-                <div class="text-xl fw-semibold">Comments</div>
-            </div>
-            <div class="mb-3 card card-body">
-                <div v-if="!statuses?.['data']?.['length']" class="section">
-                    <div class="gap-3 text-center flex-container flex-dir-column">
-                        <i class="text-5xl fad fa-face-sleeping text-muted"></i>
-                        <div style="line-height: 16px">
-                            <div class="text-xs fw-bold text-muted text-uppercase">
-                                No Posts
-                            </div>
-                            <div class="text-xs text-muted fw-semibold">
-                                {{ usePage<any>().props.user.username }} has not posted anything to their
-                                    feed.
-                            </div>
-                        </div>
-                    </div>
+                <div class="flex-container align-justify align-middle mb-1">
+                    <div class="text-xl fw-semibold">Comments</div>
                 </div>
-                <div v-else v-for="status in statuses?.['data']"
-                    class="gap-3 section flex-container flex-dir-column-sm">
-                    <div class="mx-auto flex-child-grow" style="width: 100px">
-                        <a href="#" class="text-sm text-center d-block squish">
-                            <img :src="usePage<any>().props.user.headshot" class="mb-1 headshot" width="60" />
+                <div class="mb-3 card card-body">
+                    <div v-if="!statuses?.['data']?.['length']" class="section">
+                        <div class="gap-3 text-center flex-container flex-dir-column">
+                            <i class="text-5xl fad fa-face-sleeping text-muted"></i>
                             <div style="line-height: 16px">
-                                <div class="text-membership text-truncate">
-                                    {{ status.dname }}
+                                <div class="text-xs fw-bold text-muted text-uppercase">
+                                    No Posts
                                 </div>
-                                <div class="text-xs text-muted text-truncate">{{ '@' + status.name }}
+                                <div class="text-xs text-muted fw-semibold">
+                                    {{ usePage<any>().props.user.username }} has not posted anything to their
+                                        feed.
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     </div>
-                    <div class="card card-body card-inner w-100">
-                        <div class="align-middle flex-container align-justify">
-                            <div class="w-100">
-                                <div class="text-xs text-muted">
-                                    <i class="far fa-clock me-1"
-                                        style="vertical-align: middle;margin-top: -2.5px;font-size: 10px;"></i>
-                                    {{ status.DateHum }}
-                                </div>
-                                <div>
-                                    {{ status.message }}
-                                </div>
-                                <div class="text-sm" style="margin-left: -6px">
-                                    <button class="btn-like active squish">
-                                        <i class="far fa-heart"></i>1
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="dropdown ms-auto position-relative">
-                                <button class="btn-circle" style="margin-right: -10px">
-                                    <i class="fad fa-ellipsis-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li class="dropdown-item">
-                                        <a href="#" class="dropdown-link dropdown-link-has-icon">
-                                            <i class="fad fa-flag dropdown-icon"></i> Report
-                                        </a>
-                                    </li>
-                                    <div class="align-middle flex-container">
-                                        <div class="dropdown-title">Moderation</div>
-                                        <li class="divider flex-child-grow"></li>
+                    <div v-else v-for="status in statuses?.['data']"
+                        class="gap-3 section flex-container flex-dir-column-sm">
+                        <div class="mx-auto flex-child-grow" style="width: 100px">
+                            <a href="#" class="text-sm text-center d-block squish">
+                                <img :src="usePage<any>().props.user.headshot" class="mb-1 headshot" width="60" />
+                                <div style="line-height: 16px">
+                                    <div class="text-membership text-truncate">
+                                        {{ status.dname }}
                                     </div>
-                                    <li class="dropdown-item">
-                                        <a href="#" class="dropdown-link dropdown-link-has-icon text-danger">
-                                            <i class="fad fa-trash text-danger dropdown-icon"></i>
-                                            Delete
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                                    <div class="text-xs text-muted text-truncate">{{ '@' + status.name }}
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                        <div class="my-2 align-middle flex-container">
-                            <div class="text-xs fw-bold text-muted text-uppercase">
-                                Comments
+                        <div class="card card-body card-inner w-100">
+                            <div class="align-middle flex-container align-justify">
+                                <div class="w-100">
+                                    <div class="text-xs text-muted">
+                                        <i class="far fa-clock me-1"
+                                            style="vertical-align: middle;margin-top: -2.5px;font-size: 10px;"></i>
+                                        {{ status.DateHum }}
+                                    </div>
+                                    <div>
+                                        {{ status.message }}
+                                    </div>
+                                    <div class="text-sm" style="margin-left: -6px">
+                                        <button class="btn-like active squish">
+                                            <i class="far fa-heart"></i>1
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="dropdown ms-auto position-relative">
+                                    <button class="btn-circle" style="margin-right: -10px">
+                                        <i class="fad fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li class="dropdown-item">
+                                            <a href="#" class="dropdown-link dropdown-link-has-icon">
+                                                <i class="fad fa-flag dropdown-icon"></i> Report
+                                            </a>
+                                        </li>
+                                        <div class="align-middle flex-container">
+                                            <div class="dropdown-title">Moderation</div>
+                                            <li class="divider flex-child-grow"></li>
+                                        </div>
+                                        <li class="dropdown-item">
+                                            <a href="#" class="dropdown-link dropdown-link-has-icon text-danger">
+                                                <i class="fad fa-trash text-danger dropdown-icon"></i>
+                                                Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="divider flex-child-grow"></div>
-                        </div>
-                        <div class="gap-2 mb-2 flex-container">
-                            <input type="text" class="form form-sm form-has-section-color"
-                                placeholder="What are your thoughts on this post?" />
-                            <input type="button" class="btn btn-success btn-sm" value="Post" />
+                            <div class="my-2 align-middle flex-container">
+                                <div class="text-xs fw-bold text-muted text-uppercase">
+                                    Comments
+                                </div>
+                                <div class="divider flex-child-grow"></div>
+                            </div>
+                            <div class="gap-2 mb-2 flex-container">
+                                <input type="text" class="form form-sm form-has-section-color"
+                                    placeholder="What are your thoughts on this post?" />
+                                <input type="button" class="btn btn-success btn-sm" value="Post" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
+                <Pagination v-if="statuses?.['data']?.['length']" v-bind:pagedata="statuses" />
             </div>
         </div>
     </Sidebar>

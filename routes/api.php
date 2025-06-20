@@ -64,7 +64,7 @@ Route::group(['as' => 'api.'], function () {
         Route::get('/online/{id}', [UserController::class, 'getStatus'])->name('online');
         Route::get('/inventory/{id}', [UserController::class, 'getUserItems'])->name('inventory');
         Route::get('/inventory/currently-wearing/{id}', [UserController::class, 'getUserCurrentlyWearing'])->name('currently-wearing');
-
+        Route::get('/avatar-json/{id}', [RenderController::class, 'userAvatar'])->name('json-avatar');
         Route::get('/status-list', [UserController::class, 'getUserStatus'])->name('status');
         Route::get('/user/img/{id}', [UserController::class, 'getAvatar'])->name('avatar');
         Route::get('/follow/{user}', [UserController::class, 'follow'])->name('follow');

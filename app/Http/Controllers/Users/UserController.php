@@ -175,7 +175,6 @@ class UserController extends Controller
                 'DateHum' => $user->DateHum,
                 'status' => $user->status,
                 'online' => $user->online(),
-                'avatar' => $user->avatar(),
                 'settings' => [
                     "verified" => $user->settings?->is_verified ?? false,
                     "beta_tester" => $user->settings?->beta_tester ?? false,

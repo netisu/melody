@@ -9,6 +9,7 @@ use App\Models\Item;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -42,6 +43,14 @@ class RenderController extends Controller
         // Return the rendered image as a response
         Log::info('Finished');
         return $this->getAvatarRenderHash($avatar->user_id);
+    }
+
+    public function userAvatar($id): string|false
+    {
+        $avatar = $this->getAvatarRecord($id);
+        Log::info('Retrieved avatar for userID: {id}', ['id' => $avatar->user_id]);
+
+        return $this->prepareRequestData('user', $avatar, $avatar->image);
     }
 
     public function ItemRender($id)
