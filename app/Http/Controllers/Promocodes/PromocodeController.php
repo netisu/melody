@@ -43,12 +43,10 @@ class PromocodeController extends Controller
 
         if ($promocode->type == 'item') {
             $user = User::where(['id' => $user->id])->first();
+            $item = Item::where(['id' => $promocode->reward])->first();
 
-            $inventory = new Inventory;
-
-            $inventory->create([
-                'user_id' => $user->id,
-                'item_id' => $promocode->reward,
+            $item->inventories()->create([
+                'user_id' => Auth::user()->id,
             ]);
         } elseif ($promocode->type == 'stars') {
             $newCurrencyValue = $user->stars + $promocode->reward;

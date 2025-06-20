@@ -150,9 +150,8 @@ class MarketController extends Controller
             'onsale' => true,
         ]);
 
-        $user = User::where('id',  Auth::id()) ->first();
         $item->inventories()->create([
-            'ownable_type' => Item::class,
+            'user_id' => Auth::user()->id,
         ]);
 
         ItemPreviewRenderer::dispatch($item->id, true, $itemHashName)->onQueue('render');

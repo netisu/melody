@@ -106,7 +106,6 @@ class ItemApiController extends Controller
                 ];
             })
         );
-        
     }
     public function reRenderItem($itemID)
     {
@@ -201,7 +200,7 @@ class ItemApiController extends Controller
             ['type', '=', 'crate']
         ])->first();
 
-        if (!$crate || !Auth::user()->ownsItem($crateId)) {
+        if (!$crate || !Auth::user()->ownsItem($crateId, Item::class)) {
             return null;
         }
 
@@ -290,7 +289,7 @@ class ItemApiController extends Controller
                     ],
                     500
                 );
-            } else if (Auth::user()->ownsItem($itemId)) {
+            } else if (Auth::user()->ownsItem($itemId, Item::class)) {
                 return response()->json(
                     [
                         "message" => "You already own the item.",
@@ -399,7 +398,7 @@ class ItemApiController extends Controller
 
             // Create inventory record
             $item->inventories()->create([
-                'user_id' => Auth::user()->id,
+                'user_id' => $myu->id,
             ]);
 
             // Create purchase record

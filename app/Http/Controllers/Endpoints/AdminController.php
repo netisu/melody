@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\{
     Item,
@@ -30,7 +31,7 @@ class AdminController extends Controller
     {
         $userId = Auth::check() ? Auth::user()->id() : null;
 
-        $this->admin = Admin::where( 'user_id', $userId)->first();
+        $this->admin = Admin::where('user_id', $userId)->first();
 
         $isProduction = app()->environment('production');
 
@@ -89,29 +90,30 @@ class AdminController extends Controller
         $this->site->site_maintenance = 1;
         $this->site->save();
     }
+
     public function approveBanner(Request $request, $userId)
-{
-    $user = User::findOrFail($userId);
-    $userSettings = $user->settings;
+    {
+        $user = User::findOrFail($userId);
+        $userSettings = $user->settings;
 
-    if ($userSettings->banner_status === 'pending' && $userSettings->pending_banner_path) {
-        // Determine the final storage path
-        $finalPath = 'public/banners/' . basename($userSettings->pending_banner_path);
+        if ($userSettings->banner_status === 'pending' && $userSettings->pending_banner_path) {
+            // Determine the final storage path
+            $finalPath = 'public/banners/' . basename($userSettings->pending_banner_path);
 
-        // Copy the temporary image to the final location
-        Storage::move($userSettings->pending_banner_path, $finalPath);
+            // Copy the temporary image to the final location
+            Storage::move($userSettings->pending_banner_path, $finalPath);
 
-        // Update the settings
-        $userSettings->profile_banner_url = str_replace('public/', 'storage/', $finalPath);
-        $userSettings->banner_status = 'approved';
-        $userSettings->pending_banner_path = null; // Clean up
-        $userSettings->save();
+            // Update the settings
+            $userSettings->profile_banner_url = str_replace('public/', 'storage/', $finalPath);
+            $userSettings->banner_status = 'approved';
+            $userSettings->pending_banner_path = null; // Clean up
+            $userSettings->save();
 
-        return response()->json(['message' => 'Banner approved successfully for user ' . $userId]);
+            return response()->json(['message' => 'Banner approved successfully for user ' . $userId]);
+        }
+
+        return response()->json(['error' => 'Invalid banner status or pending path not found.'], 400);
     }
-
-    return response()->json(['error' => 'Invalid banner status or pending path not found.'], 400);
-}
 
     public function giftItem(int $itemId, int $userId)
     {
@@ -138,9 +140,8 @@ class AdminController extends Controller
             ]);
         }
 
-        $user->inventory()->create([
-            'item_id' => $itemId,
-            'ownable_type' => Item::class,
+        $item->inventories()->create([
+            'user_id' => Auth::user()->id,
         ]);
 
         $user->notify(new GiftNotification(Auth::user(), $item));

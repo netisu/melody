@@ -470,7 +470,7 @@ async function generateTresjsObjects() {
                     );
                 }
             } catch (error) {
-                console.error(`Error loading addon item '${config.addon.item}':`, error);
+                console.error(`Error loading addon item '${config.items?.addon.item}':`, error);
             }
         } else {
             if (avatarMeshes["addon"]) delete avatarMeshes["addon"];

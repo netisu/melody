@@ -4,6 +4,7 @@ use App\Models\Item;
 use App\Models\CrateItem;
 use App\Models\SiteSettings;
 use Illuminate\Support\Facades\Cache;
+
 function translations($json)
 {
     if (!file_exists($json)) {
