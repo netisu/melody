@@ -379,11 +379,11 @@ async function generateTresjsObjects() {
                 try {
                     let loadedHatModel;
                     if (hatItem.edit_style.is_model) {
-                        loadedHatModel = await loadTexture(
+                        loadedHatModel = await loadOBJModel(
                             `${UPLOADS_PATH}${hatItem.edit_style.hash}.obj`
                         );
                     } else {
-                        loadedHatModel = await loadTexture(
+                        loadedHatModel = await loadOBJModel(
                             `${UPLOADS_PATH}${hatItem.item}.obj`
                         );
                     }
@@ -435,11 +435,11 @@ async function generateTresjsObjects() {
             try {
                 let loadedAddonModel;
                 if (config.items?.addon.edit_style.is_model) {
-                    loadedAddonModel = await loadTexture(
+                    loadedAddonModel = await loadOBJModel(
                         `${UPLOADS_PATH}${config.items?.addon.edit_style.hash}.obj`
                     );
                 } else {
-                    loadedAddonModel = await loadTexture(
+                    loadedAddonModel = await loadOBJModel(
                         `${UPLOADS_PATH}${config.items?.addon.item}.obj`
                     );
                 }
