@@ -26,7 +26,7 @@ const props = defineProps<{
             RightLeg: string;
         };
         items: {
-            shirt: ItemRenderData ;
+            shirt: ItemRenderData;
             pants: ItemRenderData;
             tshirt: ItemRenderData;
             face: ItemRenderData;
@@ -194,7 +194,7 @@ async function generateTresjsObjects() {
         // --- Apply Textures & Accessories ---
         const updateMeshMaterial = async (
             meshName: string,
-            textureItem: string | undefined | null,
+            textureItem: ItemRenderData,
             defaultColor: string
         ) => {
             const currentMeshRef = avatarMeshes[meshName];
@@ -203,9 +203,19 @@ async function generateTresjsObjects() {
             const meshInScene = loadedSceneMeshes.find((m) => m.name === meshName);
             if (!meshInScene) return; // Ensure the mesh is in the actual list for bounding box
 
-            if (textureItem) {
+            if (textureItem?.item && textureItem.item !== "none") {
                 try {
-                    const texture = await loadTexture(`${UPLOADS_PATH}${textureItem}.png`);
+                    let texture;
+                    if (textureItem.edit_style) {
+                        tshirtTexture = await loadTexture(
+                            `${UPLOADS_PATH}${textureItem.edit_style.hash}.png`
+                        );
+                    } else {
+                        tshirtTexture = await loadTexture(
+                            `${UPLOADS_PATH}${textureItem.item}.png`
+                        );
+                    }
+
                     if (texture) {
                         const material = new THREE.MeshPhongMaterial({
                             map: texture,
@@ -239,11 +249,11 @@ async function generateTresjsObjects() {
         };
 
         await Promise.all([
-            updateMeshMaterial("chesticle", config.items?.shirt?.item, config.colors.Torso),
-            updateMeshMaterial("armRight", config.items?.shirt?.item, config.colors.RightArm),
-            updateMeshMaterial("armLeft", config.items?.shirt?.item, config.colors.LeftArm),
-            updateMeshMaterial("legLeft", config.items?.pants?.item, config.colors.LeftLeg),
-            updateMeshMaterial("legRight", config.items?.pants?.item, config.colors.RightLeg),
+            updateMeshMaterial("chesticle", config.items?.shirt, config.colors.Torso),
+            updateMeshMaterial("armRight", config.items?.shirt, config.colors.RightArm),
+            updateMeshMaterial("armLeft", config.items?.shirt, config.colors.LeftArm),
+            updateMeshMaterial("legLeft", config.items?.pants, config.colors.LeftLeg),
+            updateMeshMaterial("legRight", config.items?.pants, config.colors.RightLeg),
         ]);
 
         // T-shirt handling
@@ -253,7 +263,7 @@ async function generateTresjsObjects() {
                 let tshirtTexture;
                 if (config.items?.tshirt.edit_style) {
                     tshirtTexture = await loadTexture(
-                        `${UPLOADS_PATH}${config.items?.tshirt.edit_style}.png`
+                        `${UPLOADS_PATH}${config.items?.tshirt.edit_style.hash}.png`
                     );
                 } else {
                     tshirtTexture = await loadTexture(
@@ -295,7 +305,7 @@ async function generateTresjsObjects() {
                         let faceTexture;
                         if (config.items?.face.edit_style) {
                             faceTexture = await loadTexture(
-                                `${UPLOADS_PATH}${config.items?.face.edit_style}.png`
+                                `${UPLOADS_PATH}${config.items?.face.edit_style.hash}.png`
                             );
                         } else {
                             faceTexture = await loadTexture(
@@ -614,24 +624,23 @@ watch(
 </script>
 
 <template>
-            <TresCanvas :alpha="true" :shadows="true" render-mode="on-demand">
-                <!-- Camera parameters are now dynamically set based on avatar bounding box -->
-                <TresPerspectiveCamera :position="cameraPosition" :look-at="cameraLookAt" :up="[0, 1, 0]" :fov="22.5"
-                    :aspect="aspectRatio" :near="0.1" :far="1000" />
-                <!-- OrbitControls target also dynamically set -->
-                <OrbitControls :target="orbitTarget" :enable-damping="true" :damping-factor="0.05" :min-distance="2"
-                    :max-distance="20" :auto-rotate="true" :auto-rotate-speed="2" :enable-pan="true"
-                    :enable-zoom="true" />
-                <TresAmbientLight :intensity="2.5" :color="0xb0b0b0" />
-                <TresDirectionalLight :position="[-1, 3, 5]" :intensity="6" :color="0x808080" />
+    <TresCanvas :alpha="true" :shadows="true" render-mode="on-demand">
+        <!-- Camera parameters are now dynamically set based on avatar bounding box -->
+        <TresPerspectiveCamera :position="cameraPosition" :look-at="cameraLookAt" :up="[0, 1, 0]" :fov="22.5"
+            :aspect="aspectRatio" :near="0.1" :far="1000" />
+        <!-- OrbitControls target also dynamically set -->
+        <OrbitControls :target="orbitTarget" :enable-damping="true" :damping-factor="0.05" :min-distance="2"
+            :max-distance="20" :auto-rotate="true" :auto-rotate-speed="2" :enable-pan="true" :enable-zoom="true" />
+        <TresAmbientLight :intensity="2.5" :color="0xb0b0b0" />
+        <TresDirectionalLight :position="[-1, 3, 5]" :intensity="6" :color="0x808080" />
 
-                <!-- Main TresGroup for the avatar, its position will be adjusted for centering -->
-                <TresGroup :position="avatarGroupPosition">
-                    <!-- Dynamically rendered avatar parts -->
-                    <template v-for="(meshData, name) in avatarMeshes" :key="name">
-                        <TresMesh v-if="meshData.geometry" :geometry="meshData.geometry" :material="meshData.material"
-                            :position="meshData.position || [0, 0, 0]" :rotation="meshData.rotation || [0, 0, 0]" />
-                    </template>
-                </TresGroup>
-            </TresCanvas>
+        <!-- Main TresGroup for the avatar, its position will be adjusted for centering -->
+        <TresGroup :position="avatarGroupPosition">
+            <!-- Dynamically rendered avatar parts -->
+            <template v-for="(meshData, name) in avatarMeshes" :key="name">
+                <TresMesh v-if="meshData.geometry" :geometry="meshData.geometry" :material="meshData.material"
+                    :position="meshData.position || [0, 0, 0]" :rotation="meshData.rotation || [0, 0, 0]" />
+            </template>
+        </TresGroup>
+    </TresCanvas>
 </template>
