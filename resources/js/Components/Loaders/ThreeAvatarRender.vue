@@ -207,11 +207,11 @@ async function generateTresjsObjects() {
                 try {
                     let texture;
                     if (textureItem.edit_style) {
-                        tshirtTexture = await loadTexture(
+                        texture = await loadTexture(
                             `${UPLOADS_PATH}${textureItem.edit_style.hash}.png`
                         );
                     } else {
-                        tshirtTexture = await loadTexture(
+                        texture = await loadTexture(
                             `${UPLOADS_PATH}${textureItem.item}.png`
                         );
                     }
