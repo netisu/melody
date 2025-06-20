@@ -11,6 +11,7 @@ import Footer from "@/Components/LayoutParts/Footer.vue";
 import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import VLazyImage from "v-lazy-image";
 import SuperBanner from '@/Components/LayoutParts/SuperBanner.vue';
+import DummyError from "@/Images/dummy-error.png";
 
 defineProps({
     spaces: { type: Array, required: true },
@@ -37,9 +38,9 @@ const LeaveSpace = () => {
         <template #SuperBanner>
             <SuperBanner>
                 <template #bannerAsset>
-                    <v-lazy-image :src="usePage<any>().props.space.thumbnail ?? '/assets/img/dummy-error.png'"
+                    <v-lazy-image :src="usePage<any>().props.space.thumbnail ?? DummyError"
                         width="100" class="space-image" alt="Space Thumbnail"
-                        src-placeholder="/assets/img/dummy-error.png" />
+                        :src-placeholder="DummyError" />
                 </template>
                 <template #bannerName>
                     <div class="text-xl" style="line-height: 16px">

@@ -13,6 +13,7 @@ import SuperBanner from "@/Components/LayoutParts/SuperBanner.vue";
 import marketLogo from "@/Images/site-banners/market-title.png";
 import ItemCardSkeleton from "@/Components/ItemCardSkeleton.vue";
 import VLazyImage from "v-lazy-image";
+import DummyError from "@/Images/dummy-error.png";
 
 const props = defineProps({
     categories: Object,
@@ -85,7 +86,7 @@ function selectSubCategory(SubCategory: string) {
 
 function onImgErrorSmall(id) {
     let source = document.getElementById(id) as HTMLImageElement;
-    source.src = "/assets/img/dummy-error.png";
+    source.src = DummyError;
     source.onerror = null;
 
     return true;

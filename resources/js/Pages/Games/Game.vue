@@ -5,6 +5,7 @@ import Sidebar from "@/Components/LayoutParts/Sidebar.vue";
 import VLazyImage from "v-lazy-image";
 //import { Head, Link } from '@inertiajs/vue3';
 import DummyHeadshot from "@/Images/dummy_headshot.png";
+import DummyError from "@/Images/dummy-error.png";
 
 </script>
 
@@ -15,8 +16,8 @@ import DummyHeadshot from "@/Images/dummy_headshot.png";
         :OfficialImageBackground="false">
         <template>
             <portal to="bannerAsset">
-                <v-lazy-image src="/assets/img/dummy-error.png" width="100" class="space-image" alt="Game Thumbnail"
-                    src-placeholder="/assets/img/dummy-error.png" />
+                <v-lazy-image :src="DummyError" width="100" class="space-image" alt="Game Thumbnail"
+                    :src-placeholder="DummyError" />
             </portal>
             <portal to="bannerButtons">
                 <Link class="btn btn-info btn-xs text-white squish" as="button" style="outline: none">

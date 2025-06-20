@@ -9,6 +9,7 @@ import type { Ref } from "vue";
 import axios from "axios"; // Import Axios
 import { route } from "ziggy-js";
 import JsonPagination from "@/Components/JsonPagination.vue";
+import DummyError from "@/Images/dummy-error.png";
 
 import { usePage } from "@inertiajs/vue3";
 import VLazyImage from "v-lazy-image";
@@ -312,7 +313,7 @@ function fillSlot(slotNumber) {
 
 function onImgErrorSmall(id) {
     let source = document.getElementById(id) as HTMLImageElement;
-    source.src = "/assets/img/dummy-error.png";
+    source.src = DummyError;
     source.onerror = null;
 
     return true;

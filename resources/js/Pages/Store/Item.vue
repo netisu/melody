@@ -8,7 +8,7 @@ import { route } from "ziggy-js";
 import axios from 'axios';
 import { ref } from 'vue';
 import throttle from 'lodash/throttle';
-
+import DummyError from "@/Images/dummy-error.png";
 
 defineProps<{
     item?: { type: Object, default: null },
@@ -79,7 +79,7 @@ const swap = () => {
 
 function onImgErrorSmall(id) {
     let source = document.getElementById(id) as HTMLImageElement;
-    source.src = "/assets/img/dummy-error.png";
+    source.src = DummyError;
     source.onerror = null;
 
     return true;

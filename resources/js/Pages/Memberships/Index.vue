@@ -8,6 +8,7 @@ import { computed, onMounted, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import DummyHeadshot from "@/Images/dummy_headshot.png";
+import DummyError from "@/Images/dummy-error.png";
 
 
 const site = computed<any>(() => usePage<any>().props.site);
@@ -52,7 +53,7 @@ onMounted(() => {
 
 function onImgErrorSmall(id) {
     let source = document.getElementById(id) as HTMLImageElement;
-    source.src = "/assets/img/dummy-error.png";
+    source.src = DummyError;
     source.onerror = null;
 
     return true;

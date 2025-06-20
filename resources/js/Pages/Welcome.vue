@@ -6,6 +6,7 @@ import { computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import StarsBg from "@/Images/site-banners/stars-bg.png";
+import DummyError from "@/Images/dummy-error.png";
 
 const defaultAvatar = StarsBg;
 
@@ -23,7 +24,7 @@ defineProps({
 
 function onImgErrorSmall(id) {
     let source = document.getElementById(id) as HTMLImageElement;
-    source.src = "/assets/img/dummy-error.png";
+    source.src = DummyError;
     source.onerror = null;
 
     return true;

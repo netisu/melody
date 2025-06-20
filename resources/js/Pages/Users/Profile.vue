@@ -12,6 +12,7 @@ import AppHead from '@/Components/AppHead.vue';
 import ThreeAvatarRender from '@/Components/Loaders/ThreeAvatarRender.vue';
 import ItemCardSkeleton from '@/Components/ItemCardSkeleton.vue';
 import DummyAvatar from "@/Images/dummy.png";
+import DummyError from "@/Images/dummy-error.png";
 
 interface AvatarApiResponse {
     RenderType: string;
@@ -85,7 +86,7 @@ const ItemLoading = ref(false);
 
 function onImgErrorSmall(id) {
     let source = document.getElementById(id) as HTMLImageElement;
-    source.src = "/assets/img/dummy-error.png";
+    source.src = DummyError;
     source.onerror = null;
 
     return true;
