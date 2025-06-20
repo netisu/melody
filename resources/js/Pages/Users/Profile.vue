@@ -310,22 +310,22 @@ watch(following, (newValue, oldValue) => {
                                         width="50" height="50" />
                                 </button>
                             </div>
-                            <div class="avatar-torso-arms-wrapper">
-                                <button class="avatar-body-part" id="left_arm" v-tippy
+                            <div class="avatar-Torso-arms-wrapper">
+                                <button class="avatar-body-part" id="LeftArm" v-tippy
                                     :content="'#' + AvatarProps.RenderJson.colors.LeftArm"
                                     :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.LeftArm }"></button>
-                                <button class="avatar-body-part" id="torso" v-tippy
+                                <button class="avatar-body-part" id="Torso" v-tippy
                                     :content="'#' + AvatarProps.RenderJson.colors.Torso"
                                     :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.Torso }"></button>
-                                <button class="avatar-body-part" id="right_arm" v-tippy
+                                <button class="avatar-body-part" id="RightArm" v-tippy
                                     :content="'#' + AvatarProps.RenderJson.colors.RightArm"
                                     :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.RightArm }"></button>
                             </div>
                             <div class="avatar-legs-wrapper">
-                                <button class="avatar-body-part" id="left_leg" v-tippy
+                                <button class="avatar-body-part" id="LeftLeg" v-tippy
                                     :content="'#' + AvatarProps.RenderJson.colors.LeftLeg"
                                     :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.LeftLeg }"></button>
-                                <button class="avatar-body-part" id="right_leg" v-tippy
+                                <button class="avatar-body-part" id="RightLeg" v-tippy
                                     :content="'#' + AvatarProps.RenderJson.colors.RightLeg"
                                     :style="{ backgroundColor: '#' + AvatarProps.RenderJson.colors.RightLeg }"></button>
                             </div>

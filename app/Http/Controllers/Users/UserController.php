@@ -125,12 +125,12 @@ class UserController extends Controller
 
         // Retrieve current body colors directly from the avatar model's JSON column
         $currentBodyColors = $user->avatar()->colors ?? [
-            'head' => 'd3d3d3',
-            'torso' => '055e96',
-            'left_arm' => 'd3d3d3',
-            'right_arm' => 'd3d3d3',
-            'left_leg' => 'd3d3d3',
-            'right_leg' => 'd3d3d3',
+            'Head' => 'd3d3d3',
+            'Torso' => '055e96',
+            'LeftArm' => 'd3d3d3',
+            'RightArm' => 'd3d3d3',
+            'LeftLeg' => 'd3d3d3',
+            'RightLeg' => 'd3d3d3',
         ];
 
         // Derive current_face_url directly from the 'face' JSON column for the initial prop

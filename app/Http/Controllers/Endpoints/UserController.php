@@ -243,12 +243,12 @@ class UserController extends Controller
                 'status' => $user->status,
                 'online' => $user->online(),
                 'avatar' => [
-                    'color_head' => $user->avatar()->color_head ?? 'ffffff',
-                    'color_left_arm' => $user->avatar()->color_left_arm ?? 'ffffff',
-                    'color_torso' => $user->avatar()->color_torso ?? '055e96',
-                    'color_right_arm' => $user->avatar()->color_right_arm ?? 'ffffff',
-                    'color_left_leg' => $user->avatar()->color_left_leg ?? 'ffffff',
-                    'color_right_leg' => $user->avatar()->color_right_leg ?? 'ffffff',
+                    'color_Head' => $user->avatar()->color_Head ?? 'ffffff',
+                    'color_LeftArm' => $user->avatar()->color_LeftArm ?? 'ffffff',
+                    'color_Torso' => $user->avatar()->color_Torso ?? '055e96',
+                    'color_RightArm' => $user->avatar()->color_RightArm ?? 'ffffff',
+                    'color_LeftLeg' => $user->avatar()->color_LeftLeg ?? 'ffffff',
+                    'color_RightLeg' => $user->avatar()->color_RightLeg ?? 'ffffff',
                     'current_face' => config('app.storage.url') . (
                         $user->avatar()->face ? '/uploads/' . getItemHash($user->avatar()->face) . ".png" : '/assets/default.png'
                     ),

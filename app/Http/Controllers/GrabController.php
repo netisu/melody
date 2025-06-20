@@ -46,7 +46,7 @@ class GrabController extends Controller
         // Retrieve current body colors directly from the avatar model's JSON column
         $currentBodyColors = $avatar->colors ?? [
             'Head' => 'd3d3d3',
-            'torso' => '055e96',
+            'Torso' => '055e96',
             'LeftArm' => 'd3d3d3',
             'RightArm' => 'd3d3d3',
             'LeftLeg' => 'd3d3d3',
@@ -104,7 +104,7 @@ class GrabController extends Controller
                 $this->regenerate($request);
                 return Auth::user()->thumbnail();
             case 'color':
-                $validBodyParts = ['head', 'torso', 'left_arm', 'right_arm', 'left_leg', 'right_leg'];
+                $validBodyParts = ['head', 'Torso', 'LeftArm', 'RightArm', 'LeftLeg', 'RightLeg'];
                 $bodyPart = $request->body_part;
                 $newColor = $request->color;
 

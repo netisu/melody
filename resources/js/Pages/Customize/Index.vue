@@ -18,23 +18,23 @@ interface userAvatar {
     thumbnail: string;
     colors: {
         // This is the entire colors object as passed
-        head: string;
-        torso: string;
-        left_arm: string;
-        right_arm: string;
-        left_leg: string;
-        right_leg: string;
+        Head: string;
+        Torso: string;
+        LeftArm: string;
+        RightArm: string;
+        LeftLeg: string;
+        RightLeg: string;
     };
     current_face_url: string; // The URL for the current face
 }
 
 interface AvatarColors {
-    head: string;
-    torso: string;
-    left_arm: string;
-    right_arm: string;
-    left_leg: string;
-    right_leg: string;
+    Head: string;
+    Torso: string;
+    LeftArm: string;
+    RightArm: string;
+    LeftLeg: string;
+    RightLeg: string;
 }
 
 interface Item {
@@ -75,12 +75,12 @@ const userAvatar = reactive({
     // --- Properties directly from Inertia Page Props ---
     colors: reactive<AvatarColors>({
         // Make 'colors' itself a reactive object
-        head: initialuserAvatar?.colors?.head || "d3d3d3",
-        torso: initialuserAvatar?.colors?.torso || "055e96",
-        left_arm: initialuserAvatar?.colors?.left_arm || "d3d3d3",
-        right_arm: initialuserAvatar?.colors?.right_arm || "d3d3d3",
-        left_leg: initialuserAvatar?.colors?.left_leg || "d3d3d3",
-        right_leg: initialuserAvatar?.colors?.right_leg || "d3d3d3",
+        Head: initialuserAvatar?.colors?.Head || "d3d3d3",
+        Torso: initialuserAvatar?.colors?.Torso || "055e96",
+        LeftArm: initialuserAvatar?.colors?.LeftArm || "d3d3d3",
+        RightArm: initialuserAvatar?.colors?.RightArm || "d3d3d3",
+        LeftLeg: initialuserAvatar?.colors?.LeftLeg || "d3d3d3",
+        RightLeg: initialuserAvatar?.colors?.RightLeg || "d3d3d3",
     }),
 
     // Thumbnail URL from props
@@ -129,11 +129,11 @@ const handlePageClick = (page: number) => {
 // Mapping of internal part names to user-friendly names
 const partNames = {
     head: "Head",
-    left_arm: "Left Arm",
-    torso: "Torso",
-    right_arm: "Right Arm",
-    left_leg: "Left Leg",
-    right_leg: "Right Leg",
+    LeftArm: "Left Arm",
+    Torso: "Torso",
+    RightArm: "Right Arm",
+    LeftLeg: "Left Leg",
+    RightLeg: "Right Leg",
 };
 // Function to submit the selected part's color to the API
 
@@ -592,28 +592,28 @@ onMounted(() => {
                                                 width="50" height="50" />
                                         </button>
                                     </div>
-                                    <div class="avatar-torso-arms-wrapper">
-                                        <button class="avatar-body-part" id="left_arm" @click="
-                                            handlePartSelection('left_arm')
+                                    <div class="avatar-Torso-arms-wrapper">
+                                        <button class="avatar-body-part" id="LeftArm" @click="
+                                            handlePartSelection('LeftArm')
                                             "
-                                            :style="{ backgroundColor: '#' + userAvatar.colors.left_arm }"></button>
-                                        <button class="avatar-body-part" id="torso" @click="
-                                            handlePartSelection('torso')
-                                            " :style="{ backgroundColor: '#' + userAvatar.colors.torso }"></button>
-                                        <button class="avatar-body-part" id="right_arm" @click="
-                                            handlePartSelection('right_arm')
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.LeftArm }"></button>
+                                        <button class="avatar-body-part" id="Torso" @click="
+                                            handlePartSelection('Torso')
+                                            " :style="{ backgroundColor: '#' + userAvatar.colors.Torso }"></button>
+                                        <button class="avatar-body-part" id="RightArm" @click="
+                                            handlePartSelection('RightArm')
                                             "
-                                            :style="{ backgroundColor: '#' + userAvatar.colors.right_arm }"></button>
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.RightArm }"></button>
                                     </div>
                                     <div class="avatar-legs-wrapper">
-                                        <button class="avatar-body-part" id="left_leg" @click="
-                                            handlePartSelection('left_leg')
+                                        <button class="avatar-body-part" id="LeftLeg" @click="
+                                            handlePartSelection('LeftLeg')
                                             "
-                                            :style="{ backgroundColor: '#' + userAvatar.colors.left_leg }"></button>
-                                        <button class="avatar-body-part" id="right_leg" @click="
-                                            handlePartSelection('right_leg')
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.LeftLeg }"></button>
+                                        <button class="avatar-body-part" id="RightLeg" @click="
+                                            handlePartSelection('RightLeg')
                                             "
-                                            :style="{ backgroundColor: '#' + userAvatar.colors.right_leg }"></button>
+                                            :style="{ backgroundColor: '#' + userAvatar.colors.RightLeg }"></button>
                                     </div>
                                 </div>
                             </div>
@@ -748,12 +748,12 @@ onMounted(() => {
     <!--
     {{ AVATAR CLASSES }}
     Body Colors:
-    {{ userAvatar.color_head }}
-    {{ userAvatar.color_torso }}
-    {{ userAvatar.color_left_arm }}
-    {{ userAvatar.color_right_arm }}
-    {{ userAvatar.color_left_leg }}
-    {{ userAvatar.color_right_leg }}
+    {{ userAvatar.color_Head }}
+    {{ userAvatar.color_Torso }}
+    {{ userAvatar.color_LeftArm }}
+    {{ userAvatar.color_RightArm }}
+    {{ userAvatar.color_LeftLeg }}
+    {{ userAvatar.color_RightLeg }}
 
     Items: [
         Hats [
