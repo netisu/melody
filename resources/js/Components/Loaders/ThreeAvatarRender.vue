@@ -370,8 +370,8 @@ async function generateTresjsObjects() {
 
         // Hats (Iterate and load actual models/textures)
         for (let i = 0; i < (config.items?.hats || []).length; i++) {
-            const hatItem = config.items?.hats[i];
             const hatMeshName = `hat_${i}`;
+            const hatItem = config.items?.hats[hatMeshName];
 
             // Ensure cleanup of previous hat for this index
             if (avatarMeshes[hatMeshName]) delete avatarMeshes[hatMeshName];
@@ -412,8 +412,6 @@ async function generateTresjsObjects() {
 
                         const mesh = new THREE.Mesh(loadedHatModel.geometry, material);
                         mesh.name = hatMeshName;
-                        mesh.position.set(0, 8.5 + i * 0.6, 0); // Default position, adjust per model if needed
-
                         avatarMeshes[hatMeshName] = {
                             geometry: mesh.geometry,
                             material: mesh.material,
@@ -470,7 +468,6 @@ async function generateTresjsObjects() {
 
                     const mesh = new THREE.Mesh(loadedAddonModel.geometry, material);
                     mesh.name = addonMeshName;
-                    // mesh.position.set(0, 7.5, -1);
                     avatarMeshes["addon"] = {
                         geometry: mesh.geometry,
                         material: mesh.material,
