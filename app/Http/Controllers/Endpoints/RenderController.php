@@ -161,7 +161,6 @@ class RenderController extends Controller
                 'face'   => $this->getItemRenderData(null), // This will be {"item": "none", "edit_style": null}
                 'hats'   => array_combine(
                     $hatKeys,
-                    ['hat_1', 'hat_2', 'hat_3', 'hat_4', 'hat_5', 'hat_6'],
                     array_fill(0, 6, $this->getItemRenderData(null))
                 ),
                 'addon'  => $this->getItemRenderData(null),
