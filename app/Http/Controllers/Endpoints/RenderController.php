@@ -154,10 +154,13 @@ class RenderController extends Controller
             'Hash' => $hash,
         ];
 
+        $hatKeys =  ['hat_1', 'hat_2', 'hat_3', 'hat_4', 'hat_5', 'hat_6'];
+
         if ($type == 'user') {
             $itemsForRender = [
                 'face'   => $this->getItemRenderData(null), // This will be {"item": "none", "edit_style": null}
                 'hats'   => array_combine(
+                    $hatKeys,
                     ['hat_1', 'hat_2', 'hat_3', 'hat_4', 'hat_5', 'hat_6'],
                     array_fill(0, 6, $this->getItemRenderData(null))
                 ),
@@ -169,31 +172,20 @@ class RenderController extends Controller
                 'tshirt' => $this->getItemRenderData(null),
             ];
             $wearingItems = $db->getWearingItemsStructured();
-            if (isset($wearingItems['colors'])) {
-                unset($wearingItems['colors']);
-            }
 
             foreach ($wearingItems as $slotName => $slotDataObject) {
-                if ($slotName === 'hats' && is_array($slotDataObject)) {
-                    foreach ($slotDataObject as $hatKey => $wornHatData) {
-                        if (in_array($hatKey, array_keys($itemsForRender['hats'])) && $wornHatData !== null) {
-                            $itemsForRender['hats'][$hatKey] =  $this->getItemRenderData((object)$wornHatData);
-                        }
+                if (in_array($slotName, $hatKeys)) {
+                    if ($slotDataObject !== null) {
+                        $itemsForRender['hats'][$slotName] = $this->getItemRenderData((object)$slotDataObject);
                     }
                 } elseif (isset($itemsForRender[$slotName]) && (is_object($slotDataObject) || (is_array($slotDataObject) && (isset($slotDataObject['item']) || isset($slotDataObject->item))))) {
                     $itemsForRender[$slotName] = $this->getItemRenderData((object)$slotDataObject);
                 }
             }
+
             $requestData['RenderJson'] = [
                 'items' => $itemsForRender,
-                'colors' => [
-                    'Head' => $this->getColor($db->colors['head'], 'd3d3d3'),
-                    'Torso' => $this->getColor($db->colors['torso'], '055e96'),
-                    'LeftLeg' => $this->getColor($db->colors['left_leg'], 'd3d3d3'),
-                    'RightLeg' => $this->getColor($db->colors['right_leg'], 'd3d3d3'),
-                    'LeftArm' => $this->getColor($db->colors['left_arm'], 'd3d3d3'),
-                    'RightArm' => $this->getColor($db->colors['right_arm'], 'd3d3d3')
-                ],
+                'colors' => $wearingItems['colors'],
             ];
         } elseif ($type == 'item') {
             $requestData['RenderJson'] = [

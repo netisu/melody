@@ -470,7 +470,7 @@ async function generateTresjsObjects() {
 
                     const mesh = new THREE.Mesh(loadedAddonModel.geometry, material);
                     mesh.name = addonMeshName;
-                    mesh.position.set(0, 7.5, -1);
+                    // mesh.position.set(0, 7.5, -1);
                     avatarMeshes["addon"] = {
                         geometry: mesh.geometry,
                         material: mesh.material,
