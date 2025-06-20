@@ -203,23 +203,23 @@ async function generateTresjsObjects() {
             const meshInScene = loadedSceneMeshes.find((m) => m.name === meshName);
             if (!meshInScene) return; // Ensure the mesh is in the actual list for bounding box
 
-            if (textureItem?.item && textureItem.item !== "none") {
+            if (textureItem?.item && textureItem?.item !== "none") {
                 try {
                     let texture;
-                    if (textureItem.edit_style) {
+                    if (textureItem?.edit_style) {
                         texture = await loadTexture(
-                            `${UPLOADS_PATH}${textureItem.edit_style.hash}.png`
+                            `${UPLOADS_PATH}${textureItem?.edit_style?.hash}.png`
                         );
                     } else {
                         texture = await loadTexture(
-                            `${UPLOADS_PATH}${textureItem.item}.png`
+                            `${UPLOADS_PATH}${textureItem?.item}.png`
                         );
                     }
 
                     if (texture) {
                         const material = new THREE.MeshPhongMaterial({
                             map: texture,
-                            transparent: true,
+                            transparent: false,
                             alphaTest: 0.5,
                         });
                         currentMeshRef.material = material;
@@ -263,7 +263,7 @@ async function generateTresjsObjects() {
                 let tshirtTexture;
                 if (config.items?.tshirt.edit_style) {
                     tshirtTexture = await loadTexture(
-                        `${UPLOADS_PATH}${config.items?.tshirt.edit_style.hash}.png`
+                        `${UPLOADS_PATH}${config.items?.tshirt?.edit_style?.hash}.png`
                     );
                 } else {
                     tshirtTexture = await loadTexture(
@@ -303,13 +303,13 @@ async function generateTresjsObjects() {
                 if (config.items?.face && config.items?.face?.item !== "none") {
                     try {
                         let faceTexture;
-                        if (config.items?.face.edit_style) {
+                        if (config.items?.face?.edit_style) {
                             faceTexture = await loadTexture(
-                                `${UPLOADS_PATH}${config.items?.face.edit_style.hash}.png`
+                                `${UPLOADS_PATH}${config.items?.face?.edit_style?.hash}.png`
                             );
                         } else {
                             faceTexture = await loadTexture(
-                                `${UPLOADS_PATH}${config.items?.face.item}.png`
+                                `${UPLOADS_PATH}${config.items?.face?.item}.png`
                             );
                         }
 
@@ -317,13 +317,16 @@ async function generateTresjsObjects() {
                             ? new THREE.MeshPhongMaterial({
                                 map: faceTexture,
                                 color: new THREE.Color(`#${config.colors.Head}`),
-                                transparent: true,
+                                transparent: false,
                                 depthWrite: false,
                                 blending: THREE.NormalBlending,
                                 side: THREE.FrontSide,
                             })
                             : new THREE.MeshPhongMaterial({
                                 color: new THREE.Color(`#${config.colors.Head}`),
+                                depthWrite: true,
+                                transparent: false,
+                                side: THREE.FrontSide,
                             });
                         avatarMeshes["cranium"].material = material;
                         cranimumMeshInScene.material = material;
@@ -334,7 +337,7 @@ async function generateTresjsObjects() {
                             ? new THREE.MeshPhongMaterial({
                                 map: DefaultfaceTexture,
                                 color: new THREE.Color(`#${config.colors.Head}`),
-                                transparent: true,
+                                transparent: false,
                                 depthWrite: false,
                                 blending: THREE.NormalBlending,
                                 side: THREE.FrontSide,
@@ -351,7 +354,7 @@ async function generateTresjsObjects() {
                         ? new THREE.MeshPhongMaterial({
                             map: DefaultfaceTexture,
                             color: new THREE.Color(`#${config.colors.Head}`),
-                            transparent: true,
+                            transparent: false,
                             depthWrite: false,
                             blending: THREE.NormalBlending,
                             side: THREE.FrontSide,
@@ -378,13 +381,13 @@ async function generateTresjsObjects() {
             if (hatItem?.item && hatItem?.item !== "none") {
                 try {
                     let loadedHatModel;
-                    if (hatItem.edit_style.is_model) {
+                    if (hatItem?.edit_style?.is_model) {
                         loadedHatModel = await loadOBJModel(
-                            `${UPLOADS_PATH}${hatItem.edit_style.hash}.obj`
+                            `${UPLOADS_PATH}${hatItem?.edit_style?.hash}.obj`
                         );
                     } else {
                         loadedHatModel = await loadOBJModel(
-                            `${UPLOADS_PATH}${hatItem.item}.obj`
+                            `${UPLOADS_PATH}${hatItem?.item}.obj`
                         );
                     }
                     if (loadedHatModel) {
@@ -392,17 +395,17 @@ async function generateTresjsObjects() {
                         let loadedHatTexture;
                         if (hatItem.edit_style.is_texture) {
                             loadedHatTexture = await loadTexture(
-                                `${UPLOADS_PATH}${hatItem.edit_style.hash}.png`
+                                `${UPLOADS_PATH}${hatItem?.edit_style?.hash}.png`
                             );
                         } else {
                             loadedHatTexture = await loadTexture(
-                                `${UPLOADS_PATH}${hatItem.item}.png`
+                                `${UPLOADS_PATH}${hatItem?.item}.png`
                             );
                         }
                         const material = loadedHatTexture
                             ? new THREE.MeshPhongMaterial({
                                 map: loadedHatTexture,
-                                transparent: true,
+                                transparent: false,
                                 alphaTest: 0.5,
                             })
                             : new THREE.MeshPhongMaterial({ color: 0x888888 });
@@ -419,11 +422,11 @@ async function generateTresjsObjects() {
                         loadedSceneMeshes.push(mesh); // Add actual mesh
                     } else {
                         console.warn(
-                            `Hat model for '${hatItem.item}' could not be loaded. Skipping this hat.`
+                            `Hat model for '${hatItem?.item}' could not be loaded. Skipping this hat.`
                         );
                     }
                 } catch (error) {
-                    console.error(`Error loading hat item '${hatItem.item}':`, error);
+                    console.error(`Error loading hat item '${hatItem?.item}':`, error);
                 }
             }
         }
@@ -434,13 +437,13 @@ async function generateTresjsObjects() {
 
             try {
                 let loadedAddonModel;
-                if (config.items?.addon.edit_style.is_model) {
+                if (config.items?.addon?.edit_style && config.items?.addon?.edit_style?.is_model) {
                     loadedAddonModel = await loadOBJModel(
-                        `${UPLOADS_PATH}${config.items?.addon.edit_style.hash}.obj`
+                        `${UPLOADS_PATH}${config.items?.addon?.edit_style?.hash}.obj`
                     );
                 } else {
                     loadedAddonModel = await loadOBJModel(
-                        `${UPLOADS_PATH}${config.items?.addon.item}.obj`
+                        `${UPLOADS_PATH}${config.items?.addon?.item}.obj`
                     );
                 }
 
@@ -448,19 +451,19 @@ async function generateTresjsObjects() {
                     let loadedAddonTexture;
 
                     // Only proceed if model loaded successfully
-                    if (config.items?.addon.edit_style.is_texture) {
+                    if (config.items?.addon?.edit_style?.is_texture) {
                         loadedAddonTexture = await loadTexture(
-                            `${UPLOADS_PATH}${config.items?.addon.edit_style.hash}.png`
+                            `${UPLOADS_PATH}${config.items?.addon?.edit_style?.hash}.png`
                         );
                     } else {
                         loadedAddonTexture = await loadTexture(
-                            `${UPLOADS_PATH}${config.items?.addon.item}.png`
+                            `${UPLOADS_PATH}${config.items?.addon?.item}.png`
                         );
                     }
                     const material = loadedAddonTexture
                         ? new THREE.MeshPhongMaterial({
                             map: loadedAddonTexture,
-                            transparent: true,
+                            transparent: false,
                             alphaTest: 0.5,
                         })
                         : new THREE.MeshPhongMaterial({ color: 0x996633 });
@@ -476,11 +479,11 @@ async function generateTresjsObjects() {
                     loadedSceneMeshes.push(mesh); // Add actual mesh
                 } else {
                     console.warn(
-                        `Addon model for '${config.items?.addon.item}' could not be loaded. Skipping this addon.`
+                        `Addon model for '${config.items?.addon?.item}' could not be loaded. Skipping this addon.`
                     );
                 }
             } catch (error) {
-                console.error(`Error loading addon item '${config.items?.addon.item}':`, error);
+                console.error(`Error loading addon item '${config.items?.addon?.item}':`, error);
             }
         } else {
             if (avatarMeshes["addon"]) delete avatarMeshes["addon"];
