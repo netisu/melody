@@ -323,10 +323,7 @@ async function generateTresjsObjects() {
                                 side: THREE.FrontSide,
                             })
                             : new THREE.MeshPhongMaterial({
-                                color: new THREE.Color(`#${config.colors.Head}`),
-                                depthWrite: true,
-                                transparent: false,
-                                side: THREE.FrontSide,
+                                color: new THREE.Color(`#${config.colors.Head}`)
                             });
                         avatarMeshes["cranium"].material = material;
                         cranimumMeshInScene.material = material;
@@ -546,9 +543,9 @@ watch(
 </script>
 
 <template>
-    <TresCanvas :alpha="true" :shadows="true" render-mode="on-demand">
+    <TresCanvas :alpha="true" :shadows="true"> <!-- render-mode="on-demand" -->
         <!-- Camera parameters are now dynamically set based on avatar bounding box -->
-        <TresPerspectiveCamera :position="[9, 8, -8]" />
+        <TresPerspectiveCamera :position="[-4, 8, 12]" />
 
         <OrbitControls :target="[-0.5, 3.5, 0]" :enable-damping="true" :damping-factor="0.05" :min-distance="2"
             :max-distance="15" :auto-rotate="true" :auto-rotate-speed="2" :enable-pan="true" :enable-zoom="true" />
