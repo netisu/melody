@@ -279,7 +279,9 @@ class RenderController extends Controller
                 ];
             }
         }
-        return json_encode($requestData);
+        
+        $fullJson = json_encode($requestData);
+        return response()->json($fullJson);
     }
 
     private function getColor($value, $default)
