@@ -126,7 +126,7 @@ class UserController extends Controller
             $loggedInUser->following()->attach($user->id);
             $user->notify(new FollowerNotification($loggedInUser));
 
-            if (config('Values.in_event') == null && !$loggedInUser->ownsItem(1)) {
+            if (config('Values.in_event') == null && !$loggedInUser->ownsItem(124, Item::class)) {
                 $eventItem = Item::where('id', 124)->first();
                 $event = new Event;
                 $event->grantItem($eventItem, $loggedInUser, false);

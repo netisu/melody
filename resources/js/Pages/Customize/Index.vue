@@ -10,6 +10,7 @@ import axios from "axios"; // Import Axios
 import { route } from "ziggy-js";
 import JsonPagination from "@/Components/JsonPagination.vue";
 import DummyError from "@/Images/dummy-error.png";
+import DummyAvatar from "@/Images/dummy.png";
 
 import { usePage } from "@inertiajs/vue3";
 import VLazyImage from "v-lazy-image";
@@ -35,13 +36,6 @@ interface AvatarColors {
     RightArm: string;
     LeftLeg: string;
     RightLeg: string;
-}
-
-interface Item {
-    item: string; // hash of the item
-    edit_style: string | null; // hash of the selected edit style
-    is_model: boolean;
-    is_texture: boolean;
 }
 
 interface CategoryConfig {
@@ -585,9 +579,9 @@ onMounted(() => {
                             <div class="cell medium-3 avatar-display-container">
                                 <div class="avatar-wrapper">
                                     <div class="avatar-head-wrapper">
-                                        <button class="avatar-body-part" id="head" @click="
-                                            handlePartSelection('head')
-                                            " :style="{ backgroundColor: '#' + userAvatar.colors.head }">
+                                        <button class="avatar-body-part" id="Head" @click="
+                                            handlePartSelection('Head')
+                                            " :style="{ backgroundColor: '#' + userAvatar.colors.Head }">
                                             <VLazyImage :src="userAvatar.current_face" :src-placeholder="DummyAvatar"
                                                 width="50" height="50" />
                                         </button>

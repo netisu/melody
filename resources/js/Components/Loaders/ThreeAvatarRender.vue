@@ -317,7 +317,7 @@ async function generateTresjsObjects() {
                             ? new THREE.MeshPhongMaterial({
                                 map: faceTexture,
                                 color: new THREE.Color(`#${config.colors.Head}`),
-                                transparent: false,
+                                transparent: true,
                                 depthWrite: false,
                                 blending: THREE.NormalBlending,
                                 side: THREE.FrontSide,
@@ -337,7 +337,7 @@ async function generateTresjsObjects() {
                             ? new THREE.MeshPhongMaterial({
                                 map: DefaultfaceTexture,
                                 color: new THREE.Color(`#${config.colors.Head}`),
-                                transparent: false,
+                                transparent: true,
                                 depthWrite: false,
                                 blending: THREE.NormalBlending,
                                 side: THREE.FrontSide,
@@ -354,7 +354,7 @@ async function generateTresjsObjects() {
                         ? new THREE.MeshPhongMaterial({
                             map: DefaultfaceTexture,
                             color: new THREE.Color(`#${config.colors.Head}`),
-                            transparent: false,
+                            transparent: true,
                             depthWrite: false,
                             blending: THREE.NormalBlending,
                             side: THREE.FrontSide,
@@ -371,7 +371,7 @@ async function generateTresjsObjects() {
         // Hats (Iterate and load actual models/textures)
         for (let i = 0; i < (config.items?.hats || []).length; i++) {
             const hatMeshName = `hat_${i}`;
-            const hatItem = config.items?.hats[hatMeshName];
+            const hatItem = config.items?.hats?.[hatMeshName];
 
             // Ensure cleanup of previous hat for this index
             if (avatarMeshes[hatMeshName]) delete avatarMeshes[hatMeshName];
@@ -405,7 +405,7 @@ async function generateTresjsObjects() {
                         const material = loadedHatTexture
                             ? new THREE.MeshPhongMaterial({
                                 map: loadedHatTexture,
-                                transparent: false,
+                                transparent: true,
                                 alphaTest: 0.5,
                             })
                             : new THREE.MeshPhongMaterial({ color: 0x888888 });
@@ -579,7 +579,6 @@ function updateAspectRatio() {
         }
     }
 }
-
 onMounted(() => {
     nextTick(() => {
         updateAspectRatio();
@@ -626,11 +625,11 @@ watch(
 <template>
     <TresCanvas :alpha="true" :shadows="true" render-mode="on-demand">
         <!-- Camera parameters are now dynamically set based on avatar bounding box -->
-        <TresPerspectiveCamera :position="cameraPosition" :look-at="cameraLookAt" :up="[0, 1, 0]" :fov="22.5"
-            :aspect="aspectRatio" :near="0.1" :far="1000" />
-        <!-- OrbitControls target also dynamically set -->
-        <OrbitControls :target="orbitTarget" :enable-damping="true" :damping-factor="0.05" :min-distance="2"
-            :max-distance="20" :auto-rotate="true" :auto-rotate-speed="2" :enable-pan="true" :enable-zoom="true" />
+        <TresPerspectiveCamera :position="[9, 8, -8]" />
+
+        <OrbitControls :target="[-0.5, 3.5, 0]" :enable-damping="true" :damping-factor="0.05" :min-distance="2"
+            :max-distance="15" :auto-rotate="true" :auto-rotate-speed="2" :enable-pan="true" :enable-zoom="true" />
+
         <TresAmbientLight :intensity="2.5" :color="0xb0b0b0" />
         <TresDirectionalLight :position="[-1, 3, 5]" :intensity="6" :color="0x808080" />
 

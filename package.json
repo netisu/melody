@@ -48,6 +48,7 @@
     "@vee-validate/zod": "^4.15.1",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/server-renderer": "^3.5.17",
+    "camera-controls": "^2.10.1",
     "dayjs": "^1.11.13",
     "eslint-plugin-vue": "^10.2.0",
     "fsevents": "^2.3.3",
